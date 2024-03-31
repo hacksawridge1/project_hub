@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_mainwindowReUkWB.ui'
+## Form generated from reading UI file 'ui_mainwindowtIOAYv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.2
 ##
@@ -15,72 +15,66 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
-    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStatusBar, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QHeaderView, QLabel, QListWidget,
+    QListWidgetItem, QPushButton, QSizePolicy, QTableView,
+    QTextEdit, QWidget)
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(354, 527)
-        font = QFont()
-        font.setPointSize(18)
-        font.setBold(True)
-        MainWindow.setFont(font)
-        self.centralwidget = QWidget(MainWindow)
-        self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayout = QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.chat = QLabel(self.centralwidget)
-        self.chat.setObjectName(u"chat")
-        self.chat.setAlignment(Qt.AlignCenter)
-
-        self.verticalLayout.addWidget(self.chat)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setSpacing(6)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.text = QLineEdit(self.centralwidget)
-        self.text.setObjectName(u"text")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text.sizePolicy().hasHeightForWidth())
-        self.text.setSizePolicy(sizePolicy)
-
-        self.horizontalLayout.addWidget(self.text)
-
-        self.send = QPushButton(self.centralwidget)
+class Ui_Form(object):
+    def setupUi(self, Form):
+        if not Form.objectName():
+            Form.setObjectName(u"Form")
+        Form.resize(1050, 643)
+        self.users = QListWidget(Form)
+        self.users.setObjectName(u"users")
+        self.users.setGeometry(QRect(80, 50, 191, 571))
+        self.messages = QListWidget(Form)
+        self.messages.setObjectName(u"messages")
+        self.messages.setGeometry(QRect(280, 50, 761, 531))
+        self.message = QTextEdit(Form)
+        self.message.setObjectName(u"message")
+        self.message.setGeometry(QRect(280, 590, 701, 31))
+        self.send = QPushButton(Form)
         self.send.setObjectName(u"send")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.send.sizePolicy().hasHeightForWidth())
-        self.send.setSizePolicy(sizePolicy1)
+        self.send.setGeometry(QRect(990, 590, 51, 31))
+        self.notifications_active = QPushButton(Form)
+        self.notifications_active.setObjectName(u"notifications_active")
+        self.notifications_active.setGeometry(QRect(10, 50, 61, 31))
+        self.theme = QPushButton(Form)
+        self.theme.setObjectName(u"theme")
+        self.theme.setGeometry(QRect(10, 130, 61, 31))
+        self.friends = QPushButton(Form)
+        self.friends.setObjectName(u"friends")
+        self.friends.setGeometry(QRect(10, 90, 61, 31))
+        self.settings = QPushButton(Form)
+        self.settings.setObjectName(u"settings")
+        self.settings.setGeometry(QRect(10, 170, 61, 31))
+        self.user = QTableView(Form)
+        self.user.setObjectName(u"user")
+        self.user.setGeometry(QRect(90, 60, 171, 51))
+        self.profile = QPushButton(Form)
+        self.profile.setObjectName(u"profile")
+        self.profile.setGeometry(QRect(10, 600, 61, 24))
+        self.menu = QPushButton(Form)
+        self.menu.setObjectName(u"menu")
+        self.menu.setGeometry(QRect(990, 10, 51, 31))
+        self.Name = QLabel(Form)
+        self.Name.setObjectName(u"Name")
+        self.Name.setGeometry(QRect(278, 16, 701, 20))
 
-        self.horizontalLayout.addWidget(self.send)
+        self.retranslateUi(Form)
 
-
-        self.verticalLayout.addLayout(self.horizontalLayout)
-
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 354, 38))
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(MainWindow)
-
-        QMetaObject.connectSlotsByName(MainWindow)
+        QMetaObject.connectSlotsByName(Form)
     # setupUi
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u041c\u043e\u0451 \u043f\u0435\u0440\u0432\u043e\u0435 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u0441 GUI", None))
-        self.chat.setText("")
-        self.send.setText(QCoreApplication.translate("MainWindow", u"send", None))
+    def retranslateUi(self, Form):
+        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        self.send.setText(QCoreApplication.translate("Form", u"send", None))
+        self.notifications_active.setText(QCoreApplication.translate("Form", u"notifications", None))
+        self.theme.setText(QCoreApplication.translate("Form", u"theme", None))
+        self.friends.setText(QCoreApplication.translate("Form", u"friends", None))
+        self.settings.setText(QCoreApplication.translate("Form", u"settings", None))
+        self.profile.setText(QCoreApplication.translate("Form", u"profile", None))
+        self.menu.setText(QCoreApplication.translate("Form", u"menu", None))
+        self.Name.setText(QCoreApplication.translate("Form", u"Name", None))
     # retranslateUi
 
