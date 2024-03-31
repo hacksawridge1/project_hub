@@ -1,13 +1,14 @@
 from PySide6.QtWidgets import QApplication, QMainWindow
 from ui_mainwindow import Ui_Form
-
-messages = []
+from chat import chat
+from datetime import datetime
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.upMessages()
         
         self.ui.send.clicked.connect(self.send) # Надо добавить кнопку
         self.ui.friends.clicked.connect(self.friends)
@@ -20,37 +21,49 @@ class MainWindow(QMainWindow):
 
     # Отправить сообщение
     def send(self):
-        text = self.ui.text.text()
-        messages.append(text)
-        temp = ""
-        for i in messages:
-            temp = temp + i + "\n"
-        self.ui.chat.setText(temp)
+        text = self.ui.message.text()
+        chat.append(text)
+        self.ui.message.setText("")
+        self.upMessages()
+
+    def upMessages(self):
+        msg = "start\n"
+        for i in chat:
+            t = datetime.now().strftime("%H:%M:%S")
+            msg += (t + ": " + i + "\n")
+        self.ui.messages.setText(msg)
 
     # Открыть список друзей
     def friends(self):
-        print("Friends")
+        chat.append("Friends")
+        self.upMessages()
         
     # Посмореть уведомления
     def notifications_active(self):
-        print("notifications_active")
+        chat.append("notifications_active")
+        self.upMessages()
         
     # Настройки
     def settings(self):
-        print("settings")
+        chat.append("settings")
+        self.upMessages()
     
     # Темы
     def theme(self):
-        print("theme")
+        chat.append("theme")
+        self.upMessages()
 
     # Пользователь
     def user(self):
-        print("user")
+        chat.append("user")
+        self.upMessages()
         
     # Профиль
     def profile(self):
-        print("profile")
+        chat.append("profile")
+        self.upMessages()
         
     # Меню
     def menu(self):
-        print("menu")
+        chat.append("menu")
+        self.upMessages()
