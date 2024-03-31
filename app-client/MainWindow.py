@@ -22,48 +22,55 @@ class MainWindow(QMainWindow):
     # Отправить сообщение
     def send(self):
         text = self.ui.message.text()
-        chat.append(text)
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": " + text)
         self.ui.message.setText("")
         self.upMessages()
 
     def upMessages(self):
         msg = "start\n"
         for i in chat:
-            t = datetime.now().strftime("%H:%M:%S")
-            msg += (t + ": " + i + "\n")
+            msg += (i + "\n")
         self.ui.messages.setText(msg)
 
     # Открыть список друзей
     def friends(self):
-        chat.append("Friends")
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": Friends")
         self.upMessages()
         
     # Посмореть уведомления
     def notifications_active(self):
-        chat.append("notifications_active")
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": notifications_active")
         self.upMessages()
         
     # Настройки
     def settings(self):
-        chat.append("settings")
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": settings")
         self.upMessages()
     
     # Темы
     def theme(self):
-        chat.append("theme")
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": theme")
         self.upMessages()
 
     # Пользователь
     def user(self):
-        chat.append("user")
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": user")
         self.upMessages()
         
     # Профиль
     def profile(self):
-        chat.append("profile")
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": profile")
         self.upMessages()
         
     # Меню
     def menu(self):
-        chat.append("menu")
+        t = datetime.now().strftime("%H:%M:%S")
+        chat.append(t + ": menu")
         self.upMessages()
