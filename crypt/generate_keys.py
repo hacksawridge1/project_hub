@@ -1,35 +1,24 @@
-from Crypto.PublicKey import ECC
 from Crypto.PublicKey import RSA
+class Crypt:
 
-private_key = None
-public_key = None
+  def generateUserKeys(passphrase = "secret"):
+    privateKey = RSA.generate(3072)
 
-def messageCipher(message, recipient_pub_key):
-  pass
+    with open("../clientprivatekey.pem", "wb") as f:
+      data = privateKey.export_key(format='PEM',
+                                   passphrase=passphrase,
+                                   pkcs=8,
+                                   protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
+                                   prot_params={'iteration_count':131072})
+      f.write(data)
+      
+    with open("../clientpublickey.pem", "wb") as f:
+      data = privateKey.public_key().export_key(format="PEM")
+      f.write(data)
 
-def generateUserKeys():
-  global private_key
-  global public_key
-  private_key = ECC.generate(curve="p256")
-  public_key = private_key.public_key()
-  passphrase = b"secret"
-  with open("clientprivatekey.pem", "wt") as f:
-    data = private_key.export_key(format="PEM",
-                          passphrase=passphrase,
-                          protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
-                          prot_params={'iteration_count':131072})
-    f.write(data)
-  with open("clientpublickey.pem", "wt") as f:
-    data = private_key.public_key().export_key(format="PEM")
-    f.write(data)
-
-def showUserKeys():
-  print(private_key.export_key(format="PEM"))
-  print(public_key.export_key(format="PEM"))
-
-def main():
-  generateUserKeys()
+  def getUserPrivateKey(encryptedPrivateKey, passphrase):
+    key = RSA.importKey(open(encryptedPrivateKey).read(), passphrase)
+    return key
   
-
-if __name__ == '__main__':
-  main()
+  def getUserPublicKey(userPublicKey):
+    return RSA.importKey(open(userPublicKey).read())
