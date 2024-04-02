@@ -2,4 +2,5 @@
 venv
 .vscode
 *.pem
+*.pub
 __pycache__/

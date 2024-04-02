@@ -2,9 +2,9 @@ from Crypto.PublicKey import RSA
 class Crypt:
 
   def generateUserKeys(passphrase = "secret"):
-    privateKey = RSA.generate(3072)
+    privateKey = RSA.generate(1024)
 
-    with open("../clientprivatekey.pem", "wb") as f:
+    with open("../client.pem", "wb") as f:
       data = privateKey.export_key(format='PEM',
                                    passphrase=passphrase,
                                    pkcs=8,
@@ -12,7 +12,7 @@ class Crypt:
                                    prot_params={'iteration_count':131072})
       f.write(data)
       
-    with open("../clientpublickey.pem", "wb") as f:
+    with open("../client.pub", "wb") as f:
       data = privateKey.public_key().export_key(format="PEM")
       f.write(data)
 
@@ -22,3 +22,5 @@ class Crypt:
   
   def getUserPublicKey(userPublicKey):
     return RSA.importKey(open(userPublicKey).read())
+  
+Crypt.generateUserKeys()
