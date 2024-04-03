@@ -4,3 +4,4 @@ venv
 *.pem
 *.pub
 __pycache__/
+src/security/secret
