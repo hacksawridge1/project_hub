@@ -4,39 +4,23 @@ import os
 
 load_dotenv()
 
-#Сначала в env считывается старый файл .pem а потом добавляется новый?????????
-
 def generateAppKeys():
   privateKey = RSA.generate(1024)
-
-  with open('../../app.pem', 'wb') as f:
-    data = privateKey.export_key(format='PEM',
-                                 passphrase=None,
-                                 protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
-                                 prot_params={'iteration_count': 21000})
-    f.write(data)
   
   with open('../../.env', 'w') as env:
-    env.write("APP_PRIVATE_KEY="+f"\"{open('../../app.pem').read()}\"")
+    data = privateKey.export_key(format='PEM',
+                                 passphrase=None,
+                                 pkcs=8,
+                                 protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
+                                 prot_params={'iteration_count': 21000})
+    env.write(f'APP_PRIVATE_KEY=\"{data.decode("utf-8")}\"')
 
-  # os.remove('../../app.pem')
-    
-    key1 = RSA.import_key(open('../../app.pem').read())
-    key2 = RSA.import_key(os.getenv('APP_PRIVATE_KEY'))
-    print(key1.export_key(), '\n\n', key2.export_key())
-
-    if key1 == key2:
-      print('00000')
-
-  with open('../../apppub.pem', 'wb') as f:
+  with open('../../app.pub', 'wb') as f:
     data = privateKey.public_key().export_key(format='PEM')
     f.write(data)
 
-def getAppPrivateKey():
-  return RSA.importKey(os.getenv('APP_PRIVATE_KEY'))
-
-def getAppPublicKey(publicKey):
-  return RSA.importKey(open(publicKey).read())
+def getAppKey():
+  return os.getenv('APP_PRIVATE_KEY')[2:-1]
 
 def generateUserKeys(passphrase = "secret"):
   privateKey = RSA.generate(1024)
@@ -53,8 +37,12 @@ def generateUserKeys(passphrase = "secret"):
     data = privateKey.public_key().export_key(format="PEM")
     f.write(data)
 
-def getUserPrivateKey(privateKey, passphrase):
-  return RSA.importKey(open(privateKey).read(), passphrase)
+def getPrivateKey(privateKey, passphrase):
+  try:
+    return RSA.import_key(open(privateKey).read(), passphrase)
+  except:
+    return RSA.import_key(privateKey, passphrase)
+    
 
-def getUserPublicKey(publicKey):
-  return RSA.importKey(open(publicKey).read())
+def getPublicKey(publicKey):
+  return RSA.import_key(open(f'{publicKey}').read())

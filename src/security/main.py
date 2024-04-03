@@ -1,13 +1,13 @@
 import generate_keys
 import os
-from dotenv import load_dotenv
 import objects
+from dotenv import load_dotenv
 
 load_dotenv()
 
-generate_keys.generateAppKeys()
+# generate_keys.generateAppKeys()
 generate_keys.generateUserKeys(passphrase = 'secret')
-message = objects.encryptData('Somemessage', '../../apppub.pem')
+message = objects.encryptData('Somemessage', '../../app.pub')
 print(message)
 print(objects.decryptData(message, os.getenv('APP_PRIVATE_KEY')))
-open('../../app.pem').read()
+print(os.getenv("APP_PRIVATE_KEY"))
