@@ -1,6 +1,5 @@
 from Crypto.PublicKey import RSA
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -54,8 +53,8 @@ def get_private_key(private_key, passphrase = None):
     key = RSA.import_key(open(private_key).read(), passphrase)
   except:
     key = RSA.import_key(private_key, passphrase)
-
   return key.export_key(format='PEM')
+
 def get_public_key(public_key):
   try:
     key = RSA.import_key(open(public_key).read())
@@ -68,6 +67,7 @@ def import_private_key(private_key, passphrase):
     return RSA.import_key(open(private_key).read(), passphrase)
   except:
     return RSA.import_key(private_key, passphrase)
+  
 def import_public_key(public_key):
   try:
     return RSA.import_key(open(public_key).read())
