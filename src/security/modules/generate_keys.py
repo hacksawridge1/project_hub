@@ -33,20 +33,20 @@ def generate_app_keys():
     f.write(data)
 
 
-def generate_user_keys(passphrase = "secret"):
-  private_key = RSA.generate(1024)
+# def generate_user_keys(passphrase = "secret"):
+#   private_key = RSA.generate(1024)
 
-  with open("../../client.pem", "wb") as f:
-    data = private_key.export_key(format='PEM',
-                                  passphrase=passphrase,
-                                  pkcs=8,
-                                  protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
-                                  prot_params={'iteration_count':21000})
-    f.write(data)
+#   with open("../../client.pem", "wb") as f:
+#     data = private_key.export_key(format='PEM',
+#                                   passphrase=passphrase,
+#                                   pkcs=8,
+#                                   protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
+#                                   prot_params={'iteration_count':21000})
+#     f.write(data)
     
-  with open("../../client.pub", "wb") as f:
-    data = private_key.public_key().export_key(format="PEM")
-    f.write(data)
+#   with open("../../client.pub", "wb") as f:
+#     data = private_key.public_key().export_key(format="PEM")
+#     f.write(data)
 
 def get_private_key(private_key, passphrase = None):
   try:
