@@ -1,11 +1,11 @@
-import generate_keys
-import objects
+import modules.generate_keys as gk
+import modules.objects as obj
 from dotenv import load_dotenv
 
 load_dotenv()
 
-generate_keys.generateAppKeys()
-generate_keys.generateUserKeys(passphrase = 'secret')
+gk.generate_app_keys()
+gk.generate_user_keys(passphrase = 'secret')
 message = input('Введите сообщение, которое хотите зашифровать:\t')
-encryptedMessage = objects.encryptData(str(message), '../../app.pub')
-print(objects.decryptData(encryptedMessage, generate_keys.APP_PRIVATE_KEY))
+encryptedMessage = obj.encrypt_data(str(message), '../../app.pub')
+print(obj.decrypt_data(encryptedMessage, gk.APP_PRIVATE_KEY))
