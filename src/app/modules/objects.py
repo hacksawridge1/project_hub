@@ -1,41 +1,42 @@
 from Crypto.Cipher import PKCS1_OAEP
-import security.modules.generate_keys as gk
-from dotenv import load_dotenv
-
-load_dotenv()
+from Crypto.PublicKey import RSA
 
 def encrypt_data(data: str, public_key: str):
-  key = gk.import_public_key(public_key)
+  key = RSA.import_key(public_key)
   cipher = PKCS1_OAEP.new(key)
   encrypted_data = cipher.encrypt(f'{data}'.encode('utf-8'))
   return encrypted_data
 
 def decrypt_data(data: str, private_key: str, passphrase: str = None):
-  key = gk.import_private_key(private_key, passphrase)
+  key = RSA.import_key(private_key, passphrase)
   cipher = PKCS1_OAEP.new(key)
   decrypted_data = cipher.decrypt(data)
   return decrypted_data.decode('utf-8')
 
 def encrypt_object(object, public_key: str):
+  public_key = RSA.import_key(public_key).public_key().export_key(format='PEM').decode('utf-8')
   for i in object:
     k = 0
     if i != 'userpublickey':
       if type(object[i]) is list:
         while k < len(object[i]):
-          object[i][k] = encrypt_data(object[i][k], gk.get_public_key(public_key))
+          object[i][k] = encrypt_data(object[i][k], public_key)
           k += 1
-      elif type(object) is set:
-        encrypt_object(object, public_key)
+      elif type(object[i]) is set:
+        encrypt_object(object[i], public_key)
       else:
-        object[i] = encrypt_data(object[i], gk.get_public_key(public_key))
+        object[i] = encrypt_data(object[i], public_key)
 
 def decrypt_object(object, private_key: str, passphrase: str = None):
+  private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
   for i in object:
     k = 0
     if i != 'userpublickey':
       if type(object[i]) is list:
         while k < len(object[i]):
-          object[i][k] = decrypt_data(object[i][k], gk.get_private_key(private_key, passphrase))
+          object[i][k] = decrypt_data(object[i][k], private_key)
           k += 1
+      elif type(object[i]) is set:
+        decrypt_object(object[i], private_key)
       else:
-        object[i] = decrypt_data(object[i], gk.get_private_key(private_key, passphrase))
+        object[i] = decrypt_data(object[i], private_key)
