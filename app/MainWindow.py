@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         self.upMessages()
 
     def upMessages(self):
-        msg = "start\n"
+        msg = "НАБРОСОК\n"
         for i in chat:
             msg += (i + "\n")
         self.ui.messages.setText(msg)
