@@ -1,40 +1,38 @@
 __author__ = "Maxim"
 
 from PySide6.QtWidgets import QApplication, QMainWindow
-from view.view import Ui_view
-from model.model import Model
 from datetime import datetime
 
-class MainWindow(QMainWindow):
-    def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
-        self.ui = Ui_view()
-        self.model = Model()
-        self.ui.setupUi(self)
+class Control(QMainWindow):
+    def __init__(self, model, view, parent=None):
+        super(Control, self).__init__(parent)
+        self.model = model
+        self.view = view
+        self.view.setupUi(self)
         self.upMessages()
         
-        self.ui.send.clicked.connect(self.send) # Надо добавить кнопку
-        self.ui.friends.clicked.connect(self.friends)
-        self.ui.notifications_active.clicked.connect(self.notifications_active)
-        self.ui.settings.clicked.connect(self.settings) # Настройки +
-        self.ui.theme.clicked.connect(self.theme) # Темы +
-        self.ui.user.clicked.connect(self.user) # Пользователь +
-        self.ui.profile.clicked.connect(self.profile) # Профиль +
-        self.ui.menu.clicked.connect(self.menu) # Меню +
+        self.view.send.clicked.connect(self.send) # Надо добавить кнопку
+        self.view.friends.clicked.connect(self.friends)
+        self.view.notifications_active.clicked.connect(self.notifications_active)
+        self.view.settings.clicked.connect(self.settings) # Настройки +
+        self.view.theme.clicked.connect(self.theme) # Темы +
+        self.view.user.clicked.connect(self.user) # Пользователь +
+        self.view.profile.clicked.connect(self.profile) # Профиль +
+        self.view.menu.clicked.connect(self.menu) # Меню +
 
     # Отправить сообщение
     def send(self):
-        text = self.ui.message.text()
+        text = self.view.message.text()
         t = datetime.now().strftime("%H:%M:%S")
         self.model.chat.append(t + ": " + text)
-        self.ui.message.setText("")
+        self.view.message.setText("")
         self.upMessages()
 
     def upMessages(self):
         msg = "НАБРОСОК\n"
         for i in self.model.chat:
             msg += (i + "\n")
-        self.ui.messages.setText(msg)
+        self.view.messages.setText(msg)
 
     # Открыть список друзей
     def friends(self):

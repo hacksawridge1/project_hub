@@ -37,9 +37,9 @@ class Json():
         else:
             print(f"Key '{key}' not found in the JSON data.")    
 
-x = Json()
-y = x.read_json()
-print(y)
-x.create_json(y)
-x.edit_json(y)
-x.delete_json_item(y)
+#x = Json()
+#y = x.read_json()
+#print(y)
+#x.create_json(y)
+#x.edit_json(y)
+#x.delete_json_item(y)
