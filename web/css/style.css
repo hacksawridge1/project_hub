@@ -5,15 +5,6 @@
 18 марта 2024 г.
 */
 
-body, html {
-  margin: 0;
-  padding: 0;
-}
-
-.section {
-  height: 100vh; /* Задаем высоту раздела, чтобы можно было проскроллить до него */
-}
-
 .scrollButton {
   position: fixed;
   bottom: 20px;
