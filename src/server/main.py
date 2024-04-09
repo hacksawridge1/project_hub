@@ -13,14 +13,17 @@ def main():
 
   # print('connect:', addr)
 
-  # while True:
-  #   conn, addr = sock.accept()
-  #   data = conn.recv(1024)
-  #   if not data:
-  #     break
-  #   if data == 'close conn':
-  #     conn.close()
-  #   conn.send(decrypt_data(data, App.private_key))
+  conn, addr = sock.accept()
+  while True:
+    data = conn.recv(1024)
+    print(data)
+    if not data:
+      break
+    if data == b'close conn':
+      conn.close()
+      print('Connection closed')
+      break
+    conn.send(b"my Answer")
 
 if __name__ == '__main__':
   main()
