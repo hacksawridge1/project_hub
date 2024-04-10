@@ -1,4 +1,6 @@
 import socket
+import netifaces
+import ipaddress
 from Crypto.PublicKey import RSA
 
 class User:
@@ -6,8 +8,8 @@ class User:
   # initial  
   def __init__(self, name: str, passphrase: str):
     self.__name = name
-    self.__ip = self.get_local_ip()
-    self.__id = self.generate_user_id()
+    self.__ip = self.__get_local_ip()
+    self.__id = self.__generate_user_id()
     self.__generate_keys(passphrase)
     self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -22,23 +24,23 @@ class User:
 
     self.__public_key = key.public_key().export_key(format='PEM')          
 
-  def __send_message(self, addr, data):
-    self.sock.connect((f'{addr}', 9091))
-    self.sock.send(data)                        
+  def send_message(self, addr, data):
+    self.__sock.connect((f'{addr}', 9091))
+    self.__sock.send(data)                        
 
-  def generate_user_id():
+  def __generate_user_id():
     id = 101 # in progress
     return id
   
-  def get_local_ip():
-    hostname = socket.gethostname()
-    user_ip = socket.gethostbyname(hostname)
-    return user_ip
+  def __get_local_ip(self):
+    for interface in netifaces.interfaces():
+        if netifaces.AF_INET in netifaces.ifaddresses(interface):
+            for address_info in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
+                address_object = ipaddress.IPv4Address(address_info['addr'])
+                if not address_object.is_loopback:
+                    yield address_info['addr']
   
   # getters
-  @property
-  def send_message(self, data: str):
-    self.__send_message(data)
 
   @property
   def name(self):

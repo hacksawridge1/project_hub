@@ -1,5 +1,10 @@
+from src.modules.user import User
+from src.modules.app import App
+
 def main():
-  pass
+  user = User('Ivan_Borodkin', 'secret')
+  app = App('', 9090)
+  User.send_message('Some message', '192.168.3.')
 
 if __name__ == '__main__':
   main()
