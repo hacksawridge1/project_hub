@@ -3,27 +3,26 @@ import socket
 import json
 # from modules.app import App
 
+class Server:
+
+  def __init__(self, addr: str, port: int):
+    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.sock.bind((addr, port))
+    self.sock.listen()
+    while True:
+      self.conn, self.addr = self.sock.accept()
+      self.data = self.conn.recv(1024)
+
+  def __send_data(self, data: str):
+    self.conn.send(data.encode('utf-8'))
+
+  @property
+  def send_data(self, data: str):
+    self.__send_data(data)
+
+
 def main():
-  # app = App()
-  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  sock.bind(('', 9090))
-  sock.listen(1)
-
-  # sock.close()
-
-  # print('connect:', addr)
-
-  conn, addr = sock.accept()
-  while True:
-    data = conn.recv(1024)
-    print(data)
-    if not data:
-      break
-    if data == b'close conn':
-      conn.close()
-      print('Connection closed')
-      break
-    conn.send(b"my Answer")
+  pass
 
 if __name__ == '__main__':
   main()
