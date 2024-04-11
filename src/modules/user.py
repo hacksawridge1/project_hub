@@ -9,7 +9,7 @@ class User:
   def __init__(self, name: str, passphrase: str):
     self.__name = name
     self.__ip = self.__get_local_ip()
-    self.__id = self.__generate_user_id()
+    # self.__id = self.__generate_user_id()
     self.__generate_keys(passphrase)
     self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -32,7 +32,7 @@ class User:
     id = 101 # in progress
     return id
   
-  def __get_local_ip(self):
+  def __get_local_ip(self): 
     for interface in netifaces.interfaces():
         if netifaces.AF_INET in netifaces.ifaddresses(interface):
             for address_info in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
@@ -41,7 +41,6 @@ class User:
                     yield address_info['addr']
   
   # getters
-
   @property
   def name(self):
     return self.__name

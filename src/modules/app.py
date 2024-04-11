@@ -1,27 +1,12 @@
 from Crypto.PublicKey import RSA
-import socket
 
 class App:
 
   #initial
   def __init__(self, addr: str, port: int):
-    self.generate_keys()
-    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.sock.bind((addr, port))
-    self.sock.listen()
-    while True:
-      self.conn, self.addr = self.sock.accept()
-      self.data = self.conn.recv(1024)
+    self.__generate_keys()
 
-  def __send_data(self, data: str):
-    self.conn.send(data.encode('utf-8'))
-
-  @property
-  def send_data(self, data: str):
-    self.__send_data(data)
-
-
-  def generate_keys(self):
+  def __generate_keys(self):
     key = RSA.generate(1024)
     self.__private_key = key.export_key(format='PEM',
                                         passphrase=None,
@@ -30,6 +15,7 @@ class App:
                                         prot_params={'iteration_count': 21000})
     self.__public_key = key.public_key().export_key(format='PEM')
     
+  # getters
   @property
   def private_key(self):
     return self.__private_key.decode('utf-8')
