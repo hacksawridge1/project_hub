@@ -7,7 +7,7 @@ from model.socket.socket import Socket
 class Model():
     def __init__(self):
         self.json = Json()
-        self.sql = Sqlite()
+        #self.sql = Sqlite() # Загатовка для сохранения чата и т.д.
         #self.socket = Socket() # Исправить потоки
         self.name = "undefined"
         self.chat = ["temp"]
