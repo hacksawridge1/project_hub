@@ -14,7 +14,6 @@
 
 4. Домен и хостинг - ?
 
-## $${\color{red}Можно %20% делать только сайт, по backend-у и frontend-у Ваня скажет что делать.}$$
 ### Список задач по frontend.
 1. Сверстать gui-форму:
 - https://github.com/hacksawridge1/project_hub/tree/main/app/view (уже делает Матвей)
