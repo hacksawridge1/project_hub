@@ -12,12 +12,15 @@ def start_server(addr: str, port: int):
   while True:
     client_sock, client_addr = server_sock.accept()
     data = client_sock.recv(1024).decode('utf-8')
+    request = data.split(' ')[1]
     HEADERS = 'HTTP/1.1 200 OK\r\n\Content-Type: application/json; charset=utf-8\r\n\r\n'
-    if data.split(' ')[1] == '/usersonline':
+    if request == '/usersonline':
       with open('../objects/general/usersonline.json', 'r') as f:
         ans = json.load(f)
         ans = json.dumps(ans)
         client_sock.send(HEADERS.encode() + ans.encode())
         client_sock.close()
-
+    if request == 'user_info':
+      pass
+    
 start_server('', 9090)
