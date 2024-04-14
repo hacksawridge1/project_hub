@@ -1,10 +1,10 @@
 import json
 from datetime import datetime
 
-#### Надо три JSON-а: для server, для user и для настроек GUI.
+#### Лучше разделить на 3 файла JSON: для server, для user и для настроек GUI.
 class Json():
     def __init__(self):
-        self.file = "settings.json"
+        self.file = "model/json/settings.json"
         self.serv = "192.168.3.121"
         self.port = "9090"
         self.them = "light"
@@ -29,7 +29,7 @@ class Json():
             data = json.load(file)
         return data
     
-    # Редактирование JSON (ИСПРАВИТь !!! ВСЕ УДАЛЯЕТ)
+    # Редактирование JSON
     def editJSON(self, name = "undefined", mail = "undefined", icon = "default"):
         data = self.readJSON()
         for i in data:
