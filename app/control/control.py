@@ -19,6 +19,9 @@ class Control(QMainWindow):
         self.view.user.clicked.connect(self.user) # Пользователь +
         self.view.profile.clicked.connect(self.profile) # Профиль +
         self.view.menu.clicked.connect(self.menu) # Меню +
+        
+        # Инициализация JSON
+        self.model.json.createJSON()
 
     # Отправить сообщение
     def send(self):
@@ -66,8 +69,10 @@ class Control(QMainWindow):
         
     # Профиль
     def profile(self):
+        self.model.json.editJSON("maxim", "maxim2005ua@gmail.com")
+        data = self.model.json.readJSON()
         t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": profile")
+        self.model.chat.append(t + ": profile: " + data['name'])
         self.upMessages()
         
     # Меню

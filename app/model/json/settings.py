@@ -30,12 +30,15 @@ class Json():
         return data
     
     # Редактирование JSON (ИСПРАВИТь !!! ВСЕ УДАЛЯЕТ)
-    def editJSON(self, name, mail, icon):
-        data = {
-            "name": name,
-            "name": mail,
-            "mail": icon
-        }
+    def editJSON(self, name = "undefined", mail = "undefined", icon = "default"):
+        data = self.readJSON()
+        for i in data:
+            if i == "name" and name != "undefined":
+                data['name'] = name
+            if i == "mail" and mail != "undefined":
+                data['mail'] = mail
+            if i == "icon" and icon != "default":
+                data['icon'] = icon
         with open(self.file, "w") as file:
             json.dump(data, file)
 
@@ -49,12 +52,12 @@ class Json():
 '''
 j = Json()
 j.createJSON()
-print()
+print("1")
 print(j.readJSON())
-print()
+print("2")
 j.editJSON("Ишкильдык", "google@gmail.com", "ava.jpg") #УДАЛЯЕТ ВСЕ
 print(j.readJSON())
-print()
+print("3")
 j.deleteJSON()
 print(j.readJSON())
 '''
