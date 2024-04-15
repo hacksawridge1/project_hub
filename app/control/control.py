@@ -1,7 +1,7 @@
 __author__ = "Maxim"
 
 from PySide6.QtWidgets import QApplication, QMainWindow
-from datetime import datetime
+ # Надо убрать в модель
 
 class Control(QMainWindow):
     def __init__(self, model, view, parent=None):
@@ -9,74 +9,64 @@ class Control(QMainWindow):
         self.model = model
         self.view = view
         self.view.setupUi(self)
-        self.upMessages()
         
-        self.view.send.clicked.connect(self.send) # Надо добавить кнопку
-        self.view.friends.clicked.connect(self.friends)
-        self.view.notifications_active.clicked.connect(self.notifications_active)
-        self.view.settings.clicked.connect(self.settings) # Настройки +
-        self.view.theme.clicked.connect(self.theme) # Темы +
-        self.view.user.clicked.connect(self.user) # Пользователь +
-        self.view.profile.clicked.connect(self.profile) # Профиль +
-        self.view.menu.clicked.connect(self.menu) # Меню +
-        
-        # Инициализация JSON
-        self.model.json.createJSON()
+        self.view.nameButton.clicked.connect(self.nameButton) # Создать/изменить имя
+        self.view.btn_1.clicked.connect(self.btn_1) # Кнопка 1 - ?
+        self.view.btn_2.clicked.connect(self.btn_2) # Кнопка 2 - ?
+        self.view.btn_3.clicked.connect(self.btn_3) # Кнопка 3 - ?
+        self.view.btn_4.clicked.connect(self.btn_4) # Кнопка 4 - ?
+        self.view.sendButton.clicked.connect(self.sendButton) # Отправка (надо еще поEnter)
+        # nameEdit # Поле ввода имени
+        # listUser # Список карточек пользователей
+        # listMessages # Список сообщений
+        # textEdit # Поле ввода сообщения
 
-    # Отправить сообщение
-    def send(self):
-        text = self.view.message.text()
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": " + text)
-        self.view.message.setText("")
-        self.upMessages()
-
-    def upMessages(self):
-        msg = "НАБРОСОК\n"
-        for i in self.model.chat:
-            msg += (i + "\n")
-        self.view.messages.setText(msg)
-
-    # Открыть список друзей
-    def friends(self):
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": Friends")
-        self.upMessages()
-        
-    # Посмореть уведомления
-    def notifications_active(self):
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": notifications_active")
-        self.upMessages()
-        
-    # Настройки
-    def settings(self):
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": settings")
-        self.upMessages()
+        self.model.json.createJSON() # Инициализация JSON (нужна проверка на имя)
+        self.update()
     
-    # Темы
-    def theme(self):
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": theme")
-        self.upMessages()
+    def update(self):
+        pass
+        # msg = "НАБРОСОК\n"
+        # for i in self.model.chat:
+        #     msg += (i + "\n")
+        # self.view.listMessages.setText(msg)
 
-    # Пользователь
-    def user(self):
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": user")
-        self.upMessages()
-        
-    # Профиль
-    def profile(self):
-        self.model.json.editJSON("maxim", "maxim2005ua@gmail.com")
-        data = self.model.json.readJSON()
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": profile: " + data['name'])
-        self.upMessages()
-        
-    # Меню
-    def menu(self):
-        t = datetime.now().strftime("%H:%M:%S")
-        self.model.chat.append(t + ": menu")
-        self.upMessages()
+    # Создать/изменить имя
+    def nameButton(self):
+        # Добавить проверку имени != "undefined"
+        if self.view.nameButton.text() == 'name':
+            text = self.view.nameEdit.text()
+            self.model.json.editJSON(text)
+            data = self.model.json.readJSON()
+            name = data['name'] # В model имя должно пройти верификацию
+            self.setWindowTitle(u"HUB messager - " + name)
+            self.view.nameEdit.setEnabled(False)
+            self.view.nameEdit.setText("Пользователь: " + name)
+            self.view.nameButton.setText(u"edit")
+        else:
+            self.setWindowTitle(u"HUB messager - введите новое имя")
+            self.view.nameEdit.setText("")
+            self.view.nameEdit.setEnabled(True)
+            self.view.nameButton.setText(u"name")
+    
+    # Кнопка 1 - ?
+    def btn_1(self):
+        pass
+
+    # Кнопка 2 - ?
+    def btn_2(self):
+        pass
+
+    # Кнопка 3 - ?
+    def btn_3(self):
+        pass
+
+    # Кнопка 4 - ?
+    def btn_4(self):
+        pass
+
+    # Отправка
+    def sendButton(self): # Все доделать
+        text = self.view.textEdit.text()
+        self.model.chat.append(text)
+        self.update()
