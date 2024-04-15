@@ -3,8 +3,7 @@ import netifaces
 import ipaddress
 from Crypto.PublicKey import RSA
 from modules.objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data
-import json
-import re
+import requests
 
 class User:
 
@@ -25,11 +24,19 @@ class User:
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
     while i < 255:
-      self.__sock.connect((f'{net_ip}' + str(i), 9091))
-      self.__sock.send("Hello, it's meeee".encode())
+      print(i)
+      try:
+        try:
+          requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.1)
+        except requests.exceptions.ReadTimeout:
+          requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi')
+          i += 1
+          continue
+      except requests.exceptions.ConnectionError:
+        i += 1
+        continue
       # if self.__sock.connect((f'{net_ip}' + str(i), 9091)):
       #   print(f'{net_ip}' + str(i))
-      i += 1
 
   # methods
   def __generate_keys(self, passphrase: str):
