@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'viewpuAudQ.ui'
+## Form generated from reading UI file 'viewmVbfck.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.3
 ##
@@ -16,11 +16,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLineEdit,
-    QMainWindow, QScrollArea, QSizePolicy, QSpacerItem,
-    QStatusBar, QTextEdit, QToolButton, QVBoxLayout,
+    QMainWindow, QPlainTextEdit, QScrollArea, QSizePolicy,
+    QSpacerItem, QStatusBar, QToolButton, QVBoxLayout,
     QWidget)
 
-class Ui_view(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -64,16 +64,24 @@ class Ui_view(object):
 
         self.verticalLayout_left.addWidget(self.line_left_up)
 
-        self.listUser = QScrollArea(self.centralwidget)
-        self.listUser.setObjectName(u"listUser")
-        self.listUser.setMaximumSize(QSize(200, 16777215))
-        self.listUser.setWidgetResizable(True)
+        self.scrollListUser = QScrollArea(self.centralwidget)
+        self.scrollListUser.setObjectName(u"scrollListUser")
+        self.scrollListUser.setMaximumSize(QSize(200, 16777215))
+        self.scrollListUser.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 198, 476))
-        self.listUser.setWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.listUser = QVBoxLayout()
+        self.listUser.setSpacing(0)
+        self.listUser.setObjectName(u"listUser")
 
-        self.verticalLayout_left.addWidget(self.listUser)
+        self.verticalLayout_2.addLayout(self.listUser)
+
+        self.scrollListUser.setWidget(self.scrollAreaWidgetContents)
+
+        self.verticalLayout_left.addWidget(self.scrollListUser)
 
         self.line_left_down = QFrame(self.centralwidget)
         self.line_left_down.setObjectName(u"line_left_down")
@@ -86,7 +94,6 @@ class Ui_view(object):
         self.horizontalLayout_panel = QHBoxLayout()
         self.horizontalLayout_panel.setObjectName(u"horizontalLayout_panel")
         self.horizontalLayout_buttons = QHBoxLayout()
-        self.horizontalLayout_buttons.setSpacing(2)
         self.horizontalLayout_buttons.setObjectName(u"horizontalLayout_buttons")
         self.btn_1 = QToolButton(self.centralwidget)
         self.btn_1.setObjectName(u"btn_1")
@@ -139,15 +146,23 @@ class Ui_view(object):
 
         self.verticalLayout_right = QVBoxLayout()
         self.verticalLayout_right.setObjectName(u"verticalLayout_right")
-        self.listMessages = QScrollArea(self.centralwidget)
-        self.listMessages.setObjectName(u"listMessages")
-        self.listMessages.setWidgetResizable(True)
+        self.scrollListMessages = QScrollArea(self.centralwidget)
+        self.scrollListMessages.setObjectName(u"scrollListMessages")
+        self.scrollListMessages.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
         self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 254, 494))
-        self.listMessages.setWidget(self.scrollAreaWidgetContents_2)
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents_2)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.listMessage = QVBoxLayout()
+        self.listMessage.setSpacing(0)
+        self.listMessage.setObjectName(u"listMessage")
 
-        self.verticalLayout_right.addWidget(self.listMessages)
+        self.verticalLayout.addLayout(self.listMessage)
+
+        self.scrollListMessages.setWidget(self.scrollAreaWidgetContents_2)
+
+        self.verticalLayout_right.addWidget(self.scrollListMessages)
 
         self.line_right = QFrame(self.centralwidget)
         self.line_right.setObjectName(u"line_right")
@@ -156,7 +171,7 @@ class Ui_view(object):
 
         self.verticalLayout_right.addWidget(self.line_right)
 
-        self.textEdit = QTextEdit(self.centralwidget)
+        self.textEdit = QPlainTextEdit(self.centralwidget)
         self.textEdit.setObjectName(u"textEdit")
         self.textEdit.setMaximumSize(QSize(16777215, 48))
         self.textEdit.setFont(font)
@@ -178,11 +193,13 @@ class Ui_view(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"HUB messager", None))
+        self.nameEdit.setText("")
         self.nameButton.setText(QCoreApplication.translate("MainWindow", u"name", None))
         self.btn_1.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.btn_2.setText(QCoreApplication.translate("MainWindow", u"2", None))
         self.btn_3.setText(QCoreApplication.translate("MainWindow", u"3", None))
         self.btn_4.setText(QCoreApplication.translate("MainWindow", u"4", None))
         self.sendButton.setText(QCoreApplication.translate("MainWindow", u"send", None))
+        self.textEdit.setPlainText("")
     # retranslateUi
 

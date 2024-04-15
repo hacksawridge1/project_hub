@@ -1,5 +1,7 @@
 __author__ = "Maxim"
 
+from datetime import datetime
+
 from model.json.settings import Json
 from model.sql.dataBase import Sqlite
 from model.socket.socket import Socket
@@ -11,3 +13,5 @@ class Model():
         #self.socket = Socket() # Исправить потоки
         self.name = "undefined"
         self.chat = ["temp"]
+
+# t = datetime.now().strftime("%H:%M:%S")

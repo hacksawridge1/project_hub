@@ -1,4 +1,7 @@
+__author__ = "Maxim"
+
 import json
+
 from datetime import datetime
 
 #### Лучше разделить на 3 файла JSON: для server, для user и для настроек GUI.
