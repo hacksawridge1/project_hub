@@ -15,7 +15,7 @@ class User:
     # self.__id = self.__generate_user_id()
     self.__id = 101
     self.__generate_keys(passphrase)
-    self.__sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.__user_info = {
       "user_name": str(self.__name),
       # "user_ip": self.__ip,

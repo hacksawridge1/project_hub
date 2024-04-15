@@ -5,12 +5,14 @@ import json
 # TEEEEEEEEESTS
 
 def start_server(addr: str, port: int):
-  server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
   server_sock.bind((addr, port))
+  server_sock.listen()
 
   while True:
-    data = server_sock.recv(1024).decode()
+    client_sock, client_addr = server_sock.accept()
+    data = client_sock.recv(1024).decode()
     print(data)
     # server_sock.close()
     # method = data.split(' ')[0]
