@@ -8,7 +8,7 @@ def start_server(addr: str, port: int):
   server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
   server_sock.bind((addr, port))
-  server_sock.listen()
+  server_sock.listen(5)
 
   while True:
     client_sock, client_addr = server_sock.accept()
@@ -28,5 +28,11 @@ def start_server(addr: str, port: int):
       #   pass
       if request == '/hi':
         client_sock.send(HEADERS.encode()+"Hi".encode())
+        client_sock.close()
+      if request == '/init':
+        with open('../objects/general/usersonline.json', 'r') as f:
+          data = json.load(f)
+          client_sock.send(HEADERS.encode() + json.dumps(data).encode())
+          client_sock.close()
 
 start_server('', 9091)

@@ -4,6 +4,7 @@ import ipaddress
 from Crypto.PublicKey import RSA
 from modules.objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data
 import requests
+import json
 
 class User:
 
@@ -21,22 +22,9 @@ class User:
       "user_id": str(self.__id),
       "user_public_key": str(self.__public_key.decode('utf-8'))
     }
-    net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
-    i = 2
-    while i < 255:
-      print(i)
-      try:
-        try:
-          requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.1)
-        except requests.exceptions.ReadTimeout:
-          requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi')
-          i += 1
-          continue
-      except requests.exceptions.ConnectionError:
-        i += 1
-        continue
-      # if self.__sock.connect((f'{net_ip}' + str(i), 9091)):
-      #   print(f'{net_ip}' + str(i))
+    self.__users_online = self.initial()
+    print(self.__users_online)
+    print(type(self.__users_online))
 
   # methods
   def __generate_keys(self, passphrase: str):
@@ -65,11 +53,59 @@ class User:
                 address_object = ipaddress.IPv4Address(address_info['addr'])
                 if not address_object.is_loopback:
                    return address_info['addr']
+                
+  def initial(self):
+    net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
+    i = 2
+    k = 0
+    users_online = list()
+    initial_data = list()
+    data_check = None
+    black_list = list()
+
+    print("START INIT...")
+
+    while i < 255:
+      try:
+        if f'{net_ip}' + str(i) not in black_list:
+          resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.2)
+          if resp.ok:
+            if len(users_online) <= 4:
+              users_online.append(f'{net_ip}' + str(i))
+            continue
+      except requests.exceptions.ConnectionError:
+        continue
+      i += 1
+
+    for i in users_online:
+      resp = requests.get('http://' + i + ':9091' + '/init')
+      initial_data.append(resp.text)
+
+    while k < len(initial_data) - 1:
+      if initial_data[k] == initial_data[k + 1]:
+        data_check = True
+      else:
+        data_check = False
+        black_list = initial_data.copy()
+        self.initial()
+      k += 1
+
+    print("END INIT...")
+
+    if data_check:
+      initial_data = initial_data[0]
+      users_online_list = json.loads(initial_data)
+
+    return users_online_list
   
   # getters
   @property
   def user_info(self):
     return self.__user_info
+  
+  @property
+  def users_online(self):
+    return self.__users_online
   
   @property
   def name(self):
