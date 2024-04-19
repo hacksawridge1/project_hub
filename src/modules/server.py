@@ -63,8 +63,5 @@ def start_server(addr: str, port: int, user: object):
         pass
 
       if request == '/init':
-        with open('../objects/general/usersonline.json', 'r') as f:
-          users_online: dict = json.load(f)
-          with open('../objects/general/usersonline.json', 'w') as f:
-            f.write(users_online['usersonline'].append(decrypt_object(data, user.private_key)))
+        user.users_online['usersonline'].append(decrypt_object(data, user.private_key))
         client_sock.close()

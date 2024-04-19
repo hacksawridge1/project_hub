@@ -23,7 +23,7 @@ class User:
       "user_id": str(self.__id),
       "user_public_key": str(self.__public_key.decode('utf-8'))
     }
-    self.__users_online = self.__initial()
+    self.users_online = self.__initial()
 
   # methods
   def __generate_keys(self, passphrase: str):
@@ -132,9 +132,9 @@ class User:
   def user_info(self):
     return self.__user_info
   
-  @property
-  def users_online(self):
-    return self.__users_online
+  # @property
+  # def users_online(self):
+  #   return self.__users_online
   
   @property
   def name(self):
