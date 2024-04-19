@@ -12,7 +12,7 @@ def main():
   user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
   print('Генерируем данные...')
   app = App()
-  user = User(user_name, user_passphrase)
+  user = User(user_name)
   server_thr = threading.Thread(target=start_server, args=('', 9091, user), name='server')
   server_thr.start()
   print("Генерация прошла успешно")

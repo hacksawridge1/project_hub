@@ -48,11 +48,10 @@ def start_server(addr: str, port: int, user: object):
         client_sock.close()
 
       if request == '/init':
-        with open('../objects/general/usersonline.json', 'r') as f:
-          data = json.load(f)
+          data = user.users_online
           client_sock.send(
             HEADERS.encode() + 
-            encrypt_data(json.dumps(data).encode())
+            json.dumps(data).encode()
           )
           client_sock.close()
           
@@ -63,5 +62,7 @@ def start_server(addr: str, port: int, user: object):
         pass
 
       if request == '/init':
+        print(data)
         user.users_online['usersonline'].append(decrypt_object(data, user.private_key))
+        print(user.users_online)
         client_sock.close()

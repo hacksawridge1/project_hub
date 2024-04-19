@@ -11,25 +11,25 @@ import threading
 class User:
 
   # initial  
-  def __init__(self, name: str, passphrase: str):
+  def __init__(self, name: str):
     self.__name = name
     self.__ip = self.__get_local_ip()
     self.__id = 101
-    self.__generate_keys(passphrase)
+    self.__generate_keys()
     # self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.__user_info = {
       "user_name": str(self.__name),
       "user_ip": str(self.__ip),
       "user_id": str(self.__id),
-      "user_public_key": str(self.__public_key.decode('utf-8'))
+      "user_pub_key": str(self.__public_key.decode('utf-8'))
     }
     self.users_online = self.__initial()
 
   # methods
-  def __generate_keys(self, passphrase: str):
+  def __generate_keys(self):
     key = RSA.generate(2048)
     self.__private_key = key.export_key(format='PEM',
-                                        passphrase=passphrase,
+                                        passphrase=None,
                                         pkcs=8,
                                         protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
                                         prot_params={'iteration_count': 21000})
@@ -150,8 +150,8 @@ class User:
 
   @property
   def public_key(self):
-    return self.__public_key.decode('utf-8')
+    return self.__public_key.decode()
 
   @property
   def private_key(self):
-    return self.__private_key.decode('utf-8')
+    return self.__private_key.decode()

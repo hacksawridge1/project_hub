@@ -44,14 +44,12 @@ def encrypt_object(object, public_key: str):
     k = 0
     if i != 'user_public_key':
       if type(object[i]) is list:
-        if type(object[i][k]) is dict:
-          object[i][k] = encrypt_object(object[i][k], public_key)
-        else:
-          while k < len(object[i]):
-            object[i][k] = encrypt_data(object[i][k], public_key)
+        while k < len(object[i]):
+          if type(object[i][k]) is dict:
+            object[i][k] = encrypt_object(object[i][k], public_key)
+          else:
+              object[i][k] = encrypt_data(object[i][k], public_key)
           k += 1
-      elif type(object[i]) is set:
-        encrypt_object(object[i], public_key)
       else:
         object[i] = encrypt_data(object[i], public_key)
   return object
@@ -60,13 +58,11 @@ def decrypt_object(object, private_key: str, passphrase: str = None):
   private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
   for i in object:
     k = 0
-    n = 0
     if i != 'user_public_key':
       if type(object[i]) is list:
         while k < len(object[i]):
           if type(object[i][k]) is dict:
             object[i][k] = decrypt_object(object[i][k], private_key, passphrase)
-            n += 1
           else:
             object[i][k] = decrypt_data(object[i][k], private_key)
           k += 1
