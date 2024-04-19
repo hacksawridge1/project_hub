@@ -1,6 +1,6 @@
 import socket
 import json
-# from modules.objects import encrypt_data, decrypt_data, encrypt_object, decrypt_object
+from modules.objects import encrypt_data, decrypt_data, encrypt_object, decrypt_object
 
 # TEEEEEEEEESTS
 
@@ -24,26 +24,36 @@ def start_server(addr: str, port: int, user: object):
         with open('../objects/general/usersonline.json', 'r') as f:
           ans = json.load(f)
           ans = json.dumps(ans)
-          client_sock.send(HEADERS.encode() + ans.encode())
+          client_sock.send(
+            HEADERS.encode() + 
+            ans.encode()
+          )
           client_sock.close()
 
       if request == '/user_info':
         pass
 
+      # in progress
       if request == '/groups':
         pass
-      
+      #in progress
       if request == '/group_info':
         pass
 
       if request == '/hi':
-        client_sock.send(HEADERS.encode()+"Hi".encode())
+        client_sock.send(
+          HEADERS.encode() +
+          "Hi".encode()
+        )
         client_sock.close()
 
       if request == '/init':
         with open('../objects/general/usersonline.json', 'r') as f:
           data = json.load(f)
-          client_sock.send(HEADERS.encode() + json.dumps(data).encode())
+          client_sock.send(
+            HEADERS.encode() + 
+            encrypt_data(json.dumps(data).encode())
+          )
           client_sock.close()
           
     if method == "POST":
@@ -52,4 +62,9 @@ def start_server(addr: str, port: int, user: object):
       if request == f'{user.name}/message':
         pass
 
-start_server('', 9091)
+      if request == '/init':
+        with open('../objects/general/usersonline.json', 'r') as f:
+          users_online: dict = json.load(f)
+          with open('../objects/general/usersonline.json', 'w') as f:
+            f.write(users_online['usersonline'].append(decrypt_object(data, user.private_key)))
+        client_sock.close()

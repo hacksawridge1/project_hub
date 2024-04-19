@@ -73,3 +73,19 @@ def decrypt_object(object, private_key: str, passphrase: str = None):
       else:
         object[i] = decrypt_data(object[i], private_key)
   return object
+
+def find_in_object(object: object, match: str):
+  for i in object:
+    k = 0
+    if object[i] == match:
+      return object
+    else:
+      if type(object[i]) is list:
+        while k < len(object[i]):
+          if type(object[i][k]) is dict:
+            if find_in_object(object[i][k], match) != None:
+              return object[i][k]
+          else:
+            if object[i][k] == match:
+              print(object[i][k])
+          k += 1

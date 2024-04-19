@@ -2,7 +2,8 @@ import socket
 import netifaces
 import ipaddress
 from Crypto.PublicKey import RSA
-from modules.objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data
+from modules.objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data, find_in_object
+from server.main import start_server
 import requests
 import json
 
@@ -12,16 +13,16 @@ class User:
   def __init__(self, name: str, passphrase: str):
     self.__name = name
     self.__ip = self.__get_local_ip()
-    # self.__id = self.__generate_user_id()
-    self.__id = 101
+    self.__id = self.__generate_user_id()
     self.__generate_keys(passphrase)
-    self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.__user_info = {
       "user_name": str(self.__name),
-      # "user_ip": self.__ip,
+      "user_ip": str(self.__ip),
       "user_id": str(self.__id),
       "user_public_key": str(self.__public_key.decode('utf-8'))
     }
+    start_server('', 9091, self)
     self.__users_online = self.__initial()
 
   # methods
@@ -35,10 +36,18 @@ class User:
 
     self.__public_key = key.public_key().export_key(format='PEM')          
 
-  def send_message(self, addr: str, data):
-    # self.__sock.connect((addr, 9091))
-    self.__sock.sendto(f"{data}".encode(), (addr, 9091))     
-    self.__sock.close()                   
+  def send_message(self, addr: str, user_name: str, data):
+    data = {
+      "user_name": "user_name",
+      "user_id": "user_id",
+      "user_ip": "userip",
+      "date": "D_M_Y/H_M_S",
+      "message": [
+        "some_message01",
+        "some_message02"
+      ]
+    }
+    requests.post(f'http://{addr}:9091/{user_name}/message', encrypt_data(json.dumps(data))) #in progress
 
   def __generate_user_id():
     id = 101 # in progress
@@ -57,7 +66,7 @@ class User:
     i = 2
     k = 0
     users_online = list()
-    users_online_list = list()
+    users_online_list = dict()
     initial_data = list()
     data_check = None
     black_list = list()
@@ -66,7 +75,7 @@ class User:
 
     while i < 255:
       try:
-        if f'{net_ip}' + str(i) not in black_list:
+        if f'{net_ip}' + str(i) not in black_list and f'{net_ip}' + str(i) != self.__ip:
           if len(users_online) < 4:
             resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.2)
             if resp.ok:
@@ -80,30 +89,38 @@ class User:
         i += 1
         continue
 
-    for i in users_online:
-      resp = requests.get('http://' + i + ':9091' + '/init')
-      initial_data.append(resp.text)
+    if len(users_online) > 0:
+      for i in users_online:
+        resp = requests.get('http://' + i + ':9091' + '/init')
+        initial_data.append(resp.text)
 
-    if len(initial_data) > 1:
-      while k < len(initial_data) - 1:
-        if initial_data[k] == initial_data[k + 1]:
-          data_check = True
-        else:
-          data_check = False
-          black_list = users_online.copy()
-          self.__initial()
-        k += 1
-    elif len(initial_data) == 1:
-      data_check = True
+      if len(initial_data) > 1:
+        while k < len(initial_data) - 1:
+          if initial_data[k] == initial_data[k + 1]:
+            data_check = True
+          else:
+            data_check = False
+            black_list = users_online.copy()
+            self.__initial()
+          k += 1
+      elif len(initial_data) == 1:
+        data_check = True
+      else:
+        print("NO DATA")
+
+      if data_check:
+        initial_data = initial_data[0]
+        users_online_list = json.loads(initial_data)
+    
+      for i in users_online:
+        requests.post(f'http://{i}:9091/init', encrypt_object(self.__user_info, find_in_object(users_online_list, f'{i}')['user_pub_key']))
     else:
-      print("NO DATA")
+      users_online_list['usersonline'] = [
+        self.__user_info
+      ]
     
     print("END INIT...")
 
-    if data_check:
-      initial_data = initial_data[0]
-      users_online_list = json.loads(initial_data)
-    
     return users_online_list
   
   # getters
