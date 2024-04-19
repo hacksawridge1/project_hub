@@ -2,10 +2,11 @@ import socket
 import netifaces
 import ipaddress
 from Crypto.PublicKey import RSA
-from modules.objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data, find_in_object
-from server.main import start_server
+from .objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data, find_in_object
+from .server import start_server
 import requests
 import json
+import threading
 
 class User:
 
@@ -13,7 +14,7 @@ class User:
   def __init__(self, name: str, passphrase: str):
     self.__name = name
     self.__ip = self.__get_local_ip()
-    self.__id = self.__generate_user_id()
+    self.__id = 101
     self.__generate_keys(passphrase)
     # self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.__user_info = {
@@ -22,7 +23,6 @@ class User:
       "user_id": str(self.__id),
       "user_public_key": str(self.__public_key.decode('utf-8'))
     }
-    start_server('', 9091, self)
     self.__users_online = self.__initial()
 
   # methods
@@ -74,10 +74,11 @@ class User:
     print("START INIT...")
 
     while i < 255:
+      print(f'{net_ip}' + str(i))
       try:
         if f'{net_ip}' + str(i) not in black_list and f'{net_ip}' + str(i) != self.__ip:
           if len(users_online) < 4:
-            resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.2)
+            resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.1)
             if resp.ok:
               if len(users_online) <= 4:
                 users_online.append(f'{net_ip}' + str(i))
@@ -85,6 +86,9 @@ class User:
               continue
           else:
             break
+        else:
+          i += 1
+          continue
       except requests.exceptions.ConnectionError:
         i += 1
         continue
