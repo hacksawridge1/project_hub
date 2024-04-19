@@ -3,11 +3,11 @@ from Crypto.PublicKey import RSA
 class App:
 
   #initial
-  def __init__(self, addr: str, port: int):
+  def __init__(self):
     self.__generate_keys()
 
   def __generate_keys(self):
-    key = RSA.generate(1024)
+    key = RSA.generate(2048)
     self.__private_key = key.export_key(format='PEM',
                                         passphrase=None,
                                         pkcs=8,

@@ -22,13 +22,11 @@ class User:
       "user_id": str(self.__id),
       "user_public_key": str(self.__public_key.decode('utf-8'))
     }
-    self.__users_online = self.initial()
-    print(self.__users_online)
-    print(type(self.__users_online))
+    self.__users_online = self.__initial()
 
   # methods
   def __generate_keys(self, passphrase: str):
-    key = RSA.generate(1024)
+    key = RSA.generate(2048)
     self.__private_key = key.export_key(format='PEM',
                                         passphrase=passphrase,
                                         pkcs=8,
@@ -54,11 +52,12 @@ class User:
                 if not address_object.is_loopback:
                    return address_info['addr']
                 
-  def initial(self):
+  def __initial(self):
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
     k = 0
     users_online = list()
+    users_online_list = list()
     initial_data = list()
     data_check = None
     black_list = list()
@@ -68,34 +67,43 @@ class User:
     while i < 255:
       try:
         if f'{net_ip}' + str(i) not in black_list:
-          resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.2)
-          if resp.ok:
-            if len(users_online) <= 4:
-              users_online.append(f'{net_ip}' + str(i))
-            continue
+          if len(users_online) < 4:
+            resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.2)
+            if resp.ok:
+              if len(users_online) <= 4:
+                users_online.append(f'{net_ip}' + str(i))
+              i += 1
+              continue
+          else:
+            break
       except requests.exceptions.ConnectionError:
+        i += 1
         continue
-      i += 1
 
     for i in users_online:
       resp = requests.get('http://' + i + ':9091' + '/init')
       initial_data.append(resp.text)
 
-    while k < len(initial_data) - 1:
-      if initial_data[k] == initial_data[k + 1]:
-        data_check = True
-      else:
-        data_check = False
-        black_list = initial_data.copy()
-        self.initial()
-      k += 1
-
+    if len(initial_data) > 1:
+      while k < len(initial_data) - 1:
+        if initial_data[k] == initial_data[k + 1]:
+          data_check = True
+        else:
+          data_check = False
+          black_list = users_online.copy()
+          self.__initial()
+        k += 1
+    elif len(initial_data) == 1:
+      data_check = True
+    else:
+      print("NO DATA")
+    
     print("END INIT...")
 
     if data_check:
       initial_data = initial_data[0]
       users_online_list = json.loads(initial_data)
-
+    
     return users_online_list
   
   # getters

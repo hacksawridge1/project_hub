@@ -1,17 +1,42 @@
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
+from textwrap import wrap
+from pprint import pprint
 
-def encrypt_data(data: str, public_key: str):
+def encrypt_data(input_data: str, public_key: str):
+  input_data_splited = input_data.split()
+  output_data = list()
+  n = 0
   key = RSA.import_key(public_key)
   cipher = PKCS1_OAEP.new(key)
-  encrypted_data = cipher.encrypt(f'{data}'.encode('utf-8'))
-  return str(encrypted_data)
+  for i in input_data_splited:
+    output_data.append(wrap(i, 50))
+  while n < len(output_data):
+    k = 0
+    while k < len(output_data[n]):
+      output_data[n][k] = cipher.encrypt(f'{output_data[n][k]}'.encode())
+      k += 1
+    n += 1
+  return output_data
 
-def decrypt_data(data: str, private_key: str, passphrase: str = None):
+def decrypt_data(input_data: str, private_key: str, passphrase = None):
+
+  n = 0
+  output_data = str()
   key = RSA.import_key(private_key, passphrase)
   cipher = PKCS1_OAEP.new(key)
-  decrypted_data = cipher.decrypt(data)
-  return decrypted_data.decode('utf-8')
+  while n < len(input_data):
+    k = 0
+    if input_data[n] is list:
+      while k < len(input_data[n]):
+        output_data += cipher.decrypt(input_data[n][k]).decode()
+        k += 1
+    else: 
+      output_data += cipher.decrypt(input_data[n]).decode()
+    if n < len(input_data) - 1:
+      output_data += ' '
+    n += 1
+  return output_data
 
 def encrypt_object(object, public_key: str):
   public_key = RSA.import_key(public_key).public_key().export_key(format='PEM').decode('utf-8')
@@ -19,8 +44,11 @@ def encrypt_object(object, public_key: str):
     k = 0
     if i != 'user_public_key':
       if type(object[i]) is list:
-        while k < len(object[i]):
-          object[i][k] = encrypt_data(object[i][k], public_key)
+        if type(object[i][k]) is dict:
+          object[i][k] = encrypt_object(object[i][k], public_key)
+        else:
+          while k < len(object[i]):
+            object[i][k] = encrypt_data(object[i][k], public_key)
           k += 1
       elif type(object[i]) is set:
         encrypt_object(object[i], public_key)
@@ -29,17 +57,19 @@ def encrypt_object(object, public_key: str):
   return object
 
 def decrypt_object(object, private_key: str, passphrase: str = None):
-  print(object)
   private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
   for i in object:
     k = 0
+    n = 0
     if i != 'user_public_key':
       if type(object[i]) is list:
         while k < len(object[i]):
-          object[i][k] = decrypt_data(object[i][k], private_key)
+          if type(object[i][k]) is dict:
+            object[i][k] = decrypt_object(object[i][k], private_key, passphrase)
+            n += 1
+          else:
+            object[i][k] = decrypt_data(object[i][k], private_key)
           k += 1
-      elif type(object[i]) is set:
-        decrypt_object(object[i], private_key)
       else:
         object[i] = decrypt_data(object[i], private_key)
   return object
