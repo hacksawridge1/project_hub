@@ -27,7 +27,7 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
     cipher = PKCS1_OAEP.new(key)
     while n < len(input_data):
       if type(input_data[n]) is list:
-        output_data = decrypt_data(input_data[n], private_key, passphrase)
+        output_data = decrypt_data_in_data(input_data[n], private_key, passphrase)
       else:
         output_data += cipher.decrypt(input_data[n]).decode()
       n += 1
