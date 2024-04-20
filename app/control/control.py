@@ -8,6 +8,9 @@ from view.message import Ui_message
 from control.user import User
 from control.message import Message
 
+from model.user import User as ModelUser
+from model.message import Message as ModelMessage
+
 #from model.socket.socket import Socket # (перенести в control)
 
 class Control(QMainWindow):
@@ -18,7 +21,8 @@ class Control(QMainWindow):
         self.view = view
         self.view.setupUi(self)
 
-        self.countUser = 0 # Временно для теста, должно быть в model
+        self.countUser = 0 # Временно для теста
+        self.countMessage = 0 # Временно для теста
         
         self.view.nameButton.clicked.connect(self.nameButton) # Создать/изменить имя
         self.view.btn_1.clicked.connect(self.btn_1) # Кнопка 1 - ?
@@ -65,7 +69,13 @@ class Control(QMainWindow):
     
     # Кнопка 3 - временно иммитирует новое сообщение
     def btn_3(self):
-        message = Message()
+        # Прием сообщения с socket
+        self.countMessage += 1
+        user = "user-" + str(self.countMessage) # Временно (будет из socket)
+        text = "Всем привет!" # Временно (будет из socket)
+        modelMessage = ModelMessage(user, text)
+        message = Message(modelMessage)
+        self.model.addMessage(message)
         self.view.listMessage.addWidget(message)
 
     # Кнопка 4 - временно иммитирует очистку всех сообщений
@@ -74,10 +84,13 @@ class Control(QMainWindow):
             item = self.view.listMessage.takeAt(0)
             item.widget().deleteLater()
 
-    # Отправка
+    # Отправка ИСПРАВИТЬ ОБНОВЛЕНИЕ ИМЕНИ КЛИЕНТА
     def sendButton(self):
+        user = self.model.name
         text = self.view.textEdit.toPlainText()
-        message = Message()
-        message.ui.messageText.setText(text)
+        modelMessage = ModelMessage(user, text)
+        # message.ui.messageText.setText(text)
+        message = Message(modelMessage)
+        self.model.addMessage(message)
         self.view.listMessage.addWidget(message)
         self.view.textEdit.setPlainText("")
