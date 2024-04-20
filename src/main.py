@@ -6,6 +6,7 @@ from modules.server import start_server
 from modules.new_server import start_server
 from threading import Thread
 from multiprocessing import freeze_support, Process
+from _thread import start_new_thread
 
 user_name = input("Введите ваше имя:\t")
 # user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
@@ -13,7 +14,7 @@ print('Генерируем данные...')
 app = App()
 user = User(user_name)
 # server = Server(user)
-server_thread = Thread(target=start_server(user))
+server_thread = Thread(target=start_server, args=(user, ))
 server_thread.start()
 init_thread = Thread(target=user.initial)
 init_thread.start()
