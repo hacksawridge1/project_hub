@@ -88,9 +88,11 @@ class User:
 
     if len(users_online) > 0:
       for i in users_online:
-        resp = requests.get('http://' + i + ':9091' + '/init')
-        initial_data.append(resp.text)
-
+        try:
+          resp = requests.get('http://' + i + ':9091' + '/init')
+          initial_data.append(resp.text)
+        except:
+          continue
       if len(initial_data) > 1:
         while k < len(initial_data) - 1:
           if initial_data[k] == initial_data[k + 1]:
