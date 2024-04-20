@@ -20,15 +20,26 @@ def encrypt_data(input_data: str, public_key: str):
   return output_data
 
 def decrypt_data(input_data: str, private_key: str, passphrase = None):
+  def decrypt_data_in_data(input_data, private_key, passphrase):
+    n = 0
+    output_data = str()
+    key = RSA.import_key(private_key, passphrase)
+    cipher = PKCS1_OAEP.new(key)
+    while n < len(input_data):
+      if type(input_data[n]) is list:
+        output_data = decrypt_data(input_data[n], private_key, passphrase)
+      else:
+        output_data += cipher.decrypt(input_data[n]).decode()
+      n += 1
+    return output_data
+  
   n = 0
   output_data = str()
   key = RSA.import_key(private_key, passphrase)
   cipher = PKCS1_OAEP.new(key)
   while n < len(input_data):
-    print(type(input_data[n]))
-    if input_data[n] is list:
-      print(input_data[n])
-      output_data += decrypt_data(input_data[n], private_key, passphrase)
+    if type(input_data[n]) is list:
+      output_data = decrypt_data_in_data(input_data[n], private_key, passphrase)
     else:
       output_data += cipher.decrypt(input_data[n]).decode()
     if n < len(input_data) - 1:
