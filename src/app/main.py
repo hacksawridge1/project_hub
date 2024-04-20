@@ -13,8 +13,6 @@ if __name__ == "__main__":
     engine = QQmlApplicationEngine()
     qml_file = appPath + "authorization.qml"
     engine.load(qml_file)
-    #with open(appPath + "animations.py") as file:
-        #exec(file.read())
     if not engine.rootObjects():
         sys.exit(-1)
     sys.exit(app.exec())
