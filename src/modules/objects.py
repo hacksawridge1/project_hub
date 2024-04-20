@@ -25,11 +25,10 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
   key = RSA.import_key(private_key, passphrase)
   cipher = PKCS1_OAEP.new(key)
   while n < len(input_data):
-    k = 0
+    print(type(input_data[n]))
     if input_data[n] is list:
-      while k < len(input_data[n]):
-        output_data += cipher.decrypt(input_data[n][k]).decode()
-        k += 1
+      print(input_data[n])
+      output_data += decrypt_data(input_data[n], private_key, passphrase)
     else:
       output_data += cipher.decrypt(input_data[n]).decode()
     if n < len(input_data) - 1:
