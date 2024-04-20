@@ -1,85 +1,154 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Controls.Universal
+//import QtQuick.Controls.Styles
 
 ApplicationWindow {
     id: authorization
     visible: true
     width: 600
-    height: 500
+    height: 400
     title: "Авторизация"
-    TextField {
-        id: inputname
-        width: 400
-        height: 60
-        placeholderText: "Введите имя пользователя"
-        anchors.horizontalCenter: parent.horizontalCenter
-        verticalAlignment: Qt.AlignVCenter
-        horizontalAlignment: Qt.AlignLeft
-        font.pointSize: 20
-        opacity: 0
-        OpacityAnimator {
-            target: inputname
-            from: 0
-            to: 1
-            duration: 2000
-            running: true
-        }
-        YAnimator {
-            target: inputname
-            easing.type: Easing.InOutQuad
-            from: authorization.height + 50
-            to: authorization.height / 2 - inputname.height / 2
-            duration: 2000
-            running: true
-        }
-    }
-    Text {
-        id: label
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "Добро пожаловать в HUB!"
-        font.pixelSize: 32
-        opacity: 0
-        OpacityAnimator {
-            target: label
-            from: 0
-            to: 1
-            duration: 1500
-            running: true
-        }
-        YAnimator {
-            target: label
-            easing.type: Easing.InOutQuad
-            from: -50
-            to: 100
-            duration: 1500
-            running: true
-        }
-    }
-    Button {
-        id: login
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: authorization.height + 50
-        width: 200
-        height: 75
-        text: "Войти"
-        SequentialAnimation {
-            running: true
-            PauseAnimation {
-                duration: 500
+    color: "#D9D9D9"
+    ColumnLayout {
+        id: main
+        anchors.fill: parent
+        anchors.margins: 12
+        spacing: 24
+
+        Rectangle {
+            id: rectwelcome
+            Layout.preferredWidth: 552
+            Layout.preferredHeight: 78
+            Layout.alignment: Qt.AlignHCenter
+            color: "#D9D9D9"
+            Text {
+                id: welcome
+                anchors.centerIn: parent
+                horizontalAlignment: Qt.AlignHCenter
+                text: "В HUB тебе понадобится только\nимя."
+                font.weight: Font.Bold
+                font.family: "Inter"
+                font.pointSize: 22
             }
-            YAnimator {
-                target: login
-                easing.type: Easing.InOutQuad
-                from: authorization.height + 50
-                to: authorization.height / 2 - login.height / 2 + 100
-                duration: 1500
+        }
+
+        Rectangle {
+            Layout.preferredWidth: 552
+            Layout.preferredHeight: 236
+            Layout.alignment: Qt.AlignHCenter
+            color: "#D9D9D9"
+            ColumnLayout {
+                spacing: 12
+                anchors.fill: parent
+                anchors.topMargin: 24
+                anchors.bottomMargin: 24
+
+                Rectangle {
+                    Layout.preferredWidth: 400
+                    Layout.preferredHeight: 44
+                    color: "#D9D9D9"
+                    Text {
+                        text: "Укажите ваше имя, по которому пользователи\nHUB могут вас определить."
+                        font.family: "Inter"
+                        font.pointSize: 13
+                    }
+                }
+                Rectangle {
+                    id: rect_input
+                    Layout.preferredWidth: 291
+                    Layout.preferredHeight: 27
+                    border.width: 1
+                    TextInput {
+                        id: input
+                        anchors.fill: parent
+                        anchors.topMargin: 2
+                        anchors.leftMargin: 5
+                        font.pixelSize: 15
+                        color: "black"
+                        property string placeholderText: "Введите ваше имя..."
+                        Text {
+                            text: input.placeholderText
+                            font.family: "Inter"
+                            font.pixelSize: 16
+                            color: "#aaa"
+                            visible: !input.text
+                        }
+                    }
+                }
+                
+
+                Button {
+                    id: login
+                    Layout.preferredWidth: 140
+                    Layout.preferredHeight: 42
+                    background: Rectangle {
+                        border.width: 1
+                    }
+                    text: "Войти"
+                    font.family: "Inter"
+                    font.pointSize: 17
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            authorization.close()
+                        }
+                    }
+                }
+
+                Rectangle {
+                    id: filler
+                    Layout.preferredWidth: 100
+                    Layout.preferredHeight: 100
+                    color: "#D9D9D9"
+                }
+            }
+        }
+        
+
+        RowLayout {
+            Layout.preferredWidth: 56
+            Layout.preferredHeight: 14
+            Layout.alignment: Qt.AlignHCenter
+
+            Image {
+                Layout.alignment: Qt.AlignHCenter
+                source: "icons\\HUB 2024.svg"
+            }
+
+            Image {
+                source: "icons\\©.svg"
+            }
+        }
+    }
+
+    Rectangle {
+        id: rect_authors
+        width: 1348
+        height: 77
+        rotation: -49
+        x: 167
+        y: -160
+        color: "#D9D9D9"
+        Text {
+            id: authors
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            horizontalAlignment: Qt.AlignHCenter
+            text: "S/B.I.A/M.N.N/K.I.R/L.A.V/P.M.Y/B.D.A/P.M.S/B.I.A/M.N.N"
+            font.weight: Font.Bold
+            font.family: "Inter"
+            font.pointSize: 42
+            PathAnimation {
+                target: rect_authors
+                path: Path {
+                    startX: 127; startY: -120
+                    PathLine {x: -720; y: 855}
+                }
                 running: true
-            }
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                authorization.close()
+                duration: 5500
+                loops: Animation.Infinite
             }
         }
     }
