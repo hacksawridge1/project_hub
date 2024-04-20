@@ -7,7 +7,8 @@ from .server import start_server
 import requests
 import json
 import threading
-
+from dataclasses import dataclass
+@dataclass
 class User:
 
   # initial  
@@ -135,6 +136,10 @@ class User:
   # @property
   # def users_online(self):
   #   return self.__users_online
+
+  @property
+  def ip(self):
+    return self.__ip
   
   @property
   def name(self):

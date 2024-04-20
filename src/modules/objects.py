@@ -20,7 +20,6 @@ def encrypt_data(input_data: str, public_key: str):
   return output_data
 
 def decrypt_data(input_data: str, private_key: str, passphrase = None):
-
   n = 0
   output_data = str()
   key = RSA.import_key(private_key, passphrase)
@@ -48,7 +47,7 @@ def encrypt_object(object, public_key: str):
           if type(object[i][k]) is dict:
             object[i][k] = encrypt_object(object[i][k], public_key)
           else:
-              object[i][k] = encrypt_data(object[i][k], public_key)
+            object[i][k] = encrypt_data(object[i][k], public_key)
           k += 1
       else:
         object[i] = encrypt_data(object[i], public_key)

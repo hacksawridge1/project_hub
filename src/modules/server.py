@@ -12,7 +12,7 @@ def start_server(addr: str, port: int, user: object):
 
   while True:
     client_sock, client_addr = server_sock.accept()
-    data = client_sock.recv(1024).decode()
+    data = client_sock.recv(4096).decode()
     method = data.split(' ')[0]
     request = data.split(' ')[1]
 
@@ -52,17 +52,17 @@ def start_server(addr: str, port: int, user: object):
           client_sock.send(
             HEADERS.encode() + 
             json.dumps(data).encode()
-          )
+          ) 
           client_sock.close()
           
     if method == "POST":
-      pass
       
       if request == f'{user.name}/message':
         pass
 
-      if request == '/init':
+      if request == '/init': 
         print(data)
+        print(type(data))
         user.users_online['usersonline'].append(decrypt_object(data, user.private_key))
+        client_sock.send(HEADERS.encode())
         print(user.users_online)
-        client_sock.close()
