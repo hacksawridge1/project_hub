@@ -52,6 +52,6 @@ def start_server(user: User):
     def recv_message():
       req = eval(request.form.get('data'))
       print(decrypt_data(req, user.private_key))
-      return "ok"
+      return str(request.headers)
       
     app.run(host=user.ip, port=9091)
