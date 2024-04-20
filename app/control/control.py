@@ -4,12 +4,16 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 
 from view.user import Ui_user
 from view.message import Ui_message
+
 from control.user import User
 from control.message import Message
+
+#from model.socket.socket import Socket # (перенести в control)
 
 class Control(QMainWindow):
     def __init__(self, model, view, parent=None):
         super(Control, self).__init__(parent)
+        #self.socket = Socket() # Исправить потоки (перенести в control)
         self.model = model
         self.view = view
         self.view.setupUi(self)
