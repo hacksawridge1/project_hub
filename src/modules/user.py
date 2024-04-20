@@ -85,33 +85,41 @@ class User:
       except requests.exceptions.ConnectionError:
         i += 1
         continue
-
     if len(users_online) > 0:
       for i in users_online:
-        try:
-          resp = requests.get('http://' + i + ':9091' + '/init')
-          initial_data.append(resp.text)
-        except:
-          continue
+        print(i, end='\n\n')
+        resp = requests.get('http://' + i + ':9091' + '/init')
+        print('Response:')
+        print(resp.text, end='\n\n')
+        initial_data.append(resp.text)
       if len(initial_data) > 1:
         while k < len(initial_data) - 1:
-          if initial_data[k] == initial_data[k + 1]:
-            data_check = True
+          if initial_data[k + 1]:
+            if initial_data[k] == initial_data[k + 1]:
+              data_check = True
+            else:
+              data_check = False
+              black_list = users_online.copy()
+              self.__initial()
           else:
-            data_check = False
-            black_list = users_online.copy()
-            self.__initial()
+            data_check = True
           k += 1
       elif len(initial_data) == 1:
         data_check = True
       else:
         print("NO DATA")
 
+      print('Data check:')
+      print(data_check, end='\n\n')
+
       if data_check:
         initial_data = initial_data[0]
+        print('Initial data:', end='\n')
+        print(initial_data)
         users_online_list = json.loads(initial_data)
     
       for i in users_online:
+        print(find_in_object(users_online_list, f'{i}')['user_pub_key'])
         send_data = {
           'data' : str(encrypt_object(self.__user_info, find_in_object(users_online_list, f'{i}')['user_pub_key']))
         }

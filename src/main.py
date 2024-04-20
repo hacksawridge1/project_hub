@@ -27,6 +27,9 @@ while True:
   data = input('Введите сообщение:\t')
   if data == 'stop':
     break  
-  user.send_message(reciever_ip, reciever_name, data)
+  elif data == 'Пользователи':
+    print(user.users_online)
+  else:
+    user.send_message(reciever_ip, reciever_name, data)
 # server_thr = threading.Thread(target=start_server, args=('', 9091, user), name='server')
 # server_thr.start()
