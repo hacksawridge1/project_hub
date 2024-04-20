@@ -51,7 +51,8 @@ def start_server(user: User):
     @app.post(f'/{user.name}/message')
     def recv_message():
       req = eval(request.form.get('data'))
-      print(req)
       print(decrypt_data(req, user.private_key))
+      print(request.headers)
+      return request.headers
       
     app.run(host=user.ip, port=9091)

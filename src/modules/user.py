@@ -37,10 +37,6 @@ class User:
     self.__public_key = key.public_key().export_key(format='PEM')          
 
   def send_message(self, addr: str, user_name: str, data):
-    print(type(addr))
-    print(addr)
-    print(type(self.users_online))
-    print(self.users_online)
     message = {
       'data' : str(encrypt_data(data, find_in_object(self.users_online, f'{addr}')['user_pub_key']))
     }
