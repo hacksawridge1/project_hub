@@ -24,7 +24,6 @@ class User:
       "user_id": str(self.__id),
       "user_pub_key": str(self.__public_key.decode('utf-8'))
     }
-    self.users_online = self.__initial()
 
   # methods
   def __generate_keys(self):
@@ -38,17 +37,10 @@ class User:
     self.__public_key = key.public_key().export_key(format='PEM')          
 
   def send_message(self, addr: str, user_name: str, data):
-    data = {
-      "user_name": "user_name",
-      "user_id": "user_id",
-      "user_ip": "userip",
-      "date": "D_M_Y/H_M_S",
-      "message": [
-        "some_message01",
-        "some_message02"
-      ]
+    message = {
+      'data' : str(encrypt_data(data))
     }
-    requests.post(f'http://{addr}:9091/{user_name}/message', encrypt_data(json.dumps(data))) #in progress
+    requests.post(f'http://{addr}:9091/{user_name}/message', data = message) #in progress
 
   def __generate_user_id():
     id = 101 # in progress
@@ -130,20 +122,28 @@ class User:
     
     print("END INIT...")
 
-    return users_online_list
+    self.__users_online = users_online_list
   
   # getters
   @property
   def user_info(self):
     return self.__user_info
   
-  # @property
-  # def users_online(self):
-  #   return self.__users_online
+  @property
+  def users_online(self):
+    return self.__users_online
+  
+  @users_online.setter
+  def users_online(self, data: object):
+    self.__users_online = data
 
   @property
   def ip(self):
     return self.__ip
+  
+  @property
+  def initial(self):
+    self.__initial()
   
   @property
   def name(self):
