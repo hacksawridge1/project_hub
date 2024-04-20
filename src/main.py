@@ -3,7 +3,7 @@ from modules.app import App
 from textwrap import wrap
 from modules.objects import encrypt_data, decrypt_data, encrypt_object, decrypt_object, find_in_object
 from modules.server import start_server
-from modules.new_server import Server
+from modules.new_server import start_server
 from threading import Thread
 from multiprocessing import freeze_support, Process
 
@@ -12,8 +12,8 @@ user_name = input("Введите ваше имя:\t")
 print('Генерируем данные...')
 app = App()
 user = User(user_name)
-server = Server(user)
-server_thread = Thread(target=server.start(user))
+# server = Server(user)
+server_thread = Thread(target=start_server(user))
 server_thread.start()
 init_thread = Thread(target=user.initial)
 init_thread.start()
