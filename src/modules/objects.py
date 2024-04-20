@@ -82,5 +82,5 @@ def find_in_object(object: object, match: str):
               return object[i][k]
           else:
             if object[i][k] == match:
-              print(object[i][k])
+              return object[i]
           k += 1

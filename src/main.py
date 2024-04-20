@@ -8,6 +8,7 @@ from threading import Thread
 from multiprocessing import freeze_support, Process
 from _thread import start_new_thread
 
+
 user_name = input("Введите ваше имя:\t")
 # user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
 print('Генерируем данные...')
