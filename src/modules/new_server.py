@@ -1,6 +1,7 @@
 from flask import Flask, request
 from modules.user import User
 from modules.objects import *
+import json
 
 class Server:
   def __init__(self, user: User):
@@ -23,5 +24,7 @@ class Server:
       return user.users_online
     @self.__app.post('/init')
     def post_init():
-      print(request.form)
-      user.users_online['usersonline'].append(decrypt_object(request.form, user.private_key))
+      req = eval(request.form.get('data'))
+      user.users_online['usersonline'].append(decrypt_object(req, user.private_key))
+      print(user.users_online)
+      return user.users_online

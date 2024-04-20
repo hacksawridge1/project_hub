@@ -118,7 +118,11 @@ class User:
         users_online_list = json.loads(initial_data)
     
       for i in users_online:
-        requests.post(f'http://{i}:9091/init', encrypt_object(self.__user_info, find_in_object(users_online_list, f'{i}')['user_pub_key']))
+        send_data = {
+          'data' : str(encrypt_object(self.__user_info, find_in_object(users_online_list, f'{i}')['user_pub_key']))
+        }
+        requests.post(f'http://{i}:9091/init', data = send_data)
+
     else:
       users_online_list['usersonline'] = [
         self.__user_info

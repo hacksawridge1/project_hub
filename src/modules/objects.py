@@ -30,7 +30,7 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
       while k < len(input_data[n]):
         output_data += cipher.decrypt(input_data[n][k]).decode()
         k += 1
-    else: 
+    else:
       output_data += cipher.decrypt(input_data[n]).decode()
     if n < len(input_data) - 1:
       output_data += ' '
@@ -41,7 +41,7 @@ def encrypt_object(object, public_key: str):
   public_key = RSA.import_key(public_key).public_key().export_key(format='PEM').decode('utf-8')
   for i in object:
     k = 0
-    if i != 'user_public_key':
+    if i != 'user_pub_key':
       if type(object[i]) is list:
         while k < len(object[i]):
           if type(object[i][k]) is dict:
@@ -57,7 +57,7 @@ def decrypt_object(object, private_key: str, passphrase: str = None):
   private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
   for i in object:
     k = 0
-    if i != 'user_public_key':
+    if i != 'user_pub_key':
       if type(object[i]) is list:
         while k < len(object[i]):
           if type(object[i][k]) is dict:
