@@ -44,13 +44,13 @@ def start_server(user: User):
     
     @app.route('/init')
     def init():
-      return user.users_online.append(user.user_info)
+      return user.user_info
       
-    @app.post('/init')
-    def post_init():
-      req = eval(request.form.get('data'))
-      user.users_online['usersonline'].append(decrypt_object(req, user.private_key))
-      return str(request.headers)
+    # @app.post('/init')
+    # def post_init():
+    #   req = eval(request.form.get('data'))
+    #   user.users_online['usersonline'].append(decrypt_object(req, user.private_key))
+    #   return str(request.headers)
     
     @app.post(f'/{user.name}/message')
     def recv_message():

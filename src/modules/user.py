@@ -57,11 +57,8 @@ class User:
   def __initial(self):
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
-    k = 0
     users_online = list()
-    users_online_list = dict()
-    initial_data = list()
-    data_check = None
+    self.__users_online_list = list(self.__user_info)
     black_list = list()
 
     print("START INIT...")
@@ -70,10 +67,12 @@ class User:
       try:
         if f'{net_ip}' + str(i) not in black_list and f'{net_ip}' + str(i) != self.__ip:
           if len(users_online) < 4:
-            resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/hi', timeout=0.1)
+            resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/', timeout=0.1)
             if resp.ok:
               if len(users_online) <= 4:
                 users_online.append(f'{net_ip}' + str(i))
+                resp = requests.get('http://' + i + ':9091' + '/init')
+                self.__users_online_list.append(resp.text)
               i += 1
               continue
           else:
@@ -84,51 +83,8 @@ class User:
       except requests.exceptions.ConnectionError:
         i += 1
         continue
-
-    if len(users_online) > 0:
-      for i in users_online:
-        resp = requests.get('http://' + i + ':9091' + '/init')
-        initial_data.append(resp.text)
-        print(initial_data)
-      if initial_data:
-        if len(initial_data) > 1:
-          while k < len(initial_data) - 1:
-            if initial_data[k + 1]:
-              if initial_data[k] == initial_data[k + 1]:
-                data_check = True
-              else:
-                data_check = False
-                black_list = users_online.copy()
-                self.__initial()
-            else:
-              data_check = True
-            k += 1
-        elif len(initial_data) == 1:
-          data_check = True
-      else:
-        print("NO DATA")
-
-      if data_check:
-        initial_data = initial_data[0]
-        print('Initial data:', end='\n')
-        print(initial_data)
-        users_online_list = json.loads(initial_data)
-    
-      for i in users_online:
-        print(find_in_object(users_online_list, f'{i}')['user_pub_key'])
-        send_data = {
-          'data' : str(encrypt_object(self.__user_info, find_in_object(users_online_list, f'{i}')['user_pub_key']))
-        }
-        requests.post(f'http://{i}:9091/init', data = send_data)
-
-    else:
-      users_online_list['usersonline'] = [
-        self.__user_info
-      ]
     
     print("END INIT...")
-
-    self.__users_online = users_online_list
   
   # getters
   @property
@@ -137,10 +93,7 @@ class User:
   
   @property
   def users_online(self):
-    try:
-      return self.__users_online
-    except AttributeError:
-      return self.__user_info
+    return self.__users_online_list
   
   @users_online.setter
   def users_online(self, data: object):
