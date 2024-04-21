@@ -89,6 +89,7 @@ class User:
       for i in users_online:
         resp = requests.get('http://' + i + ':9091' + '/init')
         initial_data.append(resp.text)
+        print(initial_data)
       if initial_data:
         if len(initial_data) > 1:
           while k < len(initial_data) - 1:
@@ -136,9 +137,9 @@ class User:
   
   @property
   def users_online(self):
-    if self.__users_online:
+    try:
       return self.__users_online
-    else:
+    except AttributeError:
       return self.__user_info
   
   @users_online.setter
