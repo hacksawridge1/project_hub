@@ -34,7 +34,8 @@ class User:
                                         protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
                                         prot_params={'iteration_count': 21000})
 
-    self.__public_key = key.public_key().export_key(format='PEM')          
+    self.__public_key = key.public_key().export_key(format='PEM')   
+
 
   def send_message(self, addr: str, user_name: str, data):
     message = {
@@ -42,10 +43,12 @@ class User:
     }
     requests.post(f'http://{addr}:9091 /{user_name}/message', data = message) #in progress
 
+
   def __generate_user_id():
     id = 101 # in progress
     return id
   
+
   def __get_local_ip(self): 
     for interface in netifaces.interfaces():
         if netifaces.AF_INET in netifaces.ifaddresses(interface):
@@ -54,11 +57,12 @@ class User:
                 if not address_object.is_loopback:
                    return address_info['addr']
                 
+
   def __initial(self):
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
     users_online = list()
-    self.__users_online_list = set(self.__user_info)
+    self.__users_online_list = list(self.__user_info)
     black_list = list()
 
     print("START INIT...")
@@ -69,10 +73,10 @@ class User:
           if len(users_online) < 4:
             resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/', timeout=0.1)
             if resp.ok:
-              if len(users_online) <= 4:
-                users_online.append(f'{net_ip}' + str(i))
-                resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/init')
-                self.__users_online_list.union(resp.text)
+              # if len(users_online) <= 4:
+              #   users_online.append(f'{net_ip}' + str(i))
+              resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/init')
+              self.__users_online_list.union(resp.text)
               i += 1
               continue
           else:
