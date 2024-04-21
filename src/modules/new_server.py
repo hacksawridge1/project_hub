@@ -44,7 +44,7 @@ def start_server(user: User):
     
     @app.route('/init')
     def init():
-      return user.users_online
+      return user.users_online.append(user.user_info)
       
     @app.post('/init')
     def post_init():
