@@ -62,7 +62,7 @@ class User:
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
     users_online = list()
-    self.__users_online_list = list(self.__user_info)
+    self.__users_online_list = list()
     black_list = list()
 
     print("START INIT...")
