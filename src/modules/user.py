@@ -76,7 +76,7 @@ class User:
               # if len(users_online) <= 4:
               #   users_online.append(f'{net_ip}' + str(i))
               resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/init')
-              self.__users_online_list.union(resp.text)
+              self.__users_online_list.append(resp.text)
               i += 1
               continue
           else:
