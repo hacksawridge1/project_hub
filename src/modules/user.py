@@ -136,7 +136,10 @@ class User:
   
   @property
   def users_online(self):
-    return self.__users_online
+    if self.__users_online:
+      return self.__users_online
+    else:
+      return self.__user_info
   
   @users_online.setter
   def users_online(self, data: object):
