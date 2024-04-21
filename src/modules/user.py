@@ -67,7 +67,6 @@ class User:
     print("START INIT...")
 
     while i < 255:
-      print(f'{net_ip}' + str(i))
       try:
         if f'{net_ip}' + str(i) not in black_list and f'{net_ip}' + str(i) != self.__ip:
           if len(users_online) < 4:
@@ -88,30 +87,25 @@ class User:
 
     if len(users_online) > 0:
       for i in users_online:
-        print(i, end='\n\n')
         resp = requests.get('http://' + i + ':9091' + '/init')
-        print('Response:')
-        print(resp.text, end='\n\n')
         initial_data.append(resp.text)
-      if len(initial_data) > 1:
-        while k < len(initial_data) - 1:
-          if initial_data[k + 1]:
-            if initial_data[k] == initial_data[k + 1]:
-              data_check = True
+      if initial_data:
+        if len(initial_data) > 1:
+          while k < len(initial_data) - 1:
+            if initial_data[k + 1]:
+              if initial_data[k] == initial_data[k + 1]:
+                data_check = True
+              else:
+                data_check = False
+                black_list = users_online.copy()
+                self.__initial()
             else:
-              data_check = False
-              black_list = users_online.copy()
-              self.__initial()
-          else:
-            data_check = True
-          k += 1
-      elif len(initial_data) == 1:
-        data_check = True
+              data_check = True
+            k += 1
+        elif len(initial_data) == 1:
+          data_check = True
       else:
         print("NO DATA")
-
-      print('Data check:')
-      print(data_check, end='\n\n')
 
       if data_check:
         initial_data = initial_data[0]
