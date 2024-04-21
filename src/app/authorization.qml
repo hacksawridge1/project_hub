@@ -1,24 +1,25 @@
-import QtQuick
-import QtQuick.Controls
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts
+import QtQuick.Window 2.15
 import QtQuick.Controls.Universal
-//import QtQuick.Controls.Styles
+//import MyModule 1.0
 
 ApplicationWindow {
     id: authorization
+
     visible: true
     width: 600
     height: 400
-    title: "Авторизация"
+    title: "Authorization"
     color: "#D9D9D9"
+
     ColumnLayout {
-        id: main
         anchors.fill: parent
         anchors.margins: 12
         spacing: 24
 
         Rectangle {
-            id: rectwelcome
             Layout.preferredWidth: 552
             Layout.preferredHeight: 78
             Layout.alignment: Qt.AlignHCenter
@@ -56,15 +57,14 @@ ApplicationWindow {
                     }
                 }
                 Rectangle {
-                    id: rect_input
                     Layout.preferredWidth: 291
                     Layout.preferredHeight: 27
                     border.width: 1
+                    clip: true
                     TextInput {
                         id: input
                         anchors.fill: parent
-                        anchors.topMargin: 2
-                        anchors.leftMargin: 5
+                        anchors.margins: 4
                         font.pixelSize: 15
                         color: "black"
                         property string placeholderText: "Введите ваше имя..."
@@ -77,7 +77,6 @@ ApplicationWindow {
                         }
                     }
                 }
-                
 
                 Button {
                     id: login
@@ -93,12 +92,13 @@ ApplicationWindow {
                         anchors.fill: parent
                         onClicked: {
                             authorization.close()
+                            var component = Qt.createComponent("MainWindow.qml")
+                            MainWindow.main_window = component.createObject()
                         }
                     }
                 }
 
                 Rectangle {
-                    id: filler
                     Layout.preferredWidth: 100
                     Layout.preferredHeight: 100
                     color: "#D9D9D9"
@@ -113,7 +113,6 @@ ApplicationWindow {
             Layout.alignment: Qt.AlignHCenter
 
             Image {
-                Layout.alignment: Qt.AlignHCenter
                 source: "icons\\HUB 2024.svg"
             }
 
@@ -132,7 +131,6 @@ ApplicationWindow {
         y: -160
         color: "#D9D9D9"
         Text {
-            id: authors
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             horizontalAlignment: Qt.AlignHCenter
