@@ -26,7 +26,7 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
     key = RSA.import_key(private_key, passphrase)
     cipher = PKCS1_OAEP.new(key)
     while n < len(input_data):
-      if type(input_data[n]) is list or type(object[n]) is set:
+      if type(input_data[n]) is list:
         output_data = decrypt_data_in_data(input_data[n], private_key, passphrase)
       else:
         output_data += cipher.decrypt(input_data[n]).decode()
@@ -38,7 +38,7 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
   key = RSA.import_key(private_key, passphrase)
   cipher = PKCS1_OAEP.new(key)
   while n < len(input_data):
-    if type(input_data[n]) is list or type(object[n]) is set:
+    if type(input_data[n]) is list:
       output_data += decrypt_data_in_data(input_data[n], private_key, passphrase)
     else:
       output_data += cipher.decrypt(input_data[n]).decode()
@@ -49,7 +49,7 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
 
 def encrypt_object(object, public_key: str):
   public_key = RSA.import_key(public_key).public_key().export_key(format='PEM').decode('utf-8')
-  if type(object) is list or type(object) is set:
+  if type(object) is list:
     object = encrypt_data(object, public_key)
   for i in object:
     k = 0
@@ -67,7 +67,7 @@ def encrypt_object(object, public_key: str):
 
 def decrypt_object(object, private_key: str, passphrase: str = None):
   private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
-  if type(object) is list or type(object) is set:
+  if type(object) is list:
     object = decrypt_data(object, private_key, passphrase)
   for i in object:
     k = 0
@@ -84,8 +84,12 @@ def decrypt_object(object, private_key: str, passphrase: str = None):
   return object
 
 def find_in_object(object: object, match: str):
+  k = 0
+  if type(object) is list:
+    while k < len(object):
+      if find_in_object(object[k], match) != None:
+        return object[k]
   for i in object:
-    k = 0
     if object[i] == match:
       return object
     else:

@@ -41,7 +41,7 @@ class User:
     message = {
       'data' : str(encrypt_data(data, find_in_object(self.users_online, f'{addr}')['user_pub_key']))
     }
-    requests.post(f'http://{addr}:9091 /{user_name}/message', data = message) #in progress
+    requests.post(f'http://{addr}:9091/{user_name}/message', data = message) #in progress
 
 
   def __generate_user_id():
