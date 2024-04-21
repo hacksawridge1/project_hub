@@ -44,10 +44,7 @@ def start_server(user: User):
     
     @app.route('/init')
     def init():
-      if user.users_online:
-        return user.users_online
-      else:
-        return user.user_info
+      return user.users_online
       
     @app.post('/init')
     def post_init():
