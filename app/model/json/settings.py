@@ -1,31 +1,32 @@
 __author__ = "Maxim"
 
+import os.path
 import json
 
-from os import getcwd
 from datetime import datetime
 
 #### Лучше разделить на 3 файла JSON: для server, для user и для настроек GUI.
 class Json():
     def __init__(self):
-        self.file = getcwd() + "\\settings.json"
+        self.file = "model\json\settings.json"
         self.serv = "192.168.3.121"
         self.port = "9090"
         self.them = "light"
 
     # Создание JSON и заполнение по умолчанию
-    def createJSON(self, name="undefined", mail="undefined", icon = "default"):
-        data = {
-            "serv": self.serv,
-            "port": self.port,
-            "name": name,
-            "mail": mail,
-            "icon": icon,
-            "them": self.them,
-            "last": datetime.now().strftime("%H:%M:%S")
-        }
-        with open(self.file, "w") as file:
-            json.dump(data, file)
+    def createJSON(self, name, mail, icon):
+        if not os.path.exists(self.file):
+            data = {
+                "serv": self.serv,
+                "port": self.port,
+                "name": name,
+                "mail": mail,
+                "icon": icon,
+                "them": self.them,
+                "last": datetime.now().strftime("%H:%M:%S")
+            }
+            with open(self.file, "w") as file:
+                json.dump(data, file)
     
     # Чтение файла JSON
     def readJSON(self):

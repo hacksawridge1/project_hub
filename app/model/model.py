@@ -6,11 +6,10 @@ from model.sql.dataBase import Sqlite
 class Model():
     def __init__(self):
         self.json = Json()
+        self.json.createJSON("undefined", "undefined", "default")
         self.sql = Sqlite() # Загатовка для сохранения чата и т.д.
         self.listUsers = [] # Заполняется с JSON
         self.listMessages = [] # Заполняется с JSON
-        #self.name = "undefined" # Имя текущего клиента
-        self.name = self.json.readJSON()['name']
 
     ## ПОЛЬЗОВАТЕЛИ
     # Добавить пользователя

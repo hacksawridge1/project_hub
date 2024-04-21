@@ -35,16 +35,13 @@ class Control(QMainWindow):
         # listMessages # Список сообщений
         # textEdit # Поле ввода сообщения
 
-        self.model.json.createJSON() # Инициализация JSON (нужна проверка на имя)
-
     # Создать/изменить имя
     def nameButton(self):
         # Добавить проверку имени != "undefined"
         if self.view.nameButton.text() == 'name':
             text = self.view.nameEdit.text()
             self.model.json.editJSON(text)
-            data = self.model.json.readJSON()
-            name = data['name'] # В model имя должно пройти верификацию
+            name = self.model.json.readJSON()['name']
             self.setWindowTitle(u"HUB messager - " + name)
             self.view.nameEdit.setEnabled(False)
             self.view.nameEdit.setText("Пользователь: " + name)
@@ -86,7 +83,7 @@ class Control(QMainWindow):
 
     # Отправка ИСПРАВИТЬ ОБНОВЛЕНИЕ ИМЕНИ КЛИЕНТА
     def sendButton(self):
-        user = self.model.name
+        user = self.model.json.readJSON()['name']
         text = self.view.textEdit.toPlainText()
         modelMessage = ModelMessage(user, text)
         # message.ui.messageText.setText(text)
