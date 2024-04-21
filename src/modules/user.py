@@ -40,7 +40,7 @@ class User:
     message = {
       'data' : str(encrypt_data(data, find_in_object(self.users_online, f'{addr}')['user_pub_key']))
     }
-    requests.post(f'http://{addr}:9091/{user_name}/message', data = message) #in progress
+    requests.post(f'http://{addr}:9091 /{user_name}/message', data = message) #in progress
 
   def __generate_user_id():
     id = 101 # in progress
@@ -58,7 +58,7 @@ class User:
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
     users_online = list()
-    self.__users_online_list = list(self.__user_info)
+    self.__users_online_list = set(self.__user_info)
     black_list = list()
 
     print("START INIT...")
