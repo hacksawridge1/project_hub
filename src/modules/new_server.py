@@ -46,11 +46,11 @@ def start_server(user: User):
     def init():
       return user.user_info
       
-    # @app.post('/init')
-    # def post_init():
-    #   req = eval(request.form.get('data'))
-    #   user.users_online['usersonline'].append(decrypt_object(req, user.private_key))
-    #   return str(request.headers)
+    @app.post('/new-user')
+    def post_init():
+      req = eval(request.form.get('data'))
+      user.users_online = decrypt_object(req, user.private_key)
+      return str(request.headers)
     
     @app.post(f'/{user.name}/message')
     def recv_message():

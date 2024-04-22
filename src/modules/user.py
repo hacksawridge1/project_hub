@@ -71,12 +71,15 @@ class User:
       try:
         if f'{net_ip}' + str(i) not in black_list and f'{net_ip}' + str(i) != self.__ip:
           if len(users_online) < 4:
-            resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/', timeout=0.1)
+            resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
             if resp.ok:
               # if len(users_online) <= 4:
               #   users_online.append(f'{net_ip}' + str(i))
-              resp = requests.get(f'http://{net_ip}' + str(i) + ':' + str(9091) + '/init')
+              resp = requests.get(f'http://{net_ip}{i}:{9091}/init')
               self.__users_online_list.append(eval(resp.text))
+              requests.post(
+                f'http://{net_ip}{i}:{9091}/new-user', 
+                data = { 'data' : str(encrypt_object(self.__user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')))})
               i += 1
               continue
           else:
@@ -101,7 +104,10 @@ class User:
   
   @users_online.setter
   def users_online(self, data: object):
-    self.__users_online = data
+    if find_in_object(self.__users_online_list, data) == None:
+      self.__users_online_list.append(data)
+    else:
+      return 
 
   @property
   def ip(self):
