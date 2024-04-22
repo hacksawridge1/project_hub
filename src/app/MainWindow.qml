@@ -31,11 +31,21 @@ ApplicationWindow {
                 columnSpacing: 8
                 rowSpacing: 12
 
-                function new_member(username, ip) {
+                function new_user(username, ip) {
                     var component = Qt.createComponent("UserBlock.qml")
-                    var new_user = component.createObject(users)
-                    new_user.name.text = username
-                    new_user.ip.text = ip
+                    //var new_user = component.createObject(users)
+                    list_model.append({id: "user" + users.count++, component})
+                    //component.id = "user" + users.count++
+                    //list_model.append(new_user)
+                    //new_user.btn_id = "user" + users.count++
+                    //new_user.name.text = username
+                    //new_user.ip.text = ip
+                }
+
+                function delete_user() {
+                    //button.visible: false
+                    //var index = parseInt(id.match(/\d+/))
+                    //list_model.remove(index)
                 }
 
                 Rectangle {
@@ -103,7 +113,7 @@ ApplicationWindow {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            sidebar.new_member("Test", "120.138.0.159")
+                            sidebar.new_user("Test", "120.138.0.159")
                         }
                     }
                 }
@@ -124,6 +134,13 @@ ApplicationWindow {
                         height: 32
                         anchors.centerIn: parent
                         source: "icons\\settings.svg"
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            sidebar.delete_user("user0")
+                        }
                     }
                 }
 
@@ -175,8 +192,28 @@ ApplicationWindow {
 
                     ColumnLayout {
                         id: users
+                        ListView {
+                            id: lst
+                            Layout.fillHeight: true
+                            model: list_model
+                            delegate: Rectangle {
+                                width: 100
+                                height: 100
+                                color: model.color
+                            }
+                        }
                         anchors.fill: parent
                         anchors.rightMargin: 12
+                        property int count: 0
+                        ListModel {
+                            id: list_model
+                            //anchors.fill: parent
+
+                            ListElement {
+                                //id: user0
+                                color: "red"
+                            }
+                        }
                     }
                     ScrollBar.vertical: ScrollBar {
                         id: scrollbar

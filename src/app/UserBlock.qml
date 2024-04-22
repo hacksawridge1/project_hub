@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Controls.Universal
 
 Button {
-    id: user
+    id: button
     Layout.preferredWidth: 232
     Layout.preferredHeight: 48
     Layout.column: 1
