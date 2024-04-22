@@ -39,7 +39,7 @@ class User:
 
   def send_message(self, addr: str, user_name: str, data):
     message = {
-      'data' : str(encrypt_data(data, find_in_object(self.users_online, f'{addr}')['user_pub_key']))
+      'data' : str(encrypt_data(data, find_in_object(self.__users_online_list, f'{addr}')['user_pub_key']))
     }
     requests.post(f'http://{addr}:9091/{user_name}/message', data = message) #in progress
 
