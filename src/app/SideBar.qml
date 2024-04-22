@@ -1,6 +1,5 @@
-pragma ComponentBehavior: Bound
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
 
@@ -10,20 +9,23 @@ Rectangle {
     Layout.fillHeight: true
     color: "#D9D9D9"
 
+    property int count: 0
+
     function new_user(username, userip) {
-        list_model.append({name: username, ip: userip})
+        models.append({name: username, ip: userip})
     }
 
     function delete_user(index) {
-        list_model.remove(index)
+        models.remove(index)
+        --count
     }
 
     GridLayout {
         columns: 2
         anchors.fill: parent
         anchors.margins: 12
-        columnSpacing: 8
-        rowSpacing: 12
+        columnSpacing: 0
+        rowSpacing: 0
 
         Rectangle {
             Layout.columnSpan: 2
@@ -55,6 +57,7 @@ Rectangle {
             Layout.preferredHeight: 48
             Layout.column: 0
             Layout.row: 1
+            Layout.topMargin: 12
             Layout.alignment: Qt.AlignTop
             background: Rectangle {
                 border.width: 1
@@ -66,6 +69,25 @@ Rectangle {
                 anchors.centerIn: parent
                 source: "icons\\notifications_active.svg"
             }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    sidebar.color = "white"
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    parent.scale = 1.1
+                }
+
+                onExited: {
+                    parent.scale = 1.0
+                }
+            }
         }
 
         Button {
@@ -74,6 +96,7 @@ Rectangle {
             Layout.preferredHeight: 48
             Layout.column: 0
             Layout.row: 2
+            Layout.topMargin: 8
             Layout.alignment: Qt.AlignTop
             background: Rectangle {
                 border.width: 1
@@ -92,6 +115,18 @@ Rectangle {
                     sidebar.new_user("Test", "120.138.0.159")
                 }
             }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    parent.scale = 1.1
+                }
+
+                onExited: {
+                    parent.scale = 1.0
+                }
+            }
         }
 
         Button {
@@ -100,6 +135,7 @@ Rectangle {
             Layout.preferredHeight: 48
             Layout.column: 0
             Layout.row: 3
+            Layout.topMargin: 8
             Layout.alignment: Qt.AlignTop
             background: Rectangle {
                 border.width: 1
@@ -115,7 +151,19 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    sidebar.delete_user(1)
+                    sidebar.delete_user(0)
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    parent.scale = 1.1
+                }
+
+                onExited: {
+                    parent.scale = 1.0
                 }
             }
         }
@@ -126,6 +174,7 @@ Rectangle {
             Layout.preferredHeight: 48
             Layout.column: 0
             Layout.row: 4
+            Layout.topMargin: 8
             Layout.alignment: Qt.AlignTop
             background: Rectangle {
                 border.width: 1
@@ -137,6 +186,18 @@ Rectangle {
                 anchors.centerIn: parent
                 source: "icons\\theme.png"
             }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    parent.scale = 1.1
+                }
+
+                onExited: {
+                    parent.scale = 1.0
+                }
+            }
         }
 
         Button {
@@ -145,6 +206,7 @@ Rectangle {
             Layout.preferredHeight: 48
             Layout.column: 0
             Layout.row: 5
+            Layout.topMargin: 8
             Layout.alignment: Qt.AlignTop
             background: Rectangle {
                 border.width: 1
@@ -156,6 +218,18 @@ Rectangle {
                 anchors.centerIn: parent
                 source: "icons\\group.svg"
             }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    parent.scale = 1.1
+                }
+
+                onExited: {
+                    parent.scale = 1.0
+                }
+            }
         }
 
         ScrollView {
@@ -163,36 +237,34 @@ Rectangle {
             Layout.column: 1
             Layout.row: 1
             Layout.rowSpan: 6
-            Layout.preferredWidth: 244
+            Layout.preferredWidth: 250
             Layout.fillHeight: true
+            Layout.topMargin: 6
+            Layout.leftMargin: 4
 
             Rectangle {
                 id: users
                 anchors.fill: parent
-                anchors.rightMargin: 12
                 color: "#D9D9D9"
-                ListModel {
-                    id: list_model
-
-                    ListElement {
-                        name: "Artur Kemran Antonovish"
-                        ip: "192.168.0.132"
-                    }
-                    ListElement {
-                        name: "Kemran"
-                        ip: "192.168.0.159"
-                    }
-                }
                 ListView {
                     id: view
                     anchors.fill: parent
-                    spacing: 12
-                    model: list_model
+                    anchors.topMargin: 6
+                    anchors.leftMargin: 4
+                    visible: active
+                    spacing: 8
+                    model: models
                     delegate: Button {
                         width: 232
                         height: 48
+                        parent: view
+                        z: 1
                         background: Rectangle {
                             border.width: 1
+                        }
+
+                        transform: Scale {
+                            id: resize
                         }
 
                         RowLayout {
@@ -221,7 +293,7 @@ Rectangle {
                                         clip: true
                                         Text {
                                             anchors.fill: parent
-                                            text: view.model.name
+                                            text: model.name
                                             font.family: "Inter"
                                             font.pointSize: 10
                                         }
@@ -233,12 +305,67 @@ Rectangle {
                                         clip: true
                                         Text {
                                             anchors.fill: parent
-                                            text: view.model.ip
+                                            text: index
                                             font.family: "Inter"
                                             font.pointSize: 8
                                             color: "#808080"
                                         }
                                     }
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: dragArea
+                            anchors.fill: parent
+                            drag.target: parent
+                            drag.axis: Drag.YAxis
+                            hoverEnabled: true
+                            onReleased: {
+                                var endIndex = Math.round(parent.y / 56)
+                                if (endIndex <= -1) {
+                                    view.model.move(model.index, 0, 1);
+                                } else {
+                                    if (endIndex >= models.count) {
+                                        view.model.move(model.index, models.count - 1, 1);
+                                    } else {
+                                        view.model.move(model.index, endIndex, 1);
+                                    }
+                                }
+                                parent.y = 56 * model.index
+                                drag.stop()
+                                parent.z = 1
+                            }
+                            onEntered: {
+                                parent.scale = 1.03
+                            }
+
+                            onPressed: {
+                                parent.z = 100
+                                drag.start()
+                            }
+
+                            onExited: {
+                                parent.scale = 1.0
+                            }
+                        }
+
+                        Timer {
+                            id: drag
+                            interval: 1
+                            running: false
+                            repeat: true
+                            property double y: -1
+                            onTriggered: {
+                                var endIndex = Math.round(parent.y / 56)
+
+                                if (model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
+                                    y = parent.y
+                                    view.model.move(model.index, endIndex, 1);
+                                }
+                                if (y !== parent.y && y !== -1) {
+                                    parent.y = y
+                                    y = -1
                                 }
                             }
                         }

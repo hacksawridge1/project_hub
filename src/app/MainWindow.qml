@@ -10,14 +10,35 @@ ApplicationWindow {
     width: 1920
     height: 1080
     title: "HUB"
+    //property int user: index
 
-    GridLayout {
+    RowLayout {
         id: main_grid
         anchors.fill: parent
-        columns: 2
-        rows: 1
+        spacing: 0
         SideBar {
             id: sidebar
+            property ListModel models: users_list
+        }
+        Chat {
+            id: chat
+            property ListModel models: users_list
+        }
+    }
+
+    ListModel {
+        id: users_list
+        ListElement {
+            name: "Artur Kemran Antonovish"
+            ip: "192.168.0.132"
+        }
+        ListElement {
+            name: "Kemran"
+            ip: "192.168.0.159"
+        }
+        ListElement {
+            name: "Arsen"
+            ip: "192.168.0.128"
         }
     }
 }
