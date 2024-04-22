@@ -79,7 +79,7 @@ class User:
               self.__users_online_list.append(eval(resp.text))
               requests.post(
                 f'http://{net_ip}{i}:{9091}/new-user', 
-                data = { 'data' : str(encrypt_object(self.__user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')))})
+                data = { 'data' : str(encrypt_object(self.__user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')['user_pub_key']))})
               i += 1
               continue
           else:
