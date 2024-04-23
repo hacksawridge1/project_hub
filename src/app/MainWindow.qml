@@ -29,7 +29,7 @@ ApplicationWindow {
     ListModel {
         id: users_list
         ListElement {
-            name: "Artur Kemran Antonovish"
+            name: "Artur"
             ip: "192.168.0.132"
         }
         ListElement {

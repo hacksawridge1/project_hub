@@ -9,15 +9,14 @@ Rectangle {
     Layout.fillHeight: true
     color: "#D9D9D9"
 
-    property int count: 0
-
     function new_user(username, userip) {
+        console.log("models_count" + models.count)
         models.append({name: username, ip: userip})
+        console.log("models_count" + models.count)
     }
 
     function delete_user(index) {
         models.remove(index)
-        --count
     }
 
     GridLayout {
@@ -111,13 +110,6 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
-                    sidebar.new_user("Test", "120.138.0.159")
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
                 hoverEnabled: true
                 onEntered: {
                     parent.scale = 1.1
@@ -125,6 +117,11 @@ Rectangle {
 
                 onExited: {
                     parent.scale = 1.0
+                }
+
+                onClicked: {
+                    console.log("models_count" + models.count)
+                    sidebar.new_user("Test", "120.138.0.159")
                 }
             }
         }
@@ -150,13 +147,6 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
-                    sidebar.delete_user(0)
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
                 hoverEnabled: true
                 onEntered: {
                     parent.scale = 1.1
@@ -164,6 +154,10 @@ Rectangle {
 
                 onExited: {
                     parent.scale = 1.0
+                }
+
+                onClicked: {
+                    sidebar.delete_user(0)
                 }
             }
         }
@@ -251,14 +245,18 @@ Rectangle {
                     anchors.fill: parent
                     anchors.topMargin: 6
                     anchors.leftMargin: 4
-                    visible: active
                     spacing: 8
                     model: models
+                    property Button dragItem
+
                     delegate: Button {
                         width: 232
                         height: 48
                         parent: view
                         z: 1
+                        //color: (view.currentItem == model) ? "gray" : "white"
+
+                        property string nam: model.name
                         background: Rectangle {
                             border.width: 1
                         }
@@ -305,7 +303,7 @@ Rectangle {
                                         clip: true
                                         Text {
                                             anchors.fill: parent
-                                            text: index
+                                            text: model.index
                                             font.family: "Inter"
                                             font.pointSize: 8
                                             color: "#808080"
@@ -321,32 +319,42 @@ Rectangle {
                             drag.target: parent
                             drag.axis: Drag.YAxis
                             hoverEnabled: true
+
+                            onClicked: {
+                                view.currentItem = model
+                                view.currentIndex = model.index
+                            }
+
                             onReleased: {
-                                var endIndex = Math.round(parent.y / 56)
-                                if (endIndex <= -1) {
-                                    view.model.move(model.index, 0, 1);
-                                } else {
-                                    if (endIndex >= models.count) {
-                                        view.model.move(model.index, models.count - 1, 1);
-                                    } else {
-                                        view.model.move(model.index, endIndex, 1);
-                                    }
-                                }
                                 parent.y = 56 * model.index
                                 drag.stop()
                                 parent.z = 1
                             }
+
                             onEntered: {
                                 parent.scale = 1.03
                             }
 
                             onPressed: {
                                 parent.z = 100
+                                view.dragItem = parent
                                 drag.start()
                             }
 
                             onExited: {
                                 parent.scale = 1.0
+                            }
+                              DropArea {
+                                anchors {
+                                    fill: parent
+                                    margins: 10
+                                }
+
+                                //onEntered: (drag) => {
+                                    //view.items.move(
+                                            //drag.source.DelegateModel.itemsIndex,
+                                            //dragArea.DelegateModel.itemsIndex)
+                                //}
                             }
                         }
 
@@ -355,20 +363,27 @@ Rectangle {
                             interval: 1
                             running: false
                             repeat: true
-                            property double y: -1
                             onTriggered: {
                                 var endIndex = Math.round(parent.y / 56)
-
                                 if (model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
-                                    y = parent.y
-                                    view.model.move(model.index, endIndex, 1);
-                                }
-                                if (y !== parent.y && y !== -1) {
-                                    parent.y = y
-                                    y = -1
+                                    var startIndex = model.index
+                                    view.model.move(model.index, endIndex, 1)
+                                    if (view.currentIndex == startIndex) {
+                                        view.currentIndex = model.index
+                                        //view.currentItem = model
+                                    }
+                                    console.log("index: " + model.index)
+                                    console.log("current index: " + view.currentIndex)
                                 }
                             }
                         }
+                    }
+
+                    move: Transition {
+                        NumberAnimation { properties: "y"; to: view.dragItem.y; duration: 0}
+                    }
+                    displaced: Transition {
+                        NumberAnimation { properties: "y"; duration: 200 }
                     }
                 }
             }
