@@ -92,6 +92,9 @@ class User:
         continue
     
     print("END INIT...")
+
+  # def __user_leave(self):
+  #   requests.post()
   
   # getters
   @property
