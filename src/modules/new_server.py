@@ -52,10 +52,14 @@ def start_server(user: User):
       user.users_online = decrypt_object(req, user.private_key)
       return str(request.headers)
     
-    @app.post(f'/{user.name}/message')
+    @app.post(f'/<str:{user.name}>/message')
     def recv_message():
       req = eval(request.form.get('data'))
       print(f'\nMessage from [{request.remote_addr}]:\t' + decrypt_data(req, user.private_key))
       return str(request.headers)
-      
+    
+    @app.post('/remove-user')
+    def remove_user():
+      pass
+    
     app.run(host=user.ip, port=9091)
