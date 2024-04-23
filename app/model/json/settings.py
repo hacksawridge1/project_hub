@@ -1,49 +1,67 @@
+__author__ = "Maxim"
+
 import json
 
-# Нужно детализировать
+from os import getcwd
+from datetime import datetime
 
+#### Лучше разделить на 3 файла JSON: для server, для user и для настроек GUI.
 class Json():
-    data = {}
     def __init__(self):
-        self.data = {
-            "name": "undefined",
-            "icon": "undefined",
-            "last": "undefined"
-        }
+        self.file = getcwd() + "\\settings.json"
+        self.serv = "192.168.3.121"
+        self.port = "9090"
+        self.them = "light"
 
-    # Прочитать JSON
-    def read_json(self):
-        with open('settings.json', 'r') as file:
+    # Создание JSON и заполнение по умолчанию
+    def createJSON(self, name="undefined", mail="undefined", icon = "default"):
+        data = {
+            "serv": self.serv,
+            "port": self.port,
+            "name": name,
+            "mail": mail,
+            "icon": icon,
+            "them": self.them,
+            "last": datetime.now().strftime("%H:%M:%S")
+        }
+        with open(self.file, "w") as file:
+            json.dump(data, file)
+    
+    # Чтение файла JSON
+    def readJSON(self):
+        with open(self.file, "r") as file:
             data = json.load(file)
         return data
     
-    # Создать JSON
-    def create_json(self, data):
-        with open('settings.json', 'w') as file:
-            # Валидация data
-            json.dump(self.data, file)
-    
     # Редактирование JSON
-    def edit_json(self, new_data):
-        existing_data = self.read_json(self)
-        existing_data.update(new_data)
-        with open('settings.json', 'w') as file:
-            json.dump(existing_data, file)
-    
-    # Удаление JSON
-    def delete_json_item(self):
-        existing_data = self.read_json(self)
-        existing_data.update(self.data)
-        with open('settings.json', 'w') as file:
-            json.dump(existing_data, file)
+    def editJSON(self, name = "undefined", mail = "undefined", icon = "default"):
+        data = self.readJSON()
+        for i in data:
+            if i == "name" and name != "undefined":
+                data['name'] = name
+            if i == "mail" and mail != "undefined":
+                data['mail'] = mail
+            if i == "icon" and icon != "default":
+                data['icon'] = icon
+        with open(self.file, "w") as file:
+            json.dump(data, file)
 
-# Для локального тестирования (удалить)
-#x = Json()
-#y = x.read_json()
-#print(y)
-#x.create_json({"maxim", "avatar", "2024"})
-#print(y)
-#x.edit_json({"maxim2", "avatar2", "2025"})
-#print(y)
-#x.delete_json_item(y)
-#print(y)
+    # Удаление JSON
+    def deleteJSON(self):
+        with open(self.file, 'w') as file:
+            json.dump({}, file)
+
+
+#### ТЕСТИРОВАНИЕ (УДАЛИТЬ И ЛИКВИДИРОВАТЬ ВСЕХ, КТО ВИДЕЛ ЭТОТ КОД)
+'''
+j = Json()
+j.createJSON()
+print("1")
+print(j.readJSON())
+print("2")
+j.editJSON("Ишкильдык", "google@gmail.com", "ava.jpg") #УДАЛЯЕТ ВСЕ
+print(j.readJSON())
+print("3")
+j.deleteJSON()
+print(j.readJSON())
+'''

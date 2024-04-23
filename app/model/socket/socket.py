@@ -1,3 +1,5 @@
+__author__ = "Maxim"
+
 import socket
 import threading
 import sys
