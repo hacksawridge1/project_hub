@@ -10,9 +10,7 @@ Rectangle {
     color: "#D9D9D9"
 
     function new_user(username, userip) {
-        console.log("models_count" + models.count)
         models.append({name: username, ip: userip})
-        console.log("models_count" + models.count)
     }
 
     function delete_user(index) {
@@ -22,7 +20,9 @@ Rectangle {
     GridLayout {
         columns: 2
         anchors.fill: parent
-        anchors.margins: 12
+        anchors.topMargin: 12
+        anchors.leftMargin: 12
+        anchors.bottomMargin: 12
         columnSpacing: 0
         rowSpacing: 0
 
@@ -120,7 +120,6 @@ Rectangle {
                 }
 
                 onClicked: {
-                    console.log("models_count" + models.count)
                     sidebar.new_user("Test", "120.138.0.159")
                 }
             }
@@ -231,7 +230,7 @@ Rectangle {
             Layout.column: 1
             Layout.row: 1
             Layout.rowSpan: 6
-            Layout.preferredWidth: 250
+            Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.topMargin: 6
             Layout.leftMargin: 4
@@ -240,6 +239,7 @@ Rectangle {
                 id: users
                 anchors.fill: parent
                 color: "#D9D9D9"
+
                 ListView {
                     id: view
                     anchors.fill: parent
@@ -250,19 +250,14 @@ Rectangle {
                     property Button dragItem
 
                     delegate: Button {
+                        id: model_user
                         width: 232
                         height: 48
                         parent: view
                         z: 1
-                        //color: (view.currentItem == model) ? "gray" : "white"
-
-                        property string nam: model.name
                         background: Rectangle {
                             border.width: 1
-                        }
-
-                        transform: Scale {
-                            id: resize
+                            color: (view.currentIndex == model.index) ? (mouse_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (mouse_area.pressed) ? "#DDFFFF" : "white"
                         }
 
                         RowLayout {
@@ -279,6 +274,7 @@ Rectangle {
                             Rectangle {
                                 Layout.preferredWidth: 176
                                 Layout.preferredHeight: 32
+                                color: model_user.background.color
                                 ColumnLayout {
                                     anchors.fill: parent
                                     Layout.preferredWidth: 176
@@ -288,6 +284,7 @@ Rectangle {
                                     Rectangle {
                                         Layout.preferredWidth: 172
                                         Layout.preferredHeight: 14
+                                        color: model_user.background.color
                                         clip: true
                                         Text {
                                             anchors.fill: parent
@@ -300,10 +297,11 @@ Rectangle {
                                     Rectangle {
                                         Layout.preferredWidth: 172
                                         Layout.preferredHeight: 14
+                                        color: model_user.background.color
                                         clip: true
                                         Text {
                                             anchors.fill: parent
-                                            text: model.index
+                                            text: "IP: " + ip
                                             font.family: "Inter"
                                             font.pointSize: 8
                                             color: "#808080"
@@ -314,21 +312,20 @@ Rectangle {
                         }
 
                         MouseArea {
-                            id: dragArea
+                            id: mouse_area
                             anchors.fill: parent
                             drag.target: parent
                             drag.axis: Drag.YAxis
                             hoverEnabled: true
 
                             onClicked: {
-                                view.currentItem = model
                                 view.currentIndex = model.index
                             }
 
                             onReleased: {
                                 parent.y = 56 * model.index
-                                drag.stop()
                                 parent.z = 1
+                                drag_timer.stop()
                             }
 
                             onEntered: {
@@ -338,31 +335,21 @@ Rectangle {
                             onPressed: {
                                 parent.z = 100
                                 view.dragItem = parent
-                                drag.start()
+                                drag_timer.scroll = view.contentY
+                                drag_timer.start()
                             }
 
                             onExited: {
                                 parent.scale = 1.0
                             }
-                              DropArea {
-                                anchors {
-                                    fill: parent
-                                    margins: 10
-                                }
-
-                                //onEntered: (drag) => {
-                                    //view.items.move(
-                                            //drag.source.DelegateModel.itemsIndex,
-                                            //dragArea.DelegateModel.itemsIndex)
-                                //}
-                            }
                         }
 
                         Timer {
-                            id: drag
+                            id: drag_timer
                             interval: 1
                             running: false
                             repeat: true
+                            property real scroll: 0
                             onTriggered: {
                                 var endIndex = Math.round(parent.y / 56)
                                 if (model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
@@ -370,10 +357,16 @@ Rectangle {
                                     view.model.move(model.index, endIndex, 1)
                                     if (view.currentIndex == startIndex) {
                                         view.currentIndex = model.index
-                                        //view.currentItem = model
                                     }
-                                    console.log("index: " + model.index)
-                                    console.log("current index: " + view.currentIndex)
+                                }
+                                if (scroll != view.contentY) {
+                                    parent.y = parent.y - scroll + view.contentY
+                                    scroll = view.contentY
+                                }
+                                if (!mouse_area.pressed) {
+                                    parent.y = 56 * model.index
+                                    parent.z = 1
+                                    drag_timer.stop()
                                 }
                             }
                         }
@@ -383,7 +376,7 @@ Rectangle {
                         NumberAnimation { properties: "y"; to: view.dragItem.y; duration: 0}
                     }
                     displaced: Transition {
-                        NumberAnimation { properties: "y"; duration: 200 }
+                        NumberAnimation { properties: "y"; duration: 250 }
                     }
                 }
             }
@@ -415,6 +408,88 @@ Rectangle {
             Layout.column: 0
             Layout.row: 6
             Layout.fillHeight: true 
+        }
+
+        Button {
+            id: user
+            Layout.preferredWidth: 280
+            Layout.preferredHeight: 48
+            Layout.columnSpan: 2
+            Layout.row: 7
+            Layout.alignment: Qt.AlignBottom
+            background: Rectangle {
+                border.width: 1
+                color: (mouse_area.pressed) ? "#DDFFFF" : "white"
+            }
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.margins: 8
+                spacing: 8
+
+                Image {
+                    Layout.preferredWidth: 32
+                    Layout.preferredHeight: 32
+                    source: "icons\\user.svg"
+                }
+
+                Rectangle {
+                    Layout.preferredWidth: 176
+                    Layout.preferredHeight: 32
+                    color: user.background.color
+                    ColumnLayout {
+                        anchors.fill: parent
+                        Layout.preferredWidth: 176
+                        Layout.preferredHeight: 32
+                        spacing: 4
+
+                        Rectangle {
+                            Layout.preferredWidth: 172
+                            Layout.preferredHeight: 14
+                            color: user.background.color
+                            clip: true
+                            Text {
+                                anchors.fill: parent
+                                text: name
+                                font.family: "Inter"
+                                font.pointSize: 10
+                            }
+                        }
+                        
+                        Rectangle {
+                            Layout.preferredWidth: 172
+                            Layout.preferredHeight: 14
+                            color: user.background.color
+                            clip: true
+                            Text {
+                                anchors.fill: parent
+                                text: "IP: " + ip
+                                font.family: "Inter"
+                                font.pointSize: 8
+                                color: "#808080"
+                            }
+                        }
+                    }
+                }
+            }
+
+            MouseArea {
+                id: mouse_area
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onClicked: {
+                    //Soon...
+                }
+
+                onEntered: {
+                    parent.scale = 1.03
+                }
+
+                onExited: {
+                    parent.scale = 1.0
+                }
+            }
         }
     }
 }

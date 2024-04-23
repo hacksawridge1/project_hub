@@ -19,6 +19,8 @@ ApplicationWindow {
         SideBar {
             id: sidebar
             property ListModel models: users_list
+            property string name: "Hitler"
+            property string ip: "192.168.0.139"
         }
         Chat {
             id: chat
