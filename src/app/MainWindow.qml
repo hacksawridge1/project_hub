@@ -10,7 +10,7 @@ ApplicationWindow {
     width: 1920
     height: 1080
     title: "HUB"
-    //property int user: index
+
 
     RowLayout {
         id: main_grid
@@ -25,6 +25,7 @@ ApplicationWindow {
         Chat {
             id: chat
             property ListModel models: users_list
+            property var item: users_list.get(sidebar.index)
         }
     }
 
@@ -33,14 +34,17 @@ ApplicationWindow {
         ListElement {
             name: "Artur"
             ip: "192.168.0.132"
+            last_time: 65
         }
         ListElement {
             name: "Kemran"
             ip: "192.168.0.159"
+            last_time: 239
         }
         ListElement {
             name: "Arsen"
             ip: "192.168.0.128"
+            last_time: 3
         }
     }
 }

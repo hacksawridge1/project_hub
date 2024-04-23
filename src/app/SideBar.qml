@@ -8,6 +8,11 @@ Rectangle {
     Layout.preferredWidth: 304
     Layout.fillHeight: true
     color: "#D9D9D9"
+    property int index: view.currentIndex
+
+    function select_group() {
+        view.currentIndex = -1
+    }
 
     function new_user(username, userip) {
         models.append({name: username, ip: userip})
@@ -66,17 +71,11 @@ Rectangle {
                 width: 32
                 height: 32
                 anchors.centerIn: parent
-                source: "icons\\notifications_active.svg"
+                source: "icons/notifications_active.svg"
             }
 
             MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    sidebar.color = "white"
-                }
-            }
-
-            MouseArea {
+                id: notifications_area
                 anchors.fill: parent
                 hoverEnabled: true
                 onEntered: {
@@ -105,10 +104,11 @@ Rectangle {
                 width: 34
                 height: 21
                 anchors.centerIn: parent
-                source: "icons\\laptop.svg"
+                source: "icons/laptop.svg"
             }
 
             MouseArea {
+                id: laptop_area
                 anchors.fill: parent
                 hoverEnabled: true
                 onEntered: {
@@ -141,12 +141,14 @@ Rectangle {
                 width: 32
                 height: 32
                 anchors.centerIn: parent
-                source: "icons\\settings.svg"
+                source: "icons/settings.svg"
             }
 
             MouseArea {
+                id: settings_area
                 anchors.fill: parent
                 hoverEnabled: true
+
                 onEntered: {
                     parent.scale = 1.1
                 }
@@ -177,10 +179,11 @@ Rectangle {
                 width: 24
                 height: 24
                 anchors.centerIn: parent
-                source: "icons\\theme.png"
+                source: "icons/theme.png"
             }
 
             MouseArea {
+                id: theme_area
                 anchors.fill: parent
                 hoverEnabled: true
                 onEntered: {
@@ -203,18 +206,25 @@ Rectangle {
             Layout.alignment: Qt.AlignTop
             background: Rectangle {
                 border.width: 1
+                color: (view.currentIndex == -1) ? (group_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (group_area.pressed) ? "#DDFFFF" : "white"
             }
 
             Image {
                 width: 24
                 height: 24
                 anchors.centerIn: parent
-                source: "icons\\group.svg"
+                source: "icons/group.svg"
             }
 
             MouseArea {
+                id: group_area
                 anchors.fill: parent
                 hoverEnabled: true
+
+                onClicked: {
+                    sidebar.select_group()
+                }
+
                 onEntered: {
                     parent.scale = 1.1
                 }
@@ -257,7 +267,7 @@ Rectangle {
                         z: 1
                         background: Rectangle {
                             border.width: 1
-                            color: (view.currentIndex == model.index) ? (mouse_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (mouse_area.pressed) ? "#DDFFFF" : "white"
+                            color: (view.currentIndex == model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
                         }
 
                         RowLayout {
@@ -268,7 +278,7 @@ Rectangle {
                             Image {
                                 Layout.preferredWidth: 32
                                 Layout.preferredHeight: 32
-                                source: "icons\\user.svg"
+                                source: "icons/user.svg"
                             }
 
                             Rectangle {
@@ -312,7 +322,7 @@ Rectangle {
                         }
 
                         MouseArea {
-                            id: mouse_area
+                            id: model_area
                             anchors.fill: parent
                             drag.target: parent
                             drag.axis: Drag.YAxis
@@ -358,12 +368,14 @@ Rectangle {
                                     if (view.currentIndex == startIndex) {
                                         view.currentIndex = model.index
                                     }
+                                    console.log("index: " + model.index)
+                                    console.log("currentIndex: " + view.currentIndex)
                                 }
                                 if (scroll != view.contentY) {
                                     parent.y = parent.y - scroll + view.contentY
                                     scroll = view.contentY
                                 }
-                                if (!mouse_area.pressed) {
+                                if (!model_area.pressed) {
                                     parent.y = 56 * model.index
                                     parent.z = 1
                                     drag_timer.stop()
@@ -430,7 +442,7 @@ Rectangle {
                 Image {
                     Layout.preferredWidth: 32
                     Layout.preferredHeight: 32
-                    source: "icons\\user.svg"
+                    source: "icons/user.svg"
                 }
 
                 Rectangle {

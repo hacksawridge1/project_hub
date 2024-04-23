@@ -12,6 +12,7 @@ ApplicationWindow {
     height: 400
     title: "Authorization"
     color: "#D9D9D9"
+    flags: Qt.Window | Qt.MSWindowsFixedSizeDialogHint | Qt.WindowTitleHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint
 
     ColumnLayout {
         anchors.fill: parent
@@ -112,11 +113,11 @@ ApplicationWindow {
             Layout.alignment: Qt.AlignHCenter
 
             Image {
-                source: "icons\\HUB 2024.svg"
+                source: "icons/HUB 2024.svg"
             }
 
             Image {
-                source: "icons\\©.svg"
+                source: "icons/©.svg"
             }
         }
     }

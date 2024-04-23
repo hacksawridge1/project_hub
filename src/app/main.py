@@ -2,7 +2,7 @@ import sys
 from os import getcwd
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-appPath = getcwd() + "\\src\\app\\"
+appPath = getcwd() + "/src/app/"
 
 
 if __name__ == "__main__":
