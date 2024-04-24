@@ -53,7 +53,7 @@ def start_server(user: User):
       user.remove_user = decrypt_object(req, user.private_key)
       return user.users_online
     
-    @app.post(f'/<str:{user.name}>/message')
+    @app.post(f'/<string:{user.name}>/message')
     def recv_message():
       req = eval(request.form.get('data'))
       print(f'\nMessage from [{request.remote_addr}]:\t' + decrypt_data(req, user.private_key))

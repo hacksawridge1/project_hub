@@ -98,7 +98,7 @@ class User:
         to_send = {
           "data" : str(encrypt_data(self.__user_info, i['user_pub_key']))
         }
-        requests.post(f'http://{i['user_ip']}:{9091}/remove-user', data = to_send)
+        requests.post('http://{:s}:{:s}/remove-user'.format(i['user_ip'], 9091), data = to_send)
     except:
       print("Connection error")
       self.call_to_remove_user()

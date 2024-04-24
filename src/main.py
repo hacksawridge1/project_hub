@@ -3,6 +3,7 @@ from modules.app import App
 from modules.new_server import start_server
 # from _thread import start_new_thread
 from threading import Thread
+import sys
 
 user_name = input("Введите ваше имя:\t")
 # user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
@@ -22,7 +23,7 @@ while True:
   data = input('Введите сообщение:\t')
   if data == 'stop':
     user.call_to_remove_user()
-    raise SystemExit
+    sys.exit()
   elif data == 'Пользователи':
     print(user.users_online)
   else:
