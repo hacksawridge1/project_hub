@@ -93,11 +93,9 @@ class User:
 
   def call_to_remove_user(self):
     try:
-      for i in self.__users_online_list:
-        to_send = {
-          "data" : str(encrypt_object(self.__user_info, i['user_pub_key']))
-        }
-        requests.post('http://{:s}:{:s}/remove-user'.format(i['user_ip'], 9091), data = to_send)
+      for i in self.users_online:
+        user_ip = i['user_ip'] 
+        requests.post(f'http://{user_ip}:{9091}/remove-user', data = {"data" : str(encrypt_object(self.__user_info, i['user_pub_key']))})
     except:
       print("Connection error")
       self.call_to_remove_user()
