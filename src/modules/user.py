@@ -63,12 +63,9 @@ class User:
               # if len(users_to_ping) <= 4:
               users_to_ping.append(f'{net_ip}' + str(i))
               resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
-              print(resp.text)
               self.__users_online_list.append(eval(resp.text))
               # used_id.append(resp['user_id'])
-              print(self.__user_info)
               requests.post(f'http://{net_ip}{i}:{9091}/user', data = { 'data' : str(encrypt_object(self.user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')['user_pub_key']))})
-              print(self.__user_info)
               i += 1
               continue
           else:
