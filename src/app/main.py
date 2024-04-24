@@ -1,8 +1,14 @@
 import sys
 from os import getcwd
+import platform
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-appPath = getcwd() + "/src/app/"
+appPath = getcwd()
+
+if platform.system() == 'Linux':
+    appPath += "/"
+elif platform.system() == 'Windows':
+    appPath += "\\src\\app\\"
 
 
 if __name__ == "__main__":
