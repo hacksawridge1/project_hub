@@ -4,6 +4,12 @@ from modules.new_server import start_server
 # from _thread import start_new_thread
 from threading import Thread
 import sys
+from time import sleep
+
+def check_server():
+  while True:
+    print(server_thread.is_alive())
+    sleep(3)
 
 user_name = input("Введите ваше имя:\t")
 # user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
@@ -13,6 +19,8 @@ user = User(user_name)
 # server = Server(user)
 server_thread = Thread(target=start_server, args=(user, ))
 server_thread.start()
+check_server_thread = Thread(target=check_server)
+check_server_thread.start()
 init_thread = Thread(target=user.initial)
 init_thread.start()
 print("Генерация прошла успешно")
