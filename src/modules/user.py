@@ -63,6 +63,7 @@ class User:
               # if len(users_to_ping) <= 4:
               users_to_ping.append(f'{net_ip}' + str(i))
               resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
+              print(resp.text)
               self.__users_online_list.append(eval(resp.text))
               # used_id.append(resp['user_id'])
               requests.post(
