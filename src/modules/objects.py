@@ -123,22 +123,23 @@ def find_in_object(object: tuple[set, list, tuple, dict], match: str):
   if type(object) in arr_types:
     while k < len(object):
 
+      if object[k] == match:
+        return object[k]
       if find_in_object(object[k], match) != None:
         return object[k]
       k += 1
+  else:
+    for i in object:
+      if object[i] == match:
+        return object
+      else:
+        if type(object[i]) in arr_types:
+          while k < len(object[i]):
 
-  for i in object:
-
-    if object[i] == match:
-      return object
-    else:
-      if type(object[i]) in arr_types:
-        while k < len(object[i]):
-
-          if type(object[i][k]) is dict:
-            if find_in_object(object[i][k], match) != None:
-              return object[i][k]
-          else:
-            if object[i][k] == match:
-              return object[i]
-          k += 1
+            if type(object[i][k]) is dict:
+              if find_in_object(object[i][k], match) != None:
+                return object[i][k]
+            else:
+              if object[i][k] == match:
+                return object[i]
+            k += 1

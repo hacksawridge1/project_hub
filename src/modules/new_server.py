@@ -41,7 +41,6 @@ def start_server(user: User):
     @app.route('/user', methods=['GET', 'POST'])
     def init():
       if request.method == 'GET':
-        print(user.user_info)
         return user.user_info
       if request.method == 'POST':
         req = eval(request.form.get('data'))
