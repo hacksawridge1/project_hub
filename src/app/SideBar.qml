@@ -80,7 +80,7 @@ Rectangle {
             }
 
             Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
             }
 
             Image {
@@ -126,7 +126,7 @@ Rectangle {
             }
 
             Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
             }
 
             Image {
@@ -176,7 +176,7 @@ Rectangle {
             }
 
             Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
             }
 
             Image {
@@ -227,7 +227,7 @@ Rectangle {
             }
 
             Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
             }
 
             Image {
@@ -274,7 +274,7 @@ Rectangle {
             }
 
             Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
             }
 
             Image {
@@ -331,7 +331,7 @@ Rectangle {
                 anchors.leftMargin: 4
                 spacing: 8
                 model: models
-                property Button dragItem
+                property real dragY
 
                 delegate: Button {
                     id: model_user
@@ -345,7 +345,7 @@ Rectangle {
                     }
 
                     Behavior on scale {
-                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
                     }
 
                     RowLayout {
@@ -409,7 +409,6 @@ Rectangle {
 
                         onReleased: {
                             parent.scale = 1.03
-                            view.forceLayout()
                             back.start()
                             parent.z = 1
                             drag_timer.stop()
@@ -420,10 +419,11 @@ Rectangle {
                         }
 
                         onPressed: {
-                            parent.scale = 0.95
+                            parent.scale = 0.97
                             parent.z = 100
-                            view.dragItem = parent
+                            //view.dragItem = parent
                             drag_timer.scroll = view.contentY
+                            drag_timer.startY = parent.y
                             drag_timer.start()
                         }
 
@@ -438,14 +438,17 @@ Rectangle {
                         running: false
                         repeat: true
                         property real scroll: 0
+                        property real startY: 0
                         onTriggered: {
                             var endIndex = Math.round(parent.y / 56)
                             if (model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
                                 var startIndex = model.index
+                                view.dragY = parent.y
                                 view.model.move(model.index, endIndex, 1)
                                 if (view.currentIndex == startIndex) {
                                     view.currentIndex = model.index
                                 }
+                                //console.log("contentY: " + view.contentY)
                             }
                             if (scroll != view.contentY) {
                                 parent.y = parent.y - scroll + view.contentY
@@ -456,9 +459,12 @@ Rectangle {
                                 parent.z = 1
                                 drag_timer.stop()
                             }
+                            if (parent.y != startY && parent.scale < 1) {
+                                parent.scale = 1.03
+                            }
                         }
                     }
-                    NumberAnimation { id: back; target: model_user; property: "y"; to: 56 * model.index; duration: 250 }
+                    NumberAnimation { id: back; target: model_user; property: "y"; to: 56 * model.index; duration: 150 }
                 }
 
                 add: Transition {
@@ -466,10 +472,10 @@ Rectangle {
                     NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
                 }
                 move: Transition {
-                    NumberAnimation { properties: "y"; to: view.dragItem.y; duration: 0 }
+                    NumberAnimation { property: "y"; to: view.dragY; duration: 0 }
                 }
                 displaced: Transition {
-                    NumberAnimation { properties: "y"; duration: 250 }
+                    NumberAnimation { property: "y"; duration: 250 }
                 }
                 remove: Transition {
                     NumberAnimation { property: "opacity"; from: 1.0; to: 0; duration: 400 }
@@ -517,7 +523,7 @@ Rectangle {
             }
 
             Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
             }
 
             RowLayout {
