@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
 
-ApplicationWindow {
+Window {
     id: main_window
     visible: true
     visibility: Window.Maximized
@@ -11,6 +11,8 @@ ApplicationWindow {
     height: 1080
     title: "HUB"
 
+    property var new_user: sidebar.new_user
+    property var delete_user: sidebar.delete_user
 
     RowLayout {
         id: main_grid
@@ -47,4 +49,16 @@ ApplicationWindow {
             last_time: 3
         }
     }
+    //Component.onCompleted: {
+        //new_user("Sanya", "190.160.0.23")
+    //}
+
+    //Connections{
+        //target: control
+
+        //onNew_User: {
+            //console.log("new_user")
+            //functions.open()
+        //}
+    //}
 }

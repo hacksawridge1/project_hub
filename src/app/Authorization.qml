@@ -6,6 +6,7 @@ import QtQuick.Controls.Universal
 
 ApplicationWindow {
     id: authorization
+    signal main_window()
 
     visible: true
     width: 600
@@ -92,8 +93,7 @@ ApplicationWindow {
                         anchors.fill: parent
                         onClicked: {
                             authorization.close()
-                            var component = Qt.createComponent("MainWindow.qml")
-                            MainWindow.main_window = component.createObject()
+                            authorization.main_window()
                         }
                     }
                 }

@@ -448,7 +448,6 @@ Rectangle {
                                 if (view.currentIndex == startIndex) {
                                     view.currentIndex = model.index
                                 }
-                                //console.log("contentY: " + view.contentY)
                             }
                             if (scroll != view.contentY) {
                                 parent.y = parent.y - scroll + view.contentY
