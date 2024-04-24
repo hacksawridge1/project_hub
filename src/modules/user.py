@@ -123,7 +123,16 @@ class User:
   def remove_user(self, data: dict):
     self.__remove_user(data)
 
+  @remove_user.setter
+  def remove_user(self, data: dict):
+    self.__remove_user(data)
+
+
   @property
+  def add_user(self, data: dict):
+    pass
+  
+  @add_user.setter
   def add_user(self, data: dict):
     self.__add_user(data)
 
