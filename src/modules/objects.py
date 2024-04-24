@@ -2,6 +2,7 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from textwrap import wrap
 from pprint import pprint
+from copy import deepcopy
 
 arr_types = [list, tuple, set]
 
@@ -55,35 +56,36 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
   return output_data
 
 def encrypt_object(object, public_key: str):
+  object_copy = deepcopy(object)
   public_key = RSA.import_key(public_key).public_key().export_key(format='PEM').decode('utf-8')
-  if type(object) in arr_types:
+  if type(object_copy) in arr_types:
     i = 0
-    while i < len(object):
-      if (type(object[i]) is dict
-          or type(object[i]) in arr_types):
-        object[i] = encrypt_object(object[i], public_key)
+    while i < len(object_copy):
+      if (type(object_copy[i]) is dict
+          or type(object_copy[i]) in arr_types):
+        object_copy[i] = encrypt_object(object_copy[i], public_key)
       else:
-        object[i] = encrypt_data(object[i], public_key)
+        object_copy[i] = encrypt_data(object_copy[i], public_key)
       i += 1
-  elif type(object) is dict:
-    for i in object:
+  elif type(object_copy) is dict:
+    for i in object_copy:
       k = 0
       
       if i != 'user_pub_key':
 
-        if type(object[i]) in arr_types:
-          while k < len(object[i]):
+        if type(object_copy[i]) in arr_types:
+          while k < len(object_copy[i]):
 
-            if (type(object[i][k]) is dict 
-              or type(object[i][k]) in arr_types):
-              object[i][k] = encrypt_object(object[i][k], public_key)
+            if (type(object_copy[i][k]) is dict 
+              or type(object_copy[i][k]) in arr_types):
+              object_copy[i][k] = encrypt_object(object_copy[i][k], public_key)
             else:
-              object[i][k] = encrypt_data(object[i][k], public_key)
+              object_copy[i][k] = encrypt_data(object_copy[i][k], public_key)
             k += 1
         else:
-          object[i] = encrypt_data(object[i], public_key)
-
-  return object
+          object_copy[i] = encrypt_data(object_copy[i], public_key)
+          
+  return object_copy
 
 def decrypt_object(object: tuple[set, list, tuple, dict], private_key: str, passphrase: str = None):
   private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
