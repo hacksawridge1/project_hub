@@ -66,9 +66,9 @@ class User:
               print(resp.text)
               self.__users_online_list.append(eval(resp.text))
               # used_id.append(resp['user_id'])
-              requests.post(
-                f'http://{net_ip}{i}:{9091}/user', 
-                data = { 'data' : str(encrypt_object(self.__user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')['user_pub_key']))})
+              print(self.__user_info)
+              requests.post(f'http://{net_ip}{i}:{9091}/user', data = { 'data' : str(encrypt_object(self.user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')['user_pub_key']))})
+              print(self.__user_info)
               i += 1
               continue
           else:
@@ -98,7 +98,7 @@ class User:
     try:
       for i in self.__users_online_list:
         to_send = {
-          "data" : str(encrypt_data(self.__user_info, i['user_pub_key']))
+          "data" : str(encrypt_object(self.__user_info, i['user_pub_key']))
         }
         requests.post('http://{:s}:{:s}/remove-user'.format(i['user_ip'], 9091), data = to_send)
     except:
@@ -150,13 +150,9 @@ class User:
   def name(self):
     return self.__name
 
-  @property
-  def id(self):
-    return self.__id
-
-  @property
-  def local_ip(self):
-    return self.__ip
+  # @property
+  # def id(self):
+  #   return self.__id
 
   @property
   def public_key(self):

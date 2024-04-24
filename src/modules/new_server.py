@@ -41,12 +41,12 @@ def start_server(user: User):
     @app.route('/user', methods=['GET', 'POST'])
     def init():
       if request.method == 'GET':
-        print(request.method)
+        print(user.user_info)
         return user.user_info
       if request.method == 'POST':
         req = eval(request.form.get('data'))
         user.add_user = decrypt_object(req, user.private_key)
-        return str(request.headers)
+        return 'ok'
     
     @app.post('/remove-user')
     def remove_user():
