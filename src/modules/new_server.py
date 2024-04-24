@@ -38,19 +38,20 @@ def start_server(user: User):
     def hello():
       return user.name
     
-    @app.route('/hi')
-    def hi():
-      return str(request.headers)
-    
-    @app.route('/init')
+    @app.route('/user', methods=['POST', 'GET'])
     def init():
-      return user.user_info
-      
-    @app.post('/new-user')
-    def post_init():
+      if request.method == 'GET':
+        return user.user_info
+      if request.method == 'POST':
+        req = eval(request.form.get('data'))
+        user.add_user = decrypt_object(req, user.private_key)
+        return str(request.headers)
+    
+    @app.post('/remove-user')
+    def remove_user():
       req = eval(request.form.get('data'))
-      user.users_online = decrypt_object(req, user.private_key)
-      return str(request.headers)
+      user.remove_user = decrypt_object(req, user.private_key)
+      return user.users_online
     
     @app.post(f'/<str:{user.name}>/message')
     def recv_message():
@@ -58,8 +59,6 @@ def start_server(user: User):
       print(f'\nMessage from [{request.remote_addr}]:\t' + decrypt_data(req, user.private_key))
       return str(request.headers)
     
-    @app.post('/remove-user')
-    def remove_user():
-      pass
     
-    app.run(host=user.ip, port=9091)
+    
+    app.run(host='0.0.0.0', port=9091)

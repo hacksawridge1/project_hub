@@ -1,13 +1,10 @@
-import socket
 import netifaces
 import ipaddress
 from Crypto.PublicKey import RSA
 from .objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data, find_in_object
-from .server import start_server
 import requests
-import json
-import threading
 from dataclasses import dataclass
+from random import randint
 @dataclass
 class User:
 
@@ -15,14 +12,12 @@ class User:
   def __init__(self, name: str):
     self.__name = name
     self.__ip = self.__get_local_ip()
-    self.__id = 101
     self.__generate_keys()
     # self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.__user_info = {
       "user_name": str(self.__name),
       "user_ip": str(self.__ip),
-      "user_id": str(self.__id),
-      "user_pub_key": str(self.__public_key.decode('utf-8'))
+      "user_pub_key": str(self.__public_key.decode())
     }
 
   # methods
@@ -43,12 +38,6 @@ class User:
     }
     requests.post(f'http://{addr}:9091/{user_name}/message', data = message) #in progress
 
-
-  def __generate_user_id():
-    id = 101 # in progress
-    return id
-  
-
   def __get_local_ip(self): 
     for interface in netifaces.interfaces():
         if netifaces.AF_INET in netifaces.ifaddresses(interface):
@@ -56,29 +45,27 @@ class User:
                 address_object = ipaddress.IPv4Address(address_info['addr'])
                 if not address_object.is_loopback:
                    return address_info['addr']
-                
 
   def __initial(self):
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
-    users_online = list()
+    users_to_ping = list()
     self.__users_online_list = list()
-    black_list = list()
-
-    print("START INIT...")
+    # used_id = list()
 
     while i < 255:
       try:
-        if f'{net_ip}' + str(i) not in black_list and f'{net_ip}' + str(i) != self.__ip:
-          if len(users_online) < 4:
+        if f'{net_ip}' + str(i) != self.__ip:
+          if len(users_to_ping) < 4:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
             if resp.ok:
-              # if len(users_online) <= 4:
-              #   users_online.append(f'{net_ip}' + str(i))
-              resp = requests.get(f'http://{net_ip}{i}:{9091}/init')
-              self.__users_online_list.append(eval(resp.text))
+              # if len(users_to_ping) <= 4:
+              users_to_ping.append(f'{net_ip}' + str(i))
+              resp = eval(requests.get(f'http://{net_ip}{i}:{9091}/user').text)
+              self.__users_online_list.append(resp)
+              # used_id.append(resp['user_id'])
               requests.post(
-                f'http://{net_ip}{i}:{9091}/new-user', 
+                f'http://{net_ip}{i}:{9091}/user', 
                 data = { 'data' : str(encrypt_object(self.__user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')['user_pub_key']))})
               i += 1
               continue
@@ -91,10 +78,37 @@ class User:
         i += 1
         continue
     
-    print("END INIT...")
+  # TODO
+  # def __generate_user_id(self, data: tuple[list, set, tuple]):
+  #   id = str(randint(1, 10000))
+  #   if id in data:
+  #     self.__generate_user_id(data)
+  #   else:
+  #     self.__user_info['user_id'] = str(id)
 
-  def __user_leave(self):
-    requests.post()
+  def __remove_user(self, removed_user: dict):
+    try:
+      self.__users_online_list.remove(find_in_object(self.__users_online_list, removed_user))
+    except ValueError:
+      print('Пользователь не найден...')
+
+  def call_to_remove_user(self):
+    try:
+      for i in self.__users_online_list:
+        to_send = {
+          "data" : str(encrypt_data(self.__user_info, i['user_pub_key']))
+        }
+        requests.post(f'http://{i['user_ip']}:{9091}/remove-user', data = to_send)
+    except:
+      print("Connection error")
+      self.call_to_remove_user()
+
+  def __add_user(self, data: dict):
+    if find_in_object(self.__users_online_list, data) == None:
+      self.__users_online_list.append(data)
+    else:
+      print('Пользователь уже существует')
+
   
   # getters
   @property
@@ -104,13 +118,14 @@ class User:
   @property
   def users_online(self):
     return self.__users_online_list
-  
-  @users_online.setter
-  def users_online(self, data: object):
-    if find_in_object(self.__users_online_list, data) == None:
-      self.__users_online_list.append(data)
-    else:
-      return 
+
+  @property
+  def remove_user(self, data: dict):
+    self.__remove_user(data)
+
+  @property
+  def add_user(self, data: dict):
+    self.__add_user(data)
 
   @property
   def ip(self):
