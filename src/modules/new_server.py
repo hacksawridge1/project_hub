@@ -38,7 +38,7 @@ def start_server(user: User):
     def hello():
       return user.name
     
-    @app.route('/user', methods=['POST', 'GET'])
+    @app.route('/user', methods=['GET', 'POST'])
     def init():
       if request.method == 'GET':
         return user.user_info

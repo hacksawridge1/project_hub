@@ -54,8 +54,9 @@ class User:
     # used_id = list()
 
     while i < 255:
+      print(f'{net_ip}{i}')
       try:
-        if f'{net_ip}' + str(i) != self.__ip:
+        if f'{net_ip}{i}' != self.__ip:
           if len(users_to_ping) < 4:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
             if resp.ok:
