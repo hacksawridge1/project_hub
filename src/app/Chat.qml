@@ -11,19 +11,21 @@ ColumnLayout {
 
     Rectangle {
         Layout.fillWidth: true
-        Layout.preferredHeight: 80
+        Layout.preferredHeight: 60
         color: "#D9D9D9"
-        visible: chat.models.count == 0 ? false : true
+        visible: (connected) ? true : false
 
         RowLayout {
             anchors.fill: parent
-            anchors.margins: 12
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
+            //anchors.margins: 12
 
             Rectangle {
                 id: user
                 Layout.preferredWidth: 232
                 Layout.preferredHeight: 48
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                 color: "#D9D9D9"
                 visible: (typeof item == "undefined") ? false : true
 
@@ -83,18 +85,19 @@ ColumnLayout {
             Text {
                 Layout.preferredWidth: 220
                 Layout.preferredHeight: 48
-                Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 text: "Общий чат"
                 font.weight: Font.Bold
                 font.family: "Inter"
                 font.pointSize: 28
+                color: "#545353"
                 visible: (typeof item == "undefined") ? true : false
             }
 
             RowLayout {
                 Layout.preferredWidth: 150
                 Layout.preferredHeight: 56
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                 visible: (typeof item == "undefined") ? false : true
                 spacing: 12
 
@@ -143,7 +146,7 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        color: models.count == 0 ? "#D9D9D9" : "white"
+        color: (connected) ? "white" : "#D9D9D9"
         Text {
             anchors.centerIn: parent
             text: "Добро пожаловать в HUB."
@@ -151,7 +154,7 @@ ColumnLayout {
             font.family: "Inter"
             font.pointSize: 46
             color: "#545353"
-            visible: models.count == 0 ? true : false
+            visible: (connected) ? false : true
         }
     }
         
@@ -160,7 +163,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: 80
         spacing: 0
-        visible: models.count == 0 ? false : true
+        visible: (connected) ? true : false
 
         Rectangle {
             Layout.fillWidth: true

@@ -1,14 +1,13 @@
 import sys
-from os import getcwd
+from os import path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-appPath = getcwd() + "/src/app/"
 
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
-    qml_file = appPath + "Authorization.qml"
+    qml_file = path.dirname(path.abspath(__file__)) + "/Authorization.qml"
     engine.load(qml_file)
     if not engine.rootObjects():
         sys.exit(-1)

@@ -24,7 +24,7 @@ ApplicationWindow {
         }
         Chat {
             id: chat
-            property ListModel models: users_list
+            property bool connected: users_list.count != 0
             property var item: users_list.get(sidebar.index)
         }
     }

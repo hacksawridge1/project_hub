@@ -19,6 +19,13 @@ Rectangle {
     }
 
     function delete_user(index) {
+        if (view.currentIndex == index) {
+            if (view.count > 1) {
+                ++view.currentIndex
+            } else {
+                view.currentIndex = -1
+            }
+        }
         models.remove(index)
     }
 
@@ -38,6 +45,11 @@ Rectangle {
             Layout.alignment: Qt.AlignTop
             border.width: 1
             clip: true
+
+            Behavior on scale {
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+            }
+
             TextInput {
                 id: search
                 anchors.fill: parent
@@ -67,6 +79,10 @@ Rectangle {
                 border.width: 1
             }
 
+            Behavior on scale {
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+            }
+
             Image {
                 width: 32
                 height: 32
@@ -78,6 +94,15 @@ Rectangle {
                 id: notifications_area
                 anchors.fill: parent
                 hoverEnabled: true
+
+                onPressed: {
+                    parent.scale = 1.0
+                }
+
+                onReleased: {
+                    parent.scale = 1.1
+                }
+
                 onEntered: {
                     parent.scale = 1.1
                 }
@@ -100,6 +125,10 @@ Rectangle {
                 border.width: 1
             }
 
+            Behavior on scale {
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+            }
+
             Image {
                 width: 34
                 height: 21
@@ -111,6 +140,15 @@ Rectangle {
                 id: laptop_area
                 anchors.fill: parent
                 hoverEnabled: true
+
+                onPressed: {
+                    parent.scale = 1.0
+                }
+
+                onReleased: {
+                    parent.scale = 1.1
+                }
+
                 onEntered: {
                     parent.scale = 1.1
                 }
@@ -137,6 +175,10 @@ Rectangle {
                 border.width: 1
             }
 
+            Behavior on scale {
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+            }
+
             Image {
                 width: 32
                 height: 32
@@ -148,6 +190,14 @@ Rectangle {
                 id: settings_area
                 anchors.fill: parent
                 hoverEnabled: true
+
+                onPressed: {
+                    parent.scale = 1.0
+                }
+
+                onReleased: {
+                    parent.scale = 1.1
+                }
 
                 onEntered: {
                     parent.scale = 1.1
@@ -173,6 +223,11 @@ Rectangle {
             Layout.alignment: Qt.AlignTop
             background: Rectangle {
                 border.width: 1
+                color: (theme_area.pressed) ? "#DDFFFF" : "white"
+            }
+
+            Behavior on scale {
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
             }
 
             Image {
@@ -186,6 +241,15 @@ Rectangle {
                 id: theme_area
                 anchors.fill: parent
                 hoverEnabled: true
+
+                onPressed: {
+                    parent.scale = 1.0
+                }
+
+                onReleased: {
+                    parent.scale = 1.1
+                }
+
                 onEntered: {
                     parent.scale = 1.1
                 }
@@ -209,6 +273,10 @@ Rectangle {
                 color: (view.currentIndex == -1) ? (group_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (group_area.pressed) ? "#DDFFFF" : "white"
             }
 
+            Behavior on scale {
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+            }
+
             Image {
                 width: 24
                 height: 24
@@ -225,6 +293,14 @@ Rectangle {
                     sidebar.select_group()
                 }
 
+                onPressed: {
+                    parent.scale = 1.0
+                }
+
+                onReleased: {
+                    parent.scale = 1.1
+                }
+
                 onEntered: {
                     parent.scale = 1.1
                 }
@@ -235,8 +311,8 @@ Rectangle {
             }
         }
 
-        ScrollView {
-            id: scrl_users
+        Rectangle {
+            id: users
             Layout.column: 1
             Layout.row: 1
             Layout.rowSpan: 6
@@ -244,174 +320,180 @@ Rectangle {
             Layout.fillHeight: true
             Layout.topMargin: 6
             Layout.leftMargin: 4
+            color: "#D9D9D9"
+            clip: true
 
-            Rectangle {
-                id: users
+            ListView {
+                id: view
                 anchors.fill: parent
-                color: "#D9D9D9"
+                anchors.topMargin: 6
+                anchors.bottomMargin: 6
+                anchors.leftMargin: 4
+                spacing: 8
+                model: models
+                property Button dragItem
 
-                ListView {
-                    id: view
-                    anchors.fill: parent
-                    anchors.topMargin: 6
-                    anchors.leftMargin: 4
-                    spacing: 8
-                    model: models
-                    property Button dragItem
+                delegate: Button {
+                    id: model_user
+                    width: 232
+                    height: 48
+                    parent: view
+                    z: 1
+                    background: Rectangle {
+                        border.width: 1
+                        color: (view.currentIndex == model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
+                    }
 
-                    delegate: Button {
-                        id: model_user
-                        width: 232
-                        height: 48
-                        parent: view
-                        z: 1
-                        background: Rectangle {
-                            border.width: 1
-                            color: (view.currentIndex == model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
+                    }
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        spacing: 8
+
+                        Image {
+                            Layout.preferredWidth: 32
+                            Layout.preferredHeight: 32
+                            source: "icons/user.svg"
                         }
 
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.margins: 8
-                            spacing: 8
-
-                            Image {
-                                Layout.preferredWidth: 32
-                                Layout.preferredHeight: 32
-                                source: "icons/user.svg"
-                            }
-
-                            Rectangle {
+                        Item {
+                            Layout.preferredWidth: 176
+                            Layout.preferredHeight: 32
+                            ColumnLayout {
+                                anchors.fill: parent
                                 Layout.preferredWidth: 176
                                 Layout.preferredHeight: 32
-                                color: model_user.background.color
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    Layout.preferredWidth: 176
-                                    Layout.preferredHeight: 32
-                                    spacing: 4
+                                spacing: 4
 
-                                    Rectangle {
-                                        Layout.preferredWidth: 172
-                                        Layout.preferredHeight: 14
-                                        color: model_user.background.color
-                                        clip: true
-                                        Text {
-                                            anchors.fill: parent
-                                            text: model.name
-                                            font.family: "Inter"
-                                            font.pointSize: 10
-                                        }
+                                Item {
+                                    Layout.preferredWidth: 172
+                                    Layout.preferredHeight: 14
+                                    clip: true
+                                    Text {
+                                        anchors.fill: parent
+                                        text: model.name
+                                        font.family: "Inter"
+                                        font.pointSize: 10
                                     }
-                                    
-                                    Rectangle {
-                                        Layout.preferredWidth: 172
-                                        Layout.preferredHeight: 14
-                                        color: model_user.background.color
-                                        clip: true
-                                        Text {
-                                            anchors.fill: parent
-                                            text: "IP: " + ip
-                                            font.family: "Inter"
-                                            font.pointSize: 8
-                                            color: "#808080"
-                                        }
+                                }
+                                
+                                ItemGroup {
+                                    Layout.preferredWidth: 172
+                                    Layout.preferredHeight: 14
+                                    clip: true
+                                    Text {
+                                        anchors.fill: parent
+                                        text: "IP: " + ip
+                                        font.family: "Inter"
+                                        font.pointSize: 8
+                                        color: "#808080"
                                     }
                                 }
                             }
                         }
+                    }
 
-                        MouseArea {
-                            id: model_area
-                            anchors.fill: parent
-                            drag.target: parent
-                            drag.axis: Drag.YAxis
-                            hoverEnabled: true
+                    MouseArea {
+                        id: model_area
+                        anchors.fill: parent
+                        drag.target: parent
+                        drag.axis: Drag.YAxis
+                        hoverEnabled: true
 
-                            onClicked: {
-                                view.currentIndex = model.index
+                        onClicked: {
+                            view.currentIndex = model.index
+                        }
+
+                        onReleased: {
+                            parent.scale = 1.03
+                            view.forceLayout()
+                            back.start()
+                            parent.z = 1
+                            drag_timer.stop()
+                        }
+
+                        onEntered: {
+                            parent.scale = 1.03
+                        }
+
+                        onPressed: {
+                            parent.scale = 0.95
+                            parent.z = 100
+                            view.dragItem = parent
+                            drag_timer.scroll = view.contentY
+                            drag_timer.start()
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
+                        }
+                    }
+
+                    Timer {
+                        id: drag_timer
+                        interval: 1
+                        running: false
+                        repeat: true
+                        property real scroll: 0
+                        onTriggered: {
+                            var endIndex = Math.round(parent.y / 56)
+                            if (model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
+                                var startIndex = model.index
+                                view.model.move(model.index, endIndex, 1)
+                                if (view.currentIndex == startIndex) {
+                                    view.currentIndex = model.index
+                                }
                             }
-
-                            onReleased: {
+                            if (scroll != view.contentY) {
+                                parent.y = parent.y - scroll + view.contentY
+                                scroll = view.contentY
+                            }
+                            if (!model_area.pressed) {
                                 parent.y = 56 * model.index
                                 parent.z = 1
                                 drag_timer.stop()
                             }
-
-                            onEntered: {
-                                parent.scale = 1.03
-                            }
-
-                            onPressed: {
-                                parent.z = 100
-                                view.dragItem = parent
-                                drag_timer.scroll = view.contentY
-                                drag_timer.start()
-                            }
-
-                            onExited: {
-                                parent.scale = 1.0
-                            }
-                        }
-
-                        Timer {
-                            id: drag_timer
-                            interval: 1
-                            running: false
-                            repeat: true
-                            property real scroll: 0
-                            onTriggered: {
-                                var endIndex = Math.round(parent.y / 56)
-                                if (model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
-                                    var startIndex = model.index
-                                    view.model.move(model.index, endIndex, 1)
-                                    if (view.currentIndex == startIndex) {
-                                        view.currentIndex = model.index
-                                    }
-                                    console.log("index: " + model.index)
-                                    console.log("currentIndex: " + view.currentIndex)
-                                }
-                                if (scroll != view.contentY) {
-                                    parent.y = parent.y - scroll + view.contentY
-                                    scroll = view.contentY
-                                }
-                                if (!model_area.pressed) {
-                                    parent.y = 56 * model.index
-                                    parent.z = 1
-                                    drag_timer.stop()
-                                }
-                            }
                         }
                     }
+                    NumberAnimation { id: back; target: model_user; property: "y"; to: 56 * model.index; duration: 250 }
+                }
 
-                    move: Transition {
-                        NumberAnimation { properties: "y"; to: view.dragItem.y; duration: 0}
-                    }
-                    displaced: Transition {
-                        NumberAnimation { properties: "y"; duration: 250 }
-                    }
+                add: Transition {
+                    NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
+                    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
                 }
-            }
-            ScrollBar.vertical: ScrollBar {
-                id: scrollbar
-                parent: scrl_users
-                anchors.right: parent.right
-                anchors.rightMargin: 5
-                policy: ScrollBar.AlwaysOff
-                x: scrl_users.mirrored ? 0 : scrl_users.width - width
-                y: scrl_users.topPadding
-                width: 3
-                height: scrl_users.availableHeight
-                active: scrl_users.ScrollBar.vertical.active
-                contentItem: Rectangle {
-                    opacity: 0.0
-                    radius: width/2
-                    color: "#aaa"
+                move: Transition {
+                    NumberAnimation { properties: "y"; to: view.dragItem.y; duration: 0 }
                 }
-                background: Rectangle {
-                    opacity: 0.5
-                    radius: width/2
-                    color: "#D9D9D9"
+                displaced: Transition {
+                    NumberAnimation { properties: "y"; duration: 250 }
+                }
+                remove: Transition {
+                    NumberAnimation { property: "opacity"; from: 1.0; to: 0; duration: 400 }
+                    NumberAnimation { property: "scale"; from: 1.0; to: 0; duration: 400 }
+                }
+
+                ScrollBar.vertical: ScrollBar {
+                    id: scrollbar
+                    parent: view
+                    anchors.right: parent.right
+                    anchors.rightMargin: 5
+                    policy: ScrollBar.AlwaysOff
+                    width: 3
+                    height: view.height -100
+                    contentItem: Rectangle {
+                        opacity: 0.0
+                        radius: width/2
+                        color: "#aaa"
+                    }
+                    background: Rectangle {
+                        opacity: 0.5
+                        radius: width/2
+                        color: view.parent.color
+                    }
                 }
             }
         }
@@ -432,6 +514,10 @@ Rectangle {
             background: Rectangle {
                 border.width: 1
                 color: (mouse_area.pressed) ? "#DDFFFF" : "white"
+            }
+
+            Behavior on scale {
+                NumberAnimation { easing.type: Easing.InOutQuad; duration: 200 }
             }
 
             RowLayout {
@@ -489,6 +575,14 @@ Rectangle {
                 id: mouse_area
                 anchors.fill: parent
                 hoverEnabled: true
+
+                onPressed: {
+                    parent.scale = 1.0
+                }
+
+                onReleased: {
+                    parent.scale = 1.03
+                }
 
                 onClicked: {
                     //Soon...
