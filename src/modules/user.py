@@ -36,7 +36,7 @@ class User:
     message = {
       'data' : str(encrypt_data(data, find_in_object(self.__users_online_list, f'{addr}')['user_pub_key']))
     }
-    requests.post(f'http://{addr}:9091/{user_name}/message', data = message) #in progress
+    requests.post(f'http://{addr}:9091/message', data = message) #in progress
 
   def __get_local_ip(self): 
     for interface in netifaces.interfaces():
