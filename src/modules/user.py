@@ -126,7 +126,7 @@ class User:
         file_data = decrypt_object(json.load(f), self.__private_key)
         if find_in_object(file_data, data) == None:
           with open('objects/self/users_online.json', 'w') as f:
-            f.write(json.dumps(encrypt_object(file_data['users_online'].append(data)), self.__public_key))
+            f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
             f.close()
         else:
           print('Пользователь уже существует')
@@ -136,7 +136,7 @@ class User:
         file_data = {
           'users_online': []
         }
-        f.write(json.dumps(encrypt_object(file_data['users_online'].append(data)), self.__public_key))
+        f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
         f.close()
   
   # getters
