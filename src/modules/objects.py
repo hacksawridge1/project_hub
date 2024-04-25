@@ -3,6 +3,7 @@ from Crypto.PublicKey import RSA
 from textwrap import wrap
 from pprint import pprint
 from copy import deepcopy
+import base64 as b64
 
 arr_types = [list, tuple, set]
 
@@ -25,10 +26,12 @@ def encrypt_data(input_data: str, public_key: str):
     k = 0
     if type(output_data[n]) in arr_types:
       while k < len(output_data[n]):
-        output_data[n][k] = cipher.encrypt(f'{output_data[n][k]}'.encode())
+        b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n][k]}'.encode()))
+        output_data[n][k] = b64_data.decode()
         k += 1
     else:
-      output_data[n] = cipher.encrypt(f'{output_data[n]}'.encode())
+      b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n]}'.encode()))
+      output_data[n] = b64_data.decode()
     n += 1
 
   return output_data
@@ -43,11 +46,11 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
 
     if type(input_data[n]) in arr_types:
       for i in input_data[n]:
-        output_data += cipher.decrypt(i).decode()
+        output_data += cipher.decrypt(b64.b64decode(i)).decode()
       if n < len(input_data) - 1:
         output_data += ' '
     else:
-      output_data += cipher.decrypt(input_data[n]).decode()
+      output_data += cipher.decrypt(b64.b64decode(input_data[n])).decode()
       if n < len(input_data) - 1:
         output_data += ' '
 

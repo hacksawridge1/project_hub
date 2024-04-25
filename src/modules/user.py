@@ -5,6 +5,7 @@ from .objects import encrypt_object, decrypt_object, encrypt_data, decrypt_data,
 import requests
 from dataclasses import dataclass
 from random import randint
+import json
 @dataclass
 class User:
 
@@ -19,6 +20,9 @@ class User:
       "user_ip": str(self.__ip),
       "user_pub_key": str(self.__public_key.decode())
     }
+    with open('objects/self/user_info.json', 'w') as f:
+      f.write(json.dumps(encrypt_object(self.__user_info, self.__private_key)))
+      f.close()
 
   # methods
   def __generate_keys(self):
@@ -50,11 +54,9 @@ class User:
     net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
     i = 2
     users_to_ping = list()
-    self.__users_online_list = list()
     # used_id = list()
 
     while i < 255:
-      print(f'{net_ip}{i}')
       try:
         if f'{net_ip}{i}' != self.__ip:
           if len(users_to_ping) < 4:
@@ -65,7 +67,14 @@ class User:
               resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
               self.__add_user(eval(resp.text))
               # used_id.append(resp['user_id'])
-              requests.post(f'http://{net_ip}{i}:{9091}/user', data = { 'data' : str(encrypt_object(self.user_info, find_in_object(self.__users_online_list, f'{net_ip}{i}')['user_pub_key']))})
+              with open('objects/self/user_info.json', 'r') as f1, open('objects/self/users_online.json', 'r') as f2:
+                user_info = decrypt_object(json.load(f1), self.__private_key)
+                users_online = decrypt_object(json.load(f2), self.__private_key)
+                requests.post(
+                  f'http://{net_ip}{i}:{9091}/user',
+                  data = { 'data' : str(encrypt_object(user_info, find_in_object(users_online['users_online'], f'{net_ip}{i}')['user_pub_key']))})
+                f1.close()
+                f2.close()
               i += 1
               continue
           else:
@@ -87,34 +96,51 @@ class User:
 
   def __remove_user(self, removed_user: dict):
     try:
-      self.__users_online_list.remove(find_in_object(self.__users_online_list, removed_user))
+      with open('objects/self/users_online.json', 'w') as f:
+        users_online = decrypt_object(json.load(f), self.__private_key)
+        f.write(json.dumps(encrypt_object(users_online['users_online'].remove(find_in_object(users_online, removed_user)), self.__public_key)))
+        f.close()
     except ValueError:
       print('Пользователь не найден...')
 
   def call_to_remove_user(self):
     try:
-      for i in self.users_online:
-        user_ip = i['user_ip'] 
-        requests.post(f'http://{user_ip}:{9091}/remove-user', data = {"data" : str(encrypt_object(self.__user_info, i['user_pub_key']))})
+      with open('objects/self/users_online.json', 'r') as f1, open('objects/self/user_info.json', 'r') as f2:
+        users_online = decrypt_object(json.load(f1), self.__private_key)
+        user_info = decrypt_object(json.load(f2), self.__private_key)
+        for i in users_online['users_online']:
+          user_ip = i['user_ip'] 
+          requests.post(f'http://{user_ip}:{9091}/remove-user', data = {"data" : str(encrypt_object(user_info, i['user_pub_key']))})
+        f1.close()
+        f2.close()
     except:
       print("Connection error")
       self.call_to_remove_user()
 
   def __add_user(self, data: dict):
-    if find_in_object(self.__users_online_list, data) == None:
-      self.__users_online_list.append(data)
-    else:
-      print('Пользователь уже существует')
-
+    with open('objects/self/users_online.json', 'r') as f:
+      file_data = decrypt_object(json.load(f), self.__private_key)
+      if find_in_object(file_data, data) == None:
+        with open('objects/self/users_online.json', 'w') as f:
+          f.write(json.dumps(encrypt_object(file_data['users_online'].append(data)), self.__public_key))
+          f.close()
+      else:
+        print('Пользователь уже существует')
+      f.close()
   
   # getters
   @property
   def user_info(self):
-    return self.__user_info
+    with open('objects/self/user_info.json', 'r') as f:
+      return decrypt_object(json.load(f), self.__private_key)
   
   @property
   def users_online(self):
-    return self.__users_online_list
+    try:
+      with open('objects/self/users_online.json', 'r') as f:
+        return decrypt_object(json.load(f), self.__private_key)
+    except FileNotFoundError:
+      return 'Пользователи отсутсвуют'
 
   @property
   def remove_user(self, data: dict):

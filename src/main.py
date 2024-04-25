@@ -4,10 +4,10 @@ from modules.new_server import start_server
 from threading import Thread
 import sys
 from time import sleep
-from modules.objects import encrypt_object
+from modules.objects import encrypt_object, decrypt_object
 
 user_name = input("Введите ваше имя:\t")
-# user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
+user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
 print('Генерируем данные...')
 
 app = App()
