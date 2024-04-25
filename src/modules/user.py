@@ -6,6 +6,7 @@ import requests
 from dataclasses import dataclass
 from random import randint
 import json
+import os
 @dataclass
 class User:
 
@@ -113,6 +114,8 @@ class User:
           requests.post(f'http://{user_ip}:{9091}/remove-user', data = {"data" : str(encrypt_object(user_info, i['user_pub_key']))})
         f1.close()
         f2.close()
+        os.remove('objects/self/user_info.json')
+        os.remove('objects/self/users_online.json')
     except:
       print("Connection error")
       self.call_to_remove_user()
