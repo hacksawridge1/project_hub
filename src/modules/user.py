@@ -118,15 +118,20 @@ class User:
       self.call_to_remove_user()
 
   def __add_user(self, data: dict):
-    with open('objects/self/users_online.json', 'r') as f:
-      file_data = decrypt_object(json.load(f), self.__private_key)
-      if find_in_object(file_data, data) == None:
-        with open('objects/self/users_online.json', 'w') as f:
-          f.write(json.dumps(encrypt_object(file_data['users_online'].append(data)), self.__public_key))
-          f.close()
-      else:
-        print('Пользователь уже существует')
-      f.close()
+    if self.users_online != None:
+      with open('objects/self/users_online.json', 'r') as f:
+        file_data = decrypt_object(json.load(f), self.__private_key)
+        if find_in_object(file_data, data) == None:
+          with open('objects/self/users_online.json', 'w') as f:
+            f.write(json.dumps(encrypt_object(file_data['users_online'].append(data)), self.__public_key))
+            f.close()
+        else:
+          print('Пользователь уже существует')
+        f.close()
+    else:
+      with open('objects/self/users_online.json', 'w') as f:
+        f.write(json.dumps(encrypt_object(file_data['users_online'].append(data)), self.__public_key))
+        f.close()
   
   # getters
   @property
@@ -140,7 +145,7 @@ class User:
       with open('objects/self/users_online.json', 'r') as f:
         return decrypt_object(json.load(f), self.__private_key)
     except FileNotFoundError:
-      return 'Пользователи отсутсвуют'
+      return None
 
   @property
   def remove_user(self, data: dict):
