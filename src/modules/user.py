@@ -133,6 +133,9 @@ class User:
         f.close()
     else:
       with open('objects/self/users_online.json', 'w') as f:
+        file_data = {
+          'users_online': []
+        }
         f.write(json.dumps(encrypt_object(file_data['users_online'].append(data)), self.__public_key))
         f.close()
   
