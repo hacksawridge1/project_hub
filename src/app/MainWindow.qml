@@ -20,7 +20,7 @@ ApplicationWindow {
         spacing: 0
         SideBar {
             id: sidebar
-            models: users_list
+            users_list: users_list
             name: "Hitler"
             ip: "192.168.0.139"
         }
@@ -28,12 +28,17 @@ ApplicationWindow {
             id: chat
             objectName: "chat"
             connected: users_list.count != 0
-            item: users_list.get(sidebar.index)
+            user: users_list.get(sidebar.index)
+            messages_list: messages_list
         }
     }
 
     ListModel {
         id: users_list
+    }
+
+    ListModel {
+        id: messages_list
     }
 
     Connections {

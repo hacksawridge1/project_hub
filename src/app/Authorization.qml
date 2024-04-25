@@ -21,28 +21,25 @@ ApplicationWindow {
         spacing: 24
 
         // Верхний текст окна
-        Rectangle {
-            Layout.preferredWidth: 552
-            Layout.preferredHeight: 78
+        Text {
+            id: welcome
+            //anchors.centerIn: parent
+            horizontalAlignment: Qt.AlignHCenter
+            text: "В HUB тебе понадобится только\nимя."
+            font.weight: Font.Bold
+            font.family: "Inter"
+            font.pixelSize: 32
+            //Layout.preferredWidth: 552
+            //Layout.preferredHeight: 78
             Layout.alignment: Qt.AlignHCenter
-            color: "#D9D9D9"
-            Text {
-                id: welcome
-                anchors.centerIn: parent
-                horizontalAlignment: Qt.AlignHCenter
-                text: "В HUB тебе понадобится только\nимя."
-                font.weight: Font.Bold
-                font.family: "Inter"
-                font.pixelSize: 32
-            }
+            //color: "#D9D9D9"
         }
 
         // Прямоугольник нижней части авторизации
-        Rectangle {
+        Item {
             Layout.preferredWidth: 552
             Layout.preferredHeight: 236
             Layout.alignment: Qt.AlignHCenter
-            color: "#D9D9D9"
 
             ColumnLayout {
                 spacing: 12
@@ -50,16 +47,18 @@ ApplicationWindow {
                 anchors.topMargin: 24
                 anchors.bottomMargin: 24
 
-                Rectangle {
-                    Layout.preferredWidth: 400
-                    Layout.preferredHeight: 44
-                    color: "#D9D9D9"
-                    Text {
-                        text: "Укажите ваше имя, по которому пользователи\nHUB могут вас определить."
-                        font.family: "Inter"
-                        font.pixelSize: 16
-                    }
+                Text {
+                    Layout.bottomMargin: 2
+                    text: "Укажите ваше имя, по которому пользователи\nHUB могут вас определить."
+                    font.family: "Inter"
+                    font.pixelSize: 16
                 }
+                //Rectangle {
+                    //Layout.preferredWidth: 400
+                    //Layout.preferredHeight: 44
+                    //color: "#D9D9D9"
+                    
+                //}
 
                 // Строка ввода имени
                 Rectangle {
@@ -124,14 +123,13 @@ ApplicationWindow {
         }
     }
 
-    Rectangle {
-        id: rect_authors
+    Item {
+        id: authors
         width: 1348
         height: 77
         rotation: -49
         x: 167
         y: -160
-        color: "#D9D9D9"
         Text {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
@@ -141,7 +139,7 @@ ApplicationWindow {
             font.family: "Inter"
             font.pixelSize: 64
             PathAnimation {
-                target: rect_authors
+                target: authors
                 path: Path {
                     startX: 127; startY: -120
                     PathLine {x: -842; y: 995}

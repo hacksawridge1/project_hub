@@ -7,32 +7,35 @@ import QtQuick.Controls.Universal
 // Прямоугольник боковой панели
 Rectangle {
     id: sidebar
-    Layout.preferredWidth: 304
+    Layout.leftMargin: -1
+    Layout.preferredWidth: 305
     Layout.fillHeight: true
     color: "#D9D9D9"
-    property int index: view.currentIndex
-    property ListModel models
+    border.width: 1
+    property int index: users_view.currentIndex
+    property ListModel users_list
     property string name
     property string ip
 
     function add_user(username, userip) {
-        models.append({name: username, ip: userip})
+        users_list.append({name: username, ip: userip})
     }
 
     function delete_user(index) {
-        if (view.currentIndex == index) {
-            if (view.count > 1) {
-                ++view.currentIndex
+        if (users_view.currentIndex == index) {
+            if (users_view.count > 1) {
+                ++users_view.currentIndex
             } else {
-                view.currentIndex = -1
+                users_view.currentIndex = -1
             }
         }
-        models.remove(index)
+        users_list.remove(index)
     }
 
     // Сетка боковой панели
     ColumnLayout {
         anchors.fill: parent
+        anchors.leftMargin: 1
         spacing: 0
 
         // Поисковое поле
@@ -41,6 +44,7 @@ Rectangle {
             Layout.preferredHeight: 35
             Layout.topMargin: 12
             Layout.alignment: Qt.AlignHCenter
+            radius: 8
             border.width: 1
             clip: true
 
@@ -71,17 +75,18 @@ Rectangle {
             Layout.preferredHeight: 48
             Layout.topMargin: 12
             Layout.alignment: Qt.AlignHCenter
-            spacing: 9.6
+            spacing: 4.8
 
             // Настройки
             Button {
                 id: settings
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 48
+                Layout.preferredWidth: 44
+                Layout.preferredHeight: 56
 
                 background: Rectangle {
                     border.width: 1
                     color: (settings_area.pressed) ? "#DDFFFF" : "white"
+                    radius: 8
                 }
 
                 Behavior on scale {
@@ -121,12 +126,13 @@ Rectangle {
             // Уведомления
             Button {
                 id: notifications
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 48
+                Layout.preferredWidth: 44
+                Layout.preferredHeight: 56
 
                 background: Rectangle {
                     border.width: 1
                     color: (notifications_area.pressed) ? "#DDFFFF" : "white"
+                    radius: 8
                 }
 
                 Behavior on scale {
@@ -166,12 +172,13 @@ Rectangle {
             // Общий чат
             Button {
                 id: public_chat
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 48
+                Layout.preferredWidth: 44
+                Layout.preferredHeight: 56
 
                 background: Rectangle {
                     border.width: 1
-                    color: (view.currentIndex == -1) ? (public_chat_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (public_chat_area.pressed) ? "#DDFFFF" : "white"
+                    color: (users_view.currentIndex == -1) ? (public_chat_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (public_chat_area.pressed) ? "#DDFFFF" : "white"
+                    radius: 8
                 }
 
                 Behavior on scale {
@@ -191,7 +198,7 @@ Rectangle {
                     hoverEnabled: true
 
                     onClicked: {
-                        view.currentIndex = -1
+                        users_view.currentIndex = -1
                     }
 
                     onPressed: {
@@ -215,12 +222,13 @@ Rectangle {
             // Группы
             Button {
                 id: groups
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 48
+                Layout.preferredWidth: 44
+                Layout.preferredHeight: 56
 
                 background: Rectangle {
                     border.width: 1
                     color: (groups_area.pressed) ? "#DDFFFF" : "white"
+                    radius: 8
                 }
 
                 Behavior on scale {
@@ -260,12 +268,13 @@ Rectangle {
             // Папки
             Button {
                 id: folders
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 48
+                Layout.preferredWidth: 44
+                Layout.preferredHeight: 56
 
                 background: Rectangle {
                     border.width: 1
                     color: (folders_area.pressed) ? "#DDFFFF" : "white"
+                    radius: 8
                 }
 
                 Behavior on scale {
@@ -305,12 +314,13 @@ Rectangle {
             // Тема
             Button {
                 id: theme
-                Layout.preferredWidth: 40
-                Layout.preferredHeight: 48
+                Layout.preferredWidth: 44
+                Layout.preferredHeight: 56
 
                 background: Rectangle {
                     border.width: 1
                     color: (theme_area.pressed) ? "#DDFFFF" : "white"
+                    radius: 8
                 }
 
                 Behavior on scale {
@@ -352,21 +362,19 @@ Rectangle {
             }
         }
 
-        Rectangle {
-            id: users
+        Item {
             Layout.columnSpan: 6
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.topMargin: 4
-            color: "#D9D9D9"
+            Layout.topMargin: 6
             clip: true
 
             ListView {
-                id: view
+                id: users_view
                 anchors.fill: parent
-                anchors.topMargin: 4
+                anchors.topMargin: 6
                 spacing: 8
-                model: sidebar.models
+                model: sidebar.users_list
                 property real dragY
 
                 delegate: Button {
@@ -374,12 +382,12 @@ Rectangle {
                     width: 288
                     height: 48
                     anchors.horizontalCenter: parent.horizontalCenter
-                    parent: view
                     z: 1
                     required property var model
                     background: Rectangle {
                         border.width: 1
-                        color: (view.currentIndex == model_user.model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
+                        color: (users_view.currentIndex == model_user.model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
+                        radius: 8
                     }
 
                     Behavior on scale {
@@ -400,31 +408,22 @@ Rectangle {
                         ColumnLayout {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            spacing: 4
 
-                            Item {
+                            Text {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                clip: true
-                                Text {
-                                    anchors.fill: parent
-                                    text: model_user.model.name
-                                    font.family: "Inter"
-                                    font.pixelSize: 13
-                                }
+                                text: model_user.model.name
+                                font.family: "Inter"
+                                font.pixelSize: 13
                             }
                             
-                            Item {
+                            Text {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                clip: true
-                                Text {
-                                    anchors.fill: parent
-                                    text: "IP: " + sidebar.ip
-                                    font.family: "Inter"
-                                    font.pixelSize: 11
-                                    color: "#808080"
-                                }
+                                text: "IP: " + sidebar.ip
+                                font.family: "Inter"
+                                font.pixelSize: 11
+                                color: "#808080"
                             }
                         }
                     }
@@ -437,13 +436,13 @@ Rectangle {
                         hoverEnabled: true
 
                         onClicked: {
-                            view.currentIndex = model_user.model.index
+                            users_view.currentIndex = model_user.model.index
                         }
 
                         onPressed: {
                             parent.scale = 0.97
                             parent.z = 100
-                            drag_timer.scroll = view.contentY
+                            drag_timer.scroll = users_view.contentY
                             drag_timer.startY = parent.y
                             drag_timer.start()
                         }
@@ -475,15 +474,15 @@ Rectangle {
                             var endIndex = Math.round(parent.y / 56)
                             if (parent.model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
                                 var startIndex = model.index
-                                view.dragY = parent.y
-                                view.model.move(model.index, endIndex, 1)
-                                if (view.currentIndex == startIndex) {
-                                    view.currentIndex = model.index
+                                users_view.dragY = parent.y
+                                users_view.model.move(model.index, endIndex, 1)
+                                if (users_view.currentIndex == startIndex) {
+                                    users_view.currentIndex = model.index
                                 }
                             }
-                            if (scroll != view.contentY) {
-                                parent.y = parent.y - scroll + view.contentY
-                                scroll = view.contentY
+                            if (scroll != users_view.contentY) {
+                                parent.y = parent.y - scroll + users_view.contentY
+                                scroll = users_view.contentY
                             }
                             if (!model_area.pressed) {
                                 parent.y = 56 * model.index
@@ -503,7 +502,7 @@ Rectangle {
                     NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
                 }
                 move: Transition {
-                    NumberAnimation { property: "y"; to: view.dragY; duration: 0 }
+                    NumberAnimation { property: "y"; to: users_view.dragY; duration: 0 }
                 }
                 displaced: Transition {
                     NumberAnimation { property: "y"; duration: 250 }
@@ -524,12 +523,14 @@ Rectangle {
         Button {
             id: user
             Layout.preferredWidth: 304
-            Layout.preferredHeight: 60
+            Layout.preferredHeight: 80
+            Layout.bottomMargin: -20
             Layout.columnSpan: 2
-            Layout.alignment: Qt.AlignBottom
+            //Layout.alignment: Qt.AlignBottom
             background: Rectangle {
                 border.width: 1
                 color: (mouse_area.pressed) ? "#DDFFFF" : "white"
+                radius: 8
             }
 
             Behavior on scale {
@@ -539,6 +540,7 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent
                 anchors.margins: 8
+                anchors.bottomMargin: 28
                 spacing: 8
 
                 Image {
