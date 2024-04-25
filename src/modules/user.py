@@ -149,7 +149,8 @@ class User:
   def users_online(self):
     try:
       with open('objects/self/users_online.json', 'r') as f:
-        return decrypt_object(json.load(f), self.__private_key)
+        data = json.load(f)
+        return decrypt_object(data, self.__private_key)
     except FileNotFoundError:
       return None
 
