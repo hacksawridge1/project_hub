@@ -3,15 +3,17 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
 
+// Сетка чата
 ColumnLayout {
     id: chat
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: 0
 
+    // Блок пользователя
     Rectangle {
         Layout.fillWidth: true
-        Layout.preferredHeight: 60
+        Layout.preferredHeight: 80
         color: "#D9D9D9"
         visible: (connected) ? true : false
 
@@ -19,7 +21,6 @@ ColumnLayout {
             anchors.fill: parent
             anchors.leftMargin: 12
             anchors.rightMargin: 12
-            //anchors.margins: 12
 
             Rectangle {
                 id: user
@@ -29,54 +30,35 @@ ColumnLayout {
                 color: "#D9D9D9"
                 visible: (typeof item == "undefined") ? false : true
 
-                RowLayout {
+                ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 8
-                    spacing: 8
-
-                    Image {
-                        Layout.preferredWidth: 32
-                        Layout.preferredHeight: 32
-                        source: "icons/user.svg"
-                    }
+                    spacing: 4
 
                     Rectangle {
-                        Layout.preferredWidth: 176
-                        Layout.preferredHeight: 32
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
                         color: user.color
-
-                        ColumnLayout {
+                        clip: true
+                        Text {
                             anchors.fill: parent
-                            Layout.preferredWidth: 176
-                            Layout.preferredHeight: 32
-                            spacing: 4
-
-                            Rectangle {
-                                Layout.preferredWidth: 172
-                                Layout.preferredHeight: 14
-                                color: user.color
-                                clip: true
-                                Text {
-                                    anchors.fill: parent
-                                    text: (typeof item == "undefined") ? "" : item.name
-                                    font.family: "Inter"
-                                    font.pointSize: 10
-                                }
-                            }
-                            
-                            Rectangle {
-                                Layout.preferredWidth: 172
-                                Layout.preferredHeight: 14
-                                color: user.color
-                                clip: true
-                                Text {
-                                    anchors.fill: parent
-                                    text: (typeof item == "undefined") ? "" : "был в сети " + (item.last_time > 59 ? Math.round(item.last_time / 60) + " часов назад" : item.last_time + " минут назад")
-                                    font.family: "Inter"
-                                    font.pointSize: 8
-                                    color: "#808080"
-                                }
-                            }
+                            text: (typeof item == "undefined") ? "" : item.name
+                            font.family: "Inter"
+                            font.pixelSize: 13
+                        }
+                    }
+                    
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        color: user.color
+                        clip: true
+                        Text {
+                            anchors.fill: parent
+                            text: (typeof item == "undefined") ? "" : "был в сети " + (item.last_time > 59 ? Math.round(item.last_time / 60) + " часов назад" : item.last_time + " минут назад")
+                            font.family: "Inter"
+                            font.pixelSize: 11
+                            color: "#808080"
                         }
                     }
                 }
@@ -89,60 +71,64 @@ ColumnLayout {
                 text: "Общий чат"
                 font.weight: Font.Bold
                 font.family: "Inter"
-                font.pointSize: 28
+                font.pixelSize: 38
                 color: "#545353"
                 visible: (typeof item == "undefined") ? true : false
             }
 
             RowLayout {
-                Layout.preferredWidth: 150
+                Layout.preferredWidth: 144
                 Layout.preferredHeight: 56
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                 visible: (typeof item == "undefined") ? false : true
                 spacing: 12
 
                 Rectangle {
-                    Layout.preferredWidth: 32
-                    Layout.preferredHeight: 32
-                    Layout.alignment: Qt.AlignRight
-                    color: "#D9D9D9"
+                    Layout.preferredWidth: 40
+                    Layout.preferredHeight: 48
+                    border.width: 1
+                    color: "white"
+
                     Image {
                         anchors.centerIn: parent
-                        width: 24
-                        height: 24
+                        width: 32
+                        height: 32
                         source: "icons/phone.svg"
                     }
                 }
 
                 Rectangle {
-                    Layout.preferredWidth: 32
-                    Layout.preferredHeight: 32
-                    Layout.alignment: Qt.AlignRight
-                    color: "#D9D9D9"
+                    Layout.preferredWidth: 40
+                    Layout.preferredHeight: 48
+                    border.width: 1
+                    color: "white"
+
                     Image {
                         anchors.centerIn: parent
-                        width: 24
-                        height: 24
+                        width: 32
+                        height: 32
                         source: "icons/search.svg"
                     }
                 }
 
                 Rectangle {
-                    Layout.preferredWidth: 32
-                    Layout.preferredHeight: 32
-                    Layout.alignment: Qt.AlignRight
-                    color: "#D9D9D9"
+                    Layout.preferredWidth: 40
+                    Layout.preferredHeight: 48
+                    border.width: 1
+                    color: "white"
+
                     Image {
                         anchors.centerIn: parent
-                        width: 8
-                        height: 24
-                        source: "icons/more_horiz.svg"
+                        width: 32
+                        height: 32
+                        source: "icons/more.svg"
                     }
                 }
             }
         }
     }
 
+    // Блок чата
     Rectangle {
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -152,25 +138,92 @@ ColumnLayout {
             text: "Добро пожаловать в HUB."
             font.weight: Font.Bold
             font.family: "Inter"
-            font.pointSize: 46
+            font.pixelSize: 64
             color: "#545353"
             visible: (connected) ? false : true
         }
     }
-        
-    RowLayout {
-        id: row
+    
+    // Блок отправки сообщений
+    Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 80
-        spacing: 0
-        visible: (connected) ? true : false
+        color: "white"
 
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 48
-            Layout.margins: 16
-            border.width: 1
-            color: "#D9D9D9"
+        RowLayout {
+            anchors.fill: parent
+            anchors.margins: 16
+            spacing: 10
+            visible: (connected) ? true : false
+
+            // Поле ввода сообщения
+            Rectangle {
+                id: message_field
+                Layout.fillWidth: true
+                Layout.preferredHeight: 48
+                border.width: 1
+                color: "#D9D9D9"
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.topMargin: 8
+                    anchors.bottomMargin: 8
+                    anchors.leftMargin: 12
+                    anchors.rightMargin: 12
+                    spacing: 10
+
+                    Button {
+                        Layout.preferredWidth: 32
+                        Layout.preferredHeight: 32
+                        Layout.alignment: Qt.AlignVCenter
+                        background: Rectangle {
+                            color: message_field.color
+                        }
+
+                        Image {
+                            width: 32
+                            height: 32
+                            source: "icons/attach-file-add.svg"
+                        }
+                    }
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.topMargin: 2
+                        Layout.bottomMargin: 2
+                        color: message_field.color
+                        clip: true
+
+                        TextInput {
+                            id: message_input
+                            anchors.fill: parent
+                            anchors.margins: 2
+                            font.pixelSize: 20
+                            color: "black"
+                            property string placeholderText: "Введите ваше сообщение..."
+                            Text {
+                                text: parent.placeholderText
+                                font.family: "Inter"
+                                font.pixelSize: parent.font.pixelSize
+                                color: "#aaa"
+                                visible: !parent.text
+                            }
+                        }
+                    }
+                }
+            }
+
+            Button {
+                Layout.preferredWidth: 143
+                Layout.preferredHeight: 48
+                background: Rectangle {
+                    border.width: 1
+                    color: "#D9D9D9"
+                }
+                text: "Отправить"
+                font.family: "Inter"
+                font.pixelSize: 24
+            }
         }
     }
 }

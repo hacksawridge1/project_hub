@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
 
-Window {
+ApplicationWindow {
     id: main_window
     visible: true
     visibility: Window.Maximized
@@ -11,7 +11,11 @@ Window {
     height: 1080
     title: "HUB"
 
-    property var new_user: sidebar.new_user
+    function print_func() {
+        console.log("invoked function!")
+    }
+
+    property var add_user: sidebar.add_user
     property var delete_user: sidebar.delete_user
 
     RowLayout {
@@ -26,6 +30,7 @@ Window {
         }
         Chat {
             id: chat
+            objectName: "chat"
             property bool connected: users_list.count != 0
             property var item: users_list.get(sidebar.index)
         }
@@ -33,32 +38,17 @@ Window {
 
     ListModel {
         id: users_list
-        ListElement {
-            name: "Artur"
-            ip: "192.168.0.132"
-            last_time: 65
+    }
+
+    Connections {
+        target: control
+
+        function onAdd_user(name, ip) {
+            main_window.add_user(name, ip)
         }
-        ListElement {
-            name: "Kemran"
-            ip: "192.168.0.159"
-            last_time: 239
-        }
-        ListElement {
-            name: "Arsen"
-            ip: "192.168.0.128"
-            last_time: 3
+
+        function onDelete_user(index) {
+            main_window.delete_user(index)
         }
     }
-    //Component.onCompleted: {
-        //new_user("Sanya", "190.160.0.23")
-    //}
-
-    //Connections{
-        //target: control
-
-        //onNew_User: {
-            //console.log("new_user")
-            //functions.open()
-        //}
-    //}
 }

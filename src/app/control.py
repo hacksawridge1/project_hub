@@ -1,29 +1,22 @@
-import sys
-from os import path
-from PySide6.QtGui import QGuiApplication
-from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Slot, Signal, QAbstractItemModel, QMetaObject, Q_ARG, QGenericArgument
+from PySide6.QtCore import QObject, Signal
 
-class Func_controller(QObject):
-    new_user = Signal()
+class Controller(QObject):
+    username = ""
+    window = QObject() # Главный объект запущенного окна
+    add_user = Signal(str, str) # add_user.emit(<имя_пользователя>, <ip>) - создаст нового пользователя
+    delete_user = Signal(int) # delete_user.emit(<индекс_в_списке>) - удалит пользователя по индексу
 
-class Controller:
-    open_window = QObject()
+    def test_control(self):
+        self.add_user.emit("Artur", "192.168.0.132")
+        self.add_user.emit("Kemran", "192.168.0.159")
+        self.add_user.emit("Arsen", "192.168.0.128")
 
-    def change_window(self, window):
-        self.open_window = window
-        #print(self.open_window.property("title"))
-        #self.open_window.setProperty("title", "NEW_HUB")
-        #print(self.open_window.property("title"))
-        #users_list = self.open_window.findChild(QAbstractItemModel, "users_list")
-        #new_element = QObject()
-        #print(users_list.property("count"))
-        
-        #QMetaObject.invokeMethod(self.open_window, b'new_user', QGenericArgument("Sanya"), QGenericArgument("190.160.0.23"))
-        #self.open_window.property("new_user(\"Sanya\", \"190. 160.0.23\")")
-
-    def get_window(self):
-        return self.open_window
-
-control = Controller()
-func_control = Func_controller()
+# Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
+# Инструкция:
+# 1. from путь.к.control import control
+# 2. control.window.property(<название_свойства>) - получить свойство главного окна
+# 3. control.window.setProperty(<название_свойства>, <значение>) - установить значение свойства
+# 4. control.<объект>.findChild(QObject, <имя_ребенка>) - найдет ребенка объекта <объект> при условии, что у ребенка присутствует свойство objectName
+# С ребенком любого объекта можно делать все вышеперечисленное
+# Чтобы вызвать объявленную функцию из qml - используй: "control.<имя_функции>.emit(<параметр1>, <параметр2>, ...)"
+control = Controller() # Управлять qml окнами можно с помощью этой переменной

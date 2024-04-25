@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
 
+// Прямоугольник боковой панели
 Rectangle {
     id: sidebar
     Layout.preferredWidth: 304
@@ -10,11 +11,7 @@ Rectangle {
     color: "#D9D9D9"
     property int index: view.currentIndex
 
-    function select_group() {
-        view.currentIndex = -1
-    }
-
-    function new_user(username, userip) {
+    function add_user(username, userip) {
         models.append({name: username, ip: userip})
     }
 
@@ -29,20 +26,17 @@ Rectangle {
         models.remove(index)
     }
 
-    GridLayout {
-        columns: 2
+    // Сетка боковой панели
+    ColumnLayout {
         anchors.fill: parent
-        anchors.topMargin: 12
-        anchors.leftMargin: 12
-        anchors.bottomMargin: 12
-        columnSpacing: 0
-        rowSpacing: 0
+        spacing: 0
 
+        // Поисковое поле
         Rectangle {
-            Layout.columnSpan: 2
-            Layout.preferredWidth: 280
+            Layout.preferredWidth: 288
             Layout.preferredHeight: 35
-            Layout.alignment: Qt.AlignTop
+            Layout.topMargin: 12
+            Layout.alignment: Qt.AlignHCenter
             border.width: 1
             clip: true
 
@@ -58,285 +52,324 @@ Rectangle {
                 color: "black"
                 property string placeholderText: "Поиск..."
                 Text {
-                    text: search.placeholderText
+                    text: parent.placeholderText
                     font.family: "Inter"
-                    font.pixelSize: 16
+                    font.pixelSize: parent.font.pixelSize
                     color: "#aaa"
-                    visible: !search.text
+                    visible: !parent.text
                 }
             }
         }
-        
-        Button {
-            id: notifications
-            Layout.preferredWidth: 40
+
+        // Кнопки меню (настройки, уведомления, общий чат, группы, папки, тема)
+        RowLayout {
+            Layout.preferredWidth: 288
             Layout.preferredHeight: 48
-            Layout.column: 0
-            Layout.row: 1
             Layout.topMargin: 12
-            Layout.alignment: Qt.AlignTop
-            background: Rectangle {
-                border.width: 1
-            }
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 9.6
 
-            Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
-            }
+            // Настройки
+            Button {
+                id: settings
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 48
 
-            Image {
-                width: 32
-                height: 32
-                anchors.centerIn: parent
-                source: "icons/notifications_active.svg"
-            }
-
-            MouseArea {
-                id: notifications_area
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onPressed: {
-                    parent.scale = 1.0
+                background: Rectangle {
+                    border.width: 1
+                    color: (settings_area.pressed) ? "#DDFFFF" : "white"
                 }
 
-                onReleased: {
-                    parent.scale = 1.1
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
                 }
 
-                onEntered: {
-                    parent.scale = 1.1
+                Image {
+                    width: 32
+                    height: 32
+                    anchors.centerIn: parent
+                    source: "icons/settings.svg"
                 }
 
-                onExited: {
-                    parent.scale = 1.0
-                }
-            }
-        }
+                MouseArea {
+                    id: settings_area
+                    anchors.fill: parent
+                    hoverEnabled: true
 
-        Button {
-            id: laptop
-            Layout.preferredWidth: 40
-            Layout.preferredHeight: 48
-            Layout.column: 0
-            Layout.row: 2
-            Layout.topMargin: 8
-            Layout.alignment: Qt.AlignTop
-            background: Rectangle {
-                border.width: 1
-            }
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
 
-            Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
-            }
+                    onReleased: {
+                        parent.scale = 1.1
+                    }
 
-            Image {
-                width: 34
-                height: 21
-                anchors.centerIn: parent
-                source: "icons/laptop.svg"
-            }
+                    onEntered: {
+                        parent.scale = 1.1
+                    }
 
-            MouseArea {
-                id: laptop_area
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onPressed: {
-                    parent.scale = 1.0
-                }
-
-                onReleased: {
-                    parent.scale = 1.1
-                }
-
-                onEntered: {
-                    parent.scale = 1.1
-                }
-
-                onExited: {
-                    parent.scale = 1.0
-                }
-
-                onClicked: {
-                    sidebar.new_user("Test", "120.138.0.159")
+                    onExited: {
+                        parent.scale = 1.0
+                    }
                 }
             }
-        }
 
-        Button {
-            id: settings
-            Layout.preferredWidth: 40
-            Layout.preferredHeight: 48
-            Layout.column: 0
-            Layout.row: 3
-            Layout.topMargin: 8
-            Layout.alignment: Qt.AlignTop
-            background: Rectangle {
-                border.width: 1
-            }
+            // Уведомления
+            Button {
+                id: notifications
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 48
 
-            Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
-            }
-
-            Image {
-                width: 32
-                height: 32
-                anchors.centerIn: parent
-                source: "icons/settings.svg"
-            }
-
-            MouseArea {
-                id: settings_area
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onPressed: {
-                    parent.scale = 1.0
+                background: Rectangle {
+                    border.width: 1
+                    color: (notifications_area.pressed) ? "#DDFFFF" : "white"
                 }
 
-                onReleased: {
-                    parent.scale = 1.1
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
                 }
 
-                onEntered: {
-                    parent.scale = 1.1
+                Image {
+                    width: 32
+                    height: 32
+                    anchors.centerIn: parent
+                    source: "icons/notifications.svg"
                 }
 
-                onExited: {
-                    parent.scale = 1.0
-                }
+                MouseArea {
+                    id: notifications_area
+                    anchors.fill: parent
+                    hoverEnabled: true
 
-                onClicked: {
-                    sidebar.delete_user(0)
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.1
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.1
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
+                    }
                 }
             }
-        }
 
-        Button {
-            id: theme
-            Layout.preferredWidth: 40
-            Layout.preferredHeight: 48
-            Layout.column: 0
-            Layout.row: 4
-            Layout.topMargin: 8
-            Layout.alignment: Qt.AlignTop
-            background: Rectangle {
-                border.width: 1
-                color: (theme_area.pressed) ? "#DDFFFF" : "white"
+            // Общий чат
+            Button {
+                id: public_chat
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 48
+
+                background: Rectangle {
+                    border.width: 1
+                    color: (view.currentIndex == -1) ? (public_chat_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (public_chat_area.pressed) ? "#DDFFFF" : "white"
+                }
+
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                }
+
+                Image {
+                    width: 32
+                    height: 32
+                    anchors.centerIn: parent
+                    source: "icons/public-chat.svg"
+                }
+
+                MouseArea {
+                    id: public_chat_area
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onClicked: {
+                        view.currentIndex = -1
+                    }
+
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.1
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.1
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
+                    }
+                }
             }
 
-            Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+            // Группы
+            Button {
+                id: groups
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 48
+
+                background: Rectangle {
+                    border.width: 1
+                    color: (groups_area.pressed) ? "#DDFFFF" : "white"
+                }
+
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                }
+
+                Image {
+                    width: 32
+                    height: 32
+                    anchors.centerIn: parent
+                    source: "icons/group.svg"
+                }
+
+                MouseArea {
+                    id: groups_area
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.1
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.1
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
+                    }
+                }
+            }
+            
+            // Папки
+            Button {
+                id: folders
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 48
+
+                background: Rectangle {
+                    border.width: 1
+                    color: (folders_area.pressed) ? "#DDFFFF" : "white"
+                }
+
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                }
+
+                Image {
+                    width: 32
+                    height: 32
+                    anchors.centerIn: parent
+                    source: "icons/folder.svg"
+                }
+
+                MouseArea {
+                    id: folders_area
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.1
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.1
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
+                    }
+                }
             }
 
-            Image {
-                width: 24
-                height: 24
-                anchors.centerIn: parent
-                source: "icons/theme.png"
-            }
+            // Тема
+            Button {
+                id: theme
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 48
 
-            MouseArea {
-                id: theme_area
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onPressed: {
-                    parent.scale = 1.0
+                background: Rectangle {
+                    border.width: 1
+                    color: (theme_area.pressed) ? "#DDFFFF" : "white"
                 }
 
-                onReleased: {
-                    parent.scale = 1.1
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
                 }
 
-                onEntered: {
-                    parent.scale = 1.1
+                Image {
+                    width: 32
+                    height: 32
+                    anchors.centerIn: parent
+                    source: "icons/theme.svg"
                 }
 
-                onExited: {
-                    parent.scale = 1.0
-                }
-            }
-        }
+                MouseArea {
+                    id: theme_area
+                    anchors.fill: parent
+                    hoverEnabled: true
 
-        Button {
-            id: group
-            Layout.preferredWidth: 40
-            Layout.preferredHeight: 48
-            Layout.column: 0
-            Layout.row: 5
-            Layout.topMargin: 8
-            Layout.alignment: Qt.AlignTop
-            background: Rectangle {
-                border.width: 1
-                color: (view.currentIndex == -1) ? (group_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (group_area.pressed) ? "#DDFFFF" : "white"
-            }
+                    onClicked: {
+                        add_user("Anton", "0.0.0.0")
+                    }
 
-            Behavior on scale {
-                NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
-            }
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
 
-            Image {
-                width: 24
-                height: 24
-                anchors.centerIn: parent
-                source: "icons/group.svg"
-            }
+                    onReleased: {
+                        parent.scale = 1.1
+                    }
 
-            MouseArea {
-                id: group_area
-                anchors.fill: parent
-                hoverEnabled: true
+                    onEntered: {
+                        parent.scale = 1.1
+                    }
 
-                onClicked: {
-                    sidebar.select_group()
-                }
-
-                onPressed: {
-                    parent.scale = 1.0
-                }
-
-                onReleased: {
-                    parent.scale = 1.1
-                }
-
-                onEntered: {
-                    parent.scale = 1.1
-                }
-
-                onExited: {
-                    parent.scale = 1.0
+                    onExited: {
+                        parent.scale = 1.0
+                    }
                 }
             }
         }
 
         Rectangle {
             id: users
-            Layout.column: 1
-            Layout.row: 1
-            Layout.rowSpan: 6
+            Layout.columnSpan: 6
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.topMargin: 6
-            Layout.leftMargin: 4
+            Layout.topMargin: 4
             color: "#D9D9D9"
             clip: true
 
             ListView {
                 id: view
                 anchors.fill: parent
-                anchors.topMargin: 6
-                anchors.bottomMargin: 6
-                anchors.leftMargin: 4
+                anchors.topMargin: 4
                 spacing: 8
                 model: models
                 property real dragY
 
                 delegate: Button {
                     id: model_user
-                    width: 232
+                    width: 288
                     height: 48
+                    anchors.horizontalCenter: parent.horizontalCenter
                     parent: view
                     z: 1
                     background: Rectangle {
@@ -359,38 +392,33 @@ Rectangle {
                             source: "icons/user.svg"
                         }
 
-                        Item {
-                            Layout.preferredWidth: 176
-                            Layout.preferredHeight: 32
-                            ColumnLayout {
-                                anchors.fill: parent
-                                Layout.preferredWidth: 176
-                                Layout.preferredHeight: 32
-                                spacing: 4
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            spacing: 4
 
-                                Item {
-                                    Layout.preferredWidth: 172
-                                    Layout.preferredHeight: 14
-                                    clip: true
-                                    Text {
-                                        anchors.fill: parent
-                                        text: model.name
-                                        font.family: "Inter"
-                                        font.pointSize: 10
-                                    }
+                            Item {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                clip: true
+                                Text {
+                                    anchors.fill: parent
+                                    text: model.name
+                                    font.family: "Inter"
+                                    font.pixelSize: 13
                                 }
-                                
-                                ItemGroup {
-                                    Layout.preferredWidth: 172
-                                    Layout.preferredHeight: 14
-                                    clip: true
-                                    Text {
-                                        anchors.fill: parent
-                                        text: "IP: " + ip
-                                        font.family: "Inter"
-                                        font.pointSize: 8
-                                        color: "#808080"
-                                    }
+                            }
+                            
+                            Item {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                clip: true
+                                Text {
+                                    anchors.fill: parent
+                                    text: "IP: " + ip
+                                    font.family: "Inter"
+                                    font.pixelSize: 11
+                                    color: "#808080"
                                 }
                             }
                         }
@@ -407,24 +435,23 @@ Rectangle {
                             view.currentIndex = model.index
                         }
 
+                        onPressed: {
+                            parent.scale = 0.97
+                            parent.z = 100
+                            drag_timer.scroll = view.contentY
+                            drag_timer.startY = parent.y
+                            drag_timer.start()
+                        }
+
                         onReleased: {
                             parent.scale = 1.03
-                            back.start()
                             parent.z = 1
                             drag_timer.stop()
+                            back.start()
                         }
 
                         onEntered: {
                             parent.scale = 1.03
-                        }
-
-                        onPressed: {
-                            parent.scale = 0.97
-                            parent.z = 100
-                            //view.dragItem = parent
-                            drag_timer.scroll = view.contentY
-                            drag_timer.startY = parent.y
-                            drag_timer.start()
                         }
 
                         onExited: {
@@ -482,39 +509,18 @@ Rectangle {
                 }
 
                 ScrollBar.vertical: ScrollBar {
-                    id: scrollbar
-                    parent: view
-                    anchors.right: parent.right
-                    anchors.rightMargin: 5
+                    active: true
+                    height: parent.height
                     policy: ScrollBar.AlwaysOff
-                    width: 3
-                    height: view.height -100
-                    contentItem: Rectangle {
-                        opacity: 0.0
-                        radius: width/2
-                        color: "#aaa"
-                    }
-                    background: Rectangle {
-                        opacity: 0.5
-                        radius: width/2
-                        color: view.parent.color
-                    }
                 }
             }
         }
 
-        Item {
-            Layout.column: 0
-            Layout.row: 6
-            Layout.fillHeight: true 
-        }
-
         Button {
             id: user
-            Layout.preferredWidth: 280
-            Layout.preferredHeight: 48
+            Layout.preferredWidth: 304
+            Layout.preferredHeight: 60
             Layout.columnSpan: 2
-            Layout.row: 7
             Layout.alignment: Qt.AlignBottom
             background: Rectangle {
                 border.width: 1
@@ -555,7 +561,7 @@ Rectangle {
                                 anchors.fill: parent
                                 text: name
                                 font.family: "Inter"
-                                font.pointSize: 10
+                                font.pixelSize: 13
                             }
                         }
                         
@@ -568,7 +574,7 @@ Rectangle {
                                 anchors.fill: parent
                                 text: "IP: " + ip
                                 font.family: "Inter"
-                                font.pointSize: 8
+                                font.pixelSize: 11
                                 color: "#808080"
                             }
                         }
@@ -581,24 +587,8 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
 
-                onPressed: {
-                    parent.scale = 1.0
-                }
-
-                onReleased: {
-                    parent.scale = 1.03
-                }
-
                 onClicked: {
                     //Soon...
-                }
-
-                onEntered: {
-                    parent.scale = 1.03
-                }
-
-                onExited: {
-                    parent.scale = 1.0
                 }
             }
         }
