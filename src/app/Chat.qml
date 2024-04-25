@@ -9,13 +9,15 @@ ColumnLayout {
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: 0
+    property bool connected
+    property var item
 
     // Блок пользователя
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 80
         color: "#D9D9D9"
-        visible: (connected) ? true : false
+        visible: (chat.connected) ? true : false
 
         RowLayout {
             anchors.fill: parent
@@ -28,7 +30,7 @@ ColumnLayout {
                 Layout.preferredHeight: 48
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                 color: "#D9D9D9"
-                visible: (typeof item == "undefined") ? false : true
+                visible: (typeof chat.item == "undefined") ? false : true
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -42,7 +44,7 @@ ColumnLayout {
                         clip: true
                         Text {
                             anchors.fill: parent
-                            text: (typeof item == "undefined") ? "" : item.name
+                            text: (typeof chat.item == "undefined") ? "" : chat.item.name
                             font.family: "Inter"
                             font.pixelSize: 13
                         }
@@ -55,7 +57,7 @@ ColumnLayout {
                         clip: true
                         Text {
                             anchors.fill: parent
-                            text: (typeof item == "undefined") ? "" : "был в сети " + (item.last_time > 59 ? Math.round(item.last_time / 60) + " часов назад" : item.last_time + " минут назад")
+                            text: (typeof chat.item == "undefined") ? "" : "был в сети " + (chat.item.last_time > 59 ? Math.round(chat.item.last_time / 60) + " часов назад" : chat.item.last_time + " минут назад")
                             font.family: "Inter"
                             font.pixelSize: 11
                             color: "#808080"
@@ -73,14 +75,14 @@ ColumnLayout {
                 font.family: "Inter"
                 font.pixelSize: 38
                 color: "#545353"
-                visible: (typeof item == "undefined") ? true : false
+                visible: (typeof chat.item == "undefined") ? true : false
             }
 
             RowLayout {
                 Layout.preferredWidth: 144
                 Layout.preferredHeight: 56
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                visible: (typeof item == "undefined") ? false : true
+                visible: (typeof chat.item == "undefined") ? false : true
                 spacing: 12
 
                 Rectangle {
@@ -132,7 +134,7 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        color: (connected) ? "white" : "#D9D9D9"
+        color: (chat.connected) ? "white" : "#D9D9D9"
         Text {
             anchors.centerIn: parent
             text: "Добро пожаловать в HUB."
@@ -140,7 +142,7 @@ ColumnLayout {
             font.family: "Inter"
             font.pixelSize: 64
             color: "#545353"
-            visible: (connected) ? false : true
+            visible: (chat.connected) ? false : true
         }
     }
     
@@ -154,7 +156,7 @@ ColumnLayout {
             anchors.fill: parent
             anchors.margins: 16
             spacing: 10
-            visible: (connected) ? true : false
+            visible: (chat.connected) ? true : false
 
             // Поле ввода сообщения
             Rectangle {

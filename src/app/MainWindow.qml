@@ -11,12 +11,8 @@ ApplicationWindow {
     height: 1080
     title: "HUB"
 
-    function print_func() {
-        console.log("invoked function!")
-    }
-
-    property var add_user: sidebar.add_user
-    property var delete_user: sidebar.delete_user
+    //property var add_user: sidebar.add_user
+    //property var delete_user: sidebar.delete_user
 
     RowLayout {
         id: main_grid
@@ -24,15 +20,15 @@ ApplicationWindow {
         spacing: 0
         SideBar {
             id: sidebar
-            property ListModel models: users_list
-            property string name: "Hitler"
-            property string ip: "192.168.0.139"
+            models: users_list
+            name: "Hitler"
+            ip: "192.168.0.139"
         }
         Chat {
             id: chat
             objectName: "chat"
-            property bool connected: users_list.count != 0
-            property var item: users_list.get(sidebar.index)
+            connected: users_list.count != 0
+            item: users_list.get(sidebar.index)
         }
     }
 
@@ -44,11 +40,11 @@ ApplicationWindow {
         target: control
 
         function onAdd_user(name, ip) {
-            main_window.add_user(name, ip)
+            sidebar.add_user(name, ip)
         }
 
         function onDelete_user(index) {
-            main_window.delete_user(index)
+            sidebar.delete_user(index)
         }
     }
 }

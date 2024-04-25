@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -10,6 +11,9 @@ Rectangle {
     Layout.fillHeight: true
     color: "#D9D9D9"
     property int index: view.currentIndex
+    property ListModel models
+    property string name
+    property string ip
 
     function add_user(username, userip) {
         models.append({name: username, ip: userip})
@@ -326,7 +330,7 @@ Rectangle {
                     hoverEnabled: true
 
                     onClicked: {
-                        add_user("Anton", "0.0.0.0")
+                        sidebar.add_user("Anton", "0.0.0.0")
                     }
 
                     onPressed: {
@@ -362,7 +366,7 @@ Rectangle {
                 anchors.fill: parent
                 anchors.topMargin: 4
                 spacing: 8
-                model: models
+                model: sidebar.models
                 property real dragY
 
                 delegate: Button {
@@ -372,9 +376,10 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     parent: view
                     z: 1
+                    required property var model
                     background: Rectangle {
                         border.width: 1
-                        color: (view.currentIndex == model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
+                        color: (view.currentIndex == model_user.model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
                     }
 
                     Behavior on scale {
@@ -403,7 +408,7 @@ Rectangle {
                                 clip: true
                                 Text {
                                     anchors.fill: parent
-                                    text: model.name
+                                    text: model_user.model.name
                                     font.family: "Inter"
                                     font.pixelSize: 13
                                 }
@@ -415,7 +420,7 @@ Rectangle {
                                 clip: true
                                 Text {
                                     anchors.fill: parent
-                                    text: "IP: " + ip
+                                    text: "IP: " + sidebar.ip
                                     font.family: "Inter"
                                     font.pixelSize: 11
                                     color: "#808080"
@@ -432,7 +437,7 @@ Rectangle {
                         hoverEnabled: true
 
                         onClicked: {
-                            view.currentIndex = model.index
+                            view.currentIndex = model_user.model.index
                         }
 
                         onPressed: {
@@ -468,7 +473,7 @@ Rectangle {
                         property real startY: 0
                         onTriggered: {
                             var endIndex = Math.round(parent.y / 56)
-                            if (model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
+                            if (parent.model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
                                 var startIndex = model.index
                                 view.dragY = parent.y
                                 view.model.move(model.index, endIndex, 1)
@@ -490,7 +495,7 @@ Rectangle {
                             }
                         }
                     }
-                    NumberAnimation { id: back; target: model_user; property: "y"; to: 56 * model.index; duration: 150 }
+                    NumberAnimation { id: back; target: model_user; property: "y"; to: 56 * model_user.model.index; duration: 150 }
                 }
 
                 add: Transition {
@@ -542,37 +547,33 @@ Rectangle {
                     source: "icons/user.svg"
                 }
 
-                Rectangle {
+                Item {
                     Layout.preferredWidth: 176
                     Layout.preferredHeight: 32
-                    color: user.background.color
                     ColumnLayout {
                         anchors.fill: parent
                         Layout.preferredWidth: 176
                         Layout.preferredHeight: 32
                         spacing: 4
-
-                        Rectangle {
+                        Item {
                             Layout.preferredWidth: 172
                             Layout.preferredHeight: 14
-                            color: user.background.color
                             clip: true
                             Text {
                                 anchors.fill: parent
-                                text: name
+                                text: sidebar.name
                                 font.family: "Inter"
                                 font.pixelSize: 13
                             }
                         }
                         
-                        Rectangle {
+                        Item {
                             Layout.preferredWidth: 172
                             Layout.preferredHeight: 14
-                            color: user.background.color
                             clip: true
                             Text {
                                 anchors.fill: parent
-                                text: "IP: " + ip
+                                text: "IP: " + sidebar.ip
                                 font.family: "Inter"
                                 font.pixelSize: 11
                                 color: "#808080"
