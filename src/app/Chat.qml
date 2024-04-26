@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -12,6 +13,8 @@ ColumnLayout {
     property bool connected
     property var user
     property ListModel messages_list
+    property string name
+    property string ip
 
     // Верхняя панель
     Rectangle {
@@ -135,6 +138,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
         color: (chat.connected) ? "white" : "#D9D9D9"
+        clip: true
 
         Text {
             anchors.centerIn: parent
@@ -148,6 +152,65 @@ ColumnLayout {
 
         ListView {
             id: messages_view
+            anchors.fill: parent
+            verticalLayoutDirection: ListView.BottomToTop
+            model: chat.messages_list
+            spacing: 8
+
+            delegate: RowLayout {
+                id: message
+                anchors.leftMargin: 16
+                anchors.rightMargin: 16
+                layoutDirection: (chat.ip == message.model.ip) ? Qt.RightToLeft : Qt.LeftToRight
+                anchors.right: (chat.ip == message.model.ip) ? parent.right : undefined
+                anchors.left: (chat.ip != message.model.ip) ? parent.left : undefined
+                spacing: 8
+                required property var model
+
+                Rectangle {
+                    Layout.preferredWidth: 42
+                    Layout.preferredHeight: 42
+                    Layout.alignment: Qt.AlignBottom
+                    border.width: 1
+                    color: "#D9D9D9"
+                    radius: 8
+                    opacity: (message.model.index != 0 && chat.messages_list.get(message.model.index - 1).ip == message.model.ip) ? 0 : 1
+
+                    Image {
+                        anchors.centerIn: parent
+                        width: 32
+                        height: 32
+                        source: "icons/user.svg"
+                    }
+                }
+
+                Rectangle {
+                    implicitWidth: (messagebox_text.implicitWidth > 600) ? 600 : messagebox_text.implicitWidth
+                    implicitHeight: messagebox_text.height
+                    Layout.preferredWidth: implicitWidth + 32
+                    Layout.preferredHeight: implicitHeight + 32
+                    Layout.alignment: Qt.AlignBottom
+                    border.width: 1
+                    color: "#E9E9E9"
+                    radius: 8
+                    clip: true
+                    Text {
+                        id: messagebox_text
+                        width: parent.implicitWidth
+                        wrapMode: Text.WordWrap
+                        anchors.centerIn: parent
+                        anchors.margins: 16
+                        text: message.model.message
+                        font.family: "Inter"
+                        font.pixelSize: 16
+                    }
+                }
+            }
+            ScrollBar.vertical: ScrollBar {
+                active: true
+                height: parent.height
+                policy: ScrollBar.AlwaysOff
+            }
         }
     }
     
