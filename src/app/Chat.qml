@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
+import Qt5Compat.GraphicalEffects
 
 // Сетка чата
 ColumnLayout {
@@ -154,57 +155,94 @@ ColumnLayout {
             id: messages_view
             anchors.fill: parent
             verticalLayoutDirection: ListView.BottomToTop
-            model: chat.messages_list
             spacing: 8
+            model: chat.messages_list
 
-            delegate: RowLayout {
-                id: message
-                anchors.leftMargin: 16
-                anchors.rightMargin: 16
-                layoutDirection: (chat.ip == message.model.ip) ? Qt.RightToLeft : Qt.LeftToRight
-                anchors.right: (chat.ip == message.model.ip) ? parent.right : undefined
-                anchors.left: (chat.ip != message.model.ip) ? parent.left : undefined
-                spacing: 8
+            delegate: Item {
+                id: delegate
+                width: messages_view.width
+                implicitHeight: message.implicitHeight
                 required property var model
+                RowLayout {
+                    id: message
+                    anchors.left: (chat.ip != delegate.model.ip) ? parent.left : undefined
+                    anchors.right: (chat.ip == delegate.model.ip) ? parent.right : undefined
+                    layoutDirection: (chat.ip == delegate.model.ip) ? Qt.RightToLeft : Qt.LeftToRight
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 16
+                    spacing: 8
+                    
+                    Rectangle {
+                        id: userbox
+                        Layout.preferredWidth: 42
+                        Layout.preferredHeight: 42
+                        Layout.alignment: Qt.AlignBottom
+                        border.width: 1
+                        color: "#D9D9D9"
+                        radius: 8
+                        opacity: (delegate.model.index != 0 && chat.messages_list.get(delegate.model.index - 1).ip == delegate.model.ip) ? 0 : 1
 
-                Rectangle {
-                    Layout.preferredWidth: 42
-                    Layout.preferredHeight: 42
-                    Layout.alignment: Qt.AlignBottom
-                    border.width: 1
-                    color: "#D9D9D9"
-                    radius: 8
-                    opacity: (message.model.index != 0 && chat.messages_list.get(message.model.index - 1).ip == message.model.ip) ? 0 : 1
+                        Image {
+                            anchors.centerIn: parent
+                            width: 32
+                            height: 32
+                            source: "icons/user.svg"
+                        }
 
-                    Image {
-                        anchors.centerIn: parent
-                        width: 32
-                        height: 32
-                        source: "icons/user.svg"
+                        layer.enabled: true
+                        layer.effect: DropShadow {
+                            horizontalOffset: 3
+                            verticalOffset: 3
+                            radius: 4
+                            color: "#C0C0C0"
+                        }
+                    }
+
+                    Rectangle {
+                        id: messagebox
+                        implicitWidth: (messagebox_text.implicitWidth > 600) ? 600 : messagebox_text.implicitWidth
+                        implicitHeight: messagebox_text.height
+                        Layout.preferredWidth: implicitWidth + 32
+                        Layout.preferredHeight: implicitHeight + 32
+                        Layout.alignment: Qt.AlignBottom
+                        border.width: 1
+                        color: "#E9E9E9"
+                        radius: 8
+                        clip: true
+                        Text {
+                            id: messagebox_text
+                            width: parent.implicitWidth
+                            wrapMode: Text.WordWrap
+                            anchors.centerIn: parent
+                            anchors.margins: 16
+                            text: delegate.model.message
+                            font.family: "Inter"
+                            font.pixelSize: 16
+                        }
+
+                        layer.enabled: true
+                        layer.effect: DropShadow {
+                            horizontalOffset: 3
+                            verticalOffset: 3
+                            radius: 4
+                            color: "#C0C0C0"
+                        }
                     }
                 }
-
-                Rectangle {
-                    implicitWidth: (messagebox_text.implicitWidth > 600) ? 600 : messagebox_text.implicitWidth
-                    implicitHeight: messagebox_text.height
-                    Layout.preferredWidth: implicitWidth + 32
-                    Layout.preferredHeight: implicitHeight + 32
-                    Layout.alignment: Qt.AlignBottom
-                    border.width: 1
-                    color: "#E9E9E9"
-                    radius: 8
-                    clip: true
-                    Text {
-                        id: messagebox_text
-                        width: parent.implicitWidth
-                        wrapMode: Text.WordWrap
-                        anchors.centerIn: parent
-                        anchors.margins: 16
-                        text: message.model.message
-                        font.family: "Inter"
-                        font.pixelSize: 16
-                    }
-                }
+            }
+            add: Transition {
+                NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
+                NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
+                NumberAnimation { property: "x"; from: (messages_view.width) / 2; to: 0; duration: 400 }
+            }
+            displaced: Transition {
+                NumberAnimation { property: "opacity"; to: 1; duration: 0}
+                NumberAnimation { property: "scale"; to: 1; duration: 0}
+                NumberAnimation { property: "y"; duration: 250 }
+            }
+            remove: Transition {
+                NumberAnimation { property: "opacity"; from: 1.0; to: 0; duration: 400 }
+                NumberAnimation { property: "scale"; from: 1.0; to: 0; duration: 400 }
             }
             ScrollBar.vertical: ScrollBar {
                 active: true
@@ -284,6 +322,13 @@ ColumnLayout {
                 text: "Отправить"
                 font.family: "Inter"
                 font.pixelSize: 24
+
+                onClicked: {
+                    if(!!message_input.text && message_input.text.trim().length > 0) {
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
+                        message_input.text = ""
+                    }
+                }
             }
         }
     }

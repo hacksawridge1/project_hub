@@ -377,124 +377,130 @@ Rectangle {
                 model: sidebar.users_list
                 property real dragY
 
-                delegate: Button {
-                    id: model_user
-                    width: 288
+                delegate: Item {
+                    id: delegate
+                    width: users_view.width
                     height: 48
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    z: 1
                     required property var model
-                    background: Rectangle {
-                        border.width: 1
-                        color: (users_view.currentIndex == model_user.model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
-                        radius: 8
-                    }
-
-                    Behavior on scale {
-                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
-                    }
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.margins: 8
-                        spacing: 8
-
-                        Image {
-                            Layout.preferredWidth: 32
-                            Layout.preferredHeight: 32
-                            source: "icons/user.svg"
+                    Button {
+                        id: model_user
+                        width: 288
+                        height: 48
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        z: 1
+                        
+                        background: Rectangle {
+                            border.width: 1
+                            color: (users_view.currentIndex == delegate.model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
+                            radius: 8
                         }
 
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                        Behavior on scale {
+                            NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                        }
 
-                            Text {
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 8
+                            spacing: 8
+
+                            Image {
+                                Layout.preferredWidth: 32
+                                Layout.preferredHeight: 32
+                                source: "icons/user.svg"
+                            }
+
+                            ColumnLayout {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                text: model_user.model.name
-                                font.family: "Inter"
-                                font.pixelSize: 13
-                            }
-                            
-                            Text {
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                text: "IP: " + sidebar.ip
-                                font.family: "Inter"
-                                font.pixelSize: 11
-                                color: "#808080"
-                            }
-                        }
-                    }
 
-                    MouseArea {
-                        id: model_area
-                        anchors.fill: parent
-                        drag.target: parent
-                        drag.axis: Drag.YAxis
-                        hoverEnabled: true
-
-                        onClicked: {
-                            users_view.currentIndex = model_user.model.index
-                        }
-
-                        onPressed: {
-                            parent.scale = 0.97
-                            parent.z = 100
-                            drag_timer.scroll = users_view.contentY
-                            drag_timer.startY = parent.y
-                            drag_timer.start()
-                        }
-
-                        onReleased: {
-                            parent.scale = 1.03
-                            parent.z = 1
-                            drag_timer.stop()
-                            back.start()
-                        }
-
-                        onEntered: {
-                            parent.scale = 1.03
-                        }
-
-                        onExited: {
-                            parent.scale = 1.0
-                        }
-                    }
-
-                    Timer {
-                        id: drag_timer
-                        interval: 1
-                        running: false
-                        repeat: true
-                        property real scroll: 0
-                        property real startY: 0
-                        onTriggered: {
-                            var endIndex = Math.round(parent.y / 56)
-                            if (parent.model.index !== endIndex && endIndex > -1 && endIndex < models.count) {
-                                var startIndex = model.index
-                                users_view.dragY = parent.y
-                                users_view.model.move(model.index, endIndex, 1)
-                                if (users_view.currentIndex == startIndex) {
-                                    users_view.currentIndex = model.index
+                                Text {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    text: delegate.model.name
+                                    font.family: "Inter"
+                                    font.pixelSize: 13
+                                }
+                                
+                                Text {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    text: "IP: " + sidebar.ip
+                                    font.family: "Inter"
+                                    font.pixelSize: 11
+                                    color: "#808080"
                                 }
                             }
-                            if (scroll != users_view.contentY) {
-                                parent.y = parent.y - scroll + users_view.contentY
-                                scroll = users_view.contentY
+                        }
+
+                        MouseArea {
+                            id: model_area
+                            anchors.fill: parent
+                            drag.target: delegate
+                            drag.axis: Drag.YAxis
+                            hoverEnabled: true
+
+                            onClicked: {
+                                users_view.currentIndex = delegate.model.index
                             }
-                            if (!model_area.pressed) {
-                                parent.y = 56 * model.index
-                                parent.z = 1
+
+                            onPressed: {
+                                parent.scale = 0.97
+                                delegate.z = 100
+                                drag_timer.scroll = users_view.contentY
+                                drag_timer.startY = delegate.y
+                                drag_timer.start()
+                            }
+
+                            onReleased: {
+                                parent.scale = 1.03
+                                delegate.z = 1
                                 drag_timer.stop()
+                                back.start()
                             }
-                            if (parent.y != startY && parent.scale < 1) {
+
+                            onEntered: {
                                 parent.scale = 1.03
                             }
+
+                            onExited: {
+                                parent.scale = 1.0
+                            }
                         }
+
+                        Timer {
+                            id: drag_timer
+                            interval: 1
+                            running: false
+                            repeat: true
+                            property real scroll: 0
+                            property real startY: 0
+                            onTriggered: {
+                                var endIndex = Math.round(delegate.y / 56)
+                                if (delegate.model.index !== endIndex && endIndex > -1 && endIndex < users_list.count) {
+                                    var startIndex = delegate.model.index
+                                    users_view.dragY = delegate.y
+                                    users_view.model.move(delegate.model.index, endIndex, 1)
+                                    if (users_view.currentIndex == startIndex) {
+                                        users_view.currentIndex = delegate.model.index
+                                    }
+                                }
+                                if (scroll != users_view.contentY) {
+                                    delegate.y = delegate.y - scroll + users_view.contentY
+                                    scroll = users_view.contentY
+                                }
+                                if (!model_area.pressed) {
+                                    delegate.y = 56 * delegate.model.index
+                                    delegate.z = 1
+                                    drag_timer.stop()
+                                }
+                                if (delegate.y != startY && parent.scale < 1) {
+                                    parent.scale = 1.03
+                                }
+                            }
+                        }
+                        NumberAnimation { id: back; target: delegate; property: "y"; to: 56 * delegate.model.index; duration: 150 }
                     }
-                    NumberAnimation { id: back; target: model_user; property: "y"; to: 56 * model_user.model.index; duration: 150 }
                 }
 
                 add: Transition {
@@ -523,14 +529,15 @@ Rectangle {
         Button {
             id: user
             Layout.preferredWidth: 304
-            Layout.preferredHeight: 80
-            Layout.bottomMargin: -20
+            Layout.preferredHeight: 62
             Layout.columnSpan: 2
-            //Layout.alignment: Qt.AlignBottom
+            Layout.alignment: Qt.AlignBottom
+            Layout.bottomMargin: -2
             background: Rectangle {
                 border.width: 1
                 color: (mouse_area.pressed) ? "#DDFFFF" : "white"
-                radius: 8
+                topLeftRadius: 8
+                topRightRadius: 8
             }
 
             Behavior on scale {
@@ -540,7 +547,7 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent
                 anchors.margins: 8
-                anchors.bottomMargin: 28
+                anchors.bottomMargin: 8 + 2
                 spacing: 8
 
                 Image {
