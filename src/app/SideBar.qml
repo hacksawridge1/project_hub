@@ -529,15 +529,14 @@ Rectangle {
         Button {
             id: user
             Layout.preferredWidth: 304
-            Layout.preferredHeight: 62
+            Layout.preferredHeight: 70
             Layout.columnSpan: 2
             Layout.alignment: Qt.AlignBottom
-            Layout.bottomMargin: -2
+            Layout.bottomMargin: -10
             background: Rectangle {
                 border.width: 1
                 color: (mouse_area.pressed) ? "#DDFFFF" : "white"
-                topLeftRadius: 8
-                topRightRadius: 8
+                radius:8
             }
 
             Behavior on scale {
@@ -547,7 +546,7 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent
                 anchors.margins: 8
-                anchors.bottomMargin: 8 + 2
+                anchors.bottomMargin: 8 + 10
                 spacing: 8
 
                 Image {

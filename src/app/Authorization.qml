@@ -23,16 +23,12 @@ ApplicationWindow {
         // Верхний текст окна
         Text {
             id: welcome
-            //anchors.centerIn: parent
             horizontalAlignment: Qt.AlignHCenter
             text: "В HUB тебе понадобится только\nимя."
             font.weight: Font.Bold
             font.family: "Inter"
             font.pixelSize: 32
-            //Layout.preferredWidth: 552
-            //Layout.preferredHeight: 78
             Layout.alignment: Qt.AlignHCenter
-            //color: "#D9D9D9"
         }
 
         // Прямоугольник нижней части авторизации
@@ -53,12 +49,6 @@ ApplicationWindow {
                     font.family: "Inter"
                     font.pixelSize: 16
                 }
-                //Rectangle {
-                    //Layout.preferredWidth: 400
-                    //Layout.preferredHeight: 44
-                    //color: "#D9D9D9"
-                    
-                //}
 
                 // Строка ввода имени
                 Rectangle {
@@ -106,7 +96,6 @@ ApplicationWindow {
                 }
             }
         }
-        
 
         RowLayout {
             Layout.preferredWidth: 56

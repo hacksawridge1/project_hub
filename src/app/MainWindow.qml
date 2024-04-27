@@ -10,9 +10,7 @@ ApplicationWindow {
     width: 1920
     height: 1080
     title: "HUB"
-
-    //property var add_user: sidebar.add_user
-    //property var delete_user: sidebar.delete_user
+    
     property string name: "Hitler"
     property string ip: "192.168.0.139"
 

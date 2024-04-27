@@ -1,8 +1,10 @@
+__author__ = "MIDNIGHT"
+
 import sys
 from os import path
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Slot, Signal
+from PySide6.QtCore import QObject, Slot
 from control import control
 
 app = QGuiApplication(sys.argv)
@@ -23,8 +25,7 @@ def authorization(main_control):
     qml_file = path.dirname(path.abspath(__file__)) + "/Authorization.qml"
     engine.rootContext().setContextProperty("main_control", main_control)
     engine.load(qml_file)
-    root = engine.rootObjects()[0]
-    control.window = root
+    control.window = engine.rootObjects()[0]
 
 if __name__ == "__main__":
     authorization(main_control)
