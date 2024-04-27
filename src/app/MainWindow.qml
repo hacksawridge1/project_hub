@@ -11,7 +11,7 @@ ApplicationWindow {
     height: 1080
     title: "HUB"
     
-    property string name: "Hitler"
+    property string name: control ? control.username : ""
     property string ip: "192.168.0.139"
 
     RowLayout {

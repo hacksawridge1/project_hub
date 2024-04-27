@@ -157,6 +157,7 @@ ColumnLayout {
             verticalLayoutDirection: ListView.BottomToTop
             spacing: 8
             model: chat.messages_list
+            visible: (chat.connected) ? true : false
 
             delegate: Item {
                 id: delegate
@@ -253,9 +254,10 @@ ColumnLayout {
     }
     
     // Блок отправки сообщений
-    Item {
+    Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 88
+        color: (chat.connected) ? "white" : "#D9D9D9"
 
         RowLayout {
             anchors.fill: parent

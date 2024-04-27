@@ -1,15 +1,25 @@
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QObject, Signal, Property
 
 class Controller(QObject):
-    username = ""
-    window = QObject() # Главный объект запущенного окна
+    def __init__(self):
+        super().__init__()
+
     add_user = Signal(str, str) # add_user.emit(<имя_пользователя>, <ip>) - создаст нового пользователя
     delete_user = Signal(int) # delete_user.emit(<индекс_в_списке>) - удалит пользователя по индексу
 
-    def test_control(self):
-        self.add_user.emit("Artur", "192.168.0.132")
-        self.add_user.emit("Kemran", "192.168.0.159")
-        self.add_user.emit("Arsen", "192.168.0.128")
+    # Для передачи в qml
+    # username - start
+    __username = ""
+    usernameChanged = Signal()
+    def readUsername(self):
+        return self.__username
+    
+    def setUsername(self, value):
+        self.__username = value
+        self.usernameChanged.emit()
+
+    username = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
+    # username - end
 
 # Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
 # Инструкция:
