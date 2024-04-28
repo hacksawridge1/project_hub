@@ -5,4 +5,4 @@ venv
 *.pem
 *.pub
 __pycache__/
-src/objects/self/*
+src/objects/self/*.json
