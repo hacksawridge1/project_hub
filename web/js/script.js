@@ -15,7 +15,7 @@ up.style.visibility = "hidden";
 
 // Загрузка файла
 function downloadFile() {
-    const file = "file/hub.exe";
+    const file = "img/Authorization 1.0.png";
     // Создание ссылки на скачивание файла
     const link = document.createElement("a");
     link.href = file;
