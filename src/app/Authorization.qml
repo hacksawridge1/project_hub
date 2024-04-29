@@ -9,16 +9,18 @@ ApplicationWindow {
     id: authorization
     width: 600
     height: 400
+    minimumWidth: main_layout.implicitWidth + 20
+    minimumHeight: main_layout.implicitHeight + 20
     title: "Authorization"
     color: "#D9D9D9"
-    flags: Qt.Window | Qt.MSWindowsFixedSizeDialogHint | Qt.WindowTitleHint | Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint
     visible: true
 
     // Сетка окна
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 12
+        id: main_layout
+        anchors.centerIn: parent
         spacing: 24
+        clip: false
 
         // Верхний текст окна
         Text {
@@ -31,9 +33,9 @@ ApplicationWindow {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        // Прямоугольник нижней части авторизации
+        // Нижняя части авторизации
         Item {
-            Layout.preferredWidth: 552
+            Layout.preferredWidth: 554
             Layout.preferredHeight: 236
             Layout.alignment: Qt.AlignHCenter
 
@@ -42,6 +44,8 @@ ApplicationWindow {
                 anchors.fill: parent
                 anchors.topMargin: 24
                 anchors.bottomMargin: 24
+                anchors.leftMargin: 1
+                anchors.rightMargin: 1
 
                 Text {
                     Layout.bottomMargin: 2
@@ -55,7 +59,9 @@ ApplicationWindow {
                     Layout.preferredWidth: 291
                     Layout.preferredHeight: 27
                     border.width: 1
+                    radius: 8
                     clip: true
+
                     TextInput {
                         id: input
                         anchors.fill: parent
@@ -79,6 +85,7 @@ ApplicationWindow {
                     Layout.preferredHeight: 42
                     background: Rectangle {
                         border.width: 1
+                        radius: 8
                     }
                     text: "Войти"
                     font.family: "Inter"
@@ -91,24 +98,15 @@ ApplicationWindow {
                 }
 
                 Item {
-                    Layout.preferredWidth: 100
-                    Layout.preferredHeight: 100
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                 }
             }
         }
 
-        RowLayout {
-            Layout.preferredWidth: 56
-            Layout.preferredHeight: 14
-            Layout.alignment: Qt.AlignHCenter
-
-            Image {
-                source: "icons/HUB 2024.svg"
-            }
-
-            Image {
-                source: "icons/©.svg"
-            }
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 
@@ -117,8 +115,7 @@ ApplicationWindow {
         width: 1348
         height: 77
         rotation: -49
-        x: 167
-        y: -160
+
         Text {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
@@ -130,13 +127,29 @@ ApplicationWindow {
             PathAnimation {
                 target: authors
                 path: Path {
-                    startX: 127; startY: -120
-                    PathLine {x: -842; y: 995}
+                    startX: authorization.width - 473; startY: authorization.height - 520
+                    PathLine {x: authorization.width - 1442; y: authorization.height + 595}
                 }
                 running: true
                 duration: 5500
                 loops: Animation.Infinite
             }
+        }
+    }
+
+    RowLayout {
+        width: 56
+        height: 14
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 12
+
+        Image {
+            source: "icons/HUB 2024.svg"
+        }
+
+        Image {
+            source: "icons/©.svg"
         }
     }
 }

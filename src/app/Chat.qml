@@ -155,14 +155,12 @@ ColumnLayout {
             id: messages_view
             anchors.fill: parent
             verticalLayoutDirection: ListView.BottomToTop
-            spacing: 8
             model: chat.messages_list
             visible: (chat.connected) ? true : false
-
             delegate: Item {
                 id: delegate
                 width: messages_view.width
-                implicitHeight: message.implicitHeight
+                implicitHeight: message.implicitHeight + 8
                 required property var model
                 RowLayout {
                     id: message
@@ -251,19 +249,35 @@ ColumnLayout {
                 policy: ScrollBar.AlwaysOff
             }
         }
+
+        LinearGradient {
+            id: mask
+            anchors.fill: parent
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.98
+                    color: "transparent"
+                }
+                GradientStop {
+                    position: 1
+                    color: "white"
+                }
+            }
+            visible: (chat.connected) ? true : false
+        }
     }
     
     // Блок отправки сообщений
     Rectangle {
         Layout.fillWidth: true
-        Layout.preferredHeight: 88
-        color: (chat.connected) ? "white" : "#D9D9D9"
+        Layout.preferredHeight: 78
+        visible: (chat.connected) ? true : false
 
         RowLayout {
             anchors.fill: parent
             anchors.margins: 16
+            anchors.topMargin: 6
             spacing: 10
-            visible: (chat.connected) ? true : false
 
             // Кнопка прикрепления файлов
             Rectangle {
@@ -279,6 +293,32 @@ ColumnLayout {
                     width: 32
                     height: 32
                     source: "icons/attach-file-add.svg"
+                }
+
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                }
+
+                MouseArea {
+                    id: attach_file_area
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.1
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.1
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
+                    }
                 }
             }
 
@@ -311,6 +351,33 @@ ColumnLayout {
                         visible: !parent.text
                     }
                 }
+
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                }
+
+                MouseArea {
+                    id: message_field_area
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    z: -1
+
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.01
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.01
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
+                    }
+                }
             }
 
             Button {
@@ -325,10 +392,36 @@ ColumnLayout {
                 font.family: "Inter"
                 font.pixelSize: 24
 
-                onClicked: {
-                    if(!!message_input.text && message_input.text.trim().length > 0) {
-                        chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
-                        message_input.text = ""
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    z: -1
+
+                    onClicked: {
+                        if(!!message_input.text && message_input.text.trim().length > 0) {
+                            chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
+                            message_input.text = ""
+                        }
+                    }
+
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.06
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.06
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
                     }
                 }
             }

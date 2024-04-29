@@ -437,7 +437,7 @@ Rectangle {
                             id: model_area
                             anchors.fill: parent
                             drag.target: delegate
-                            drag.axis: Drag.YAxis
+                            drag.axis: Drag.YAxis + 0
                             hoverEnabled: true
 
                             onClicked: {
@@ -486,11 +486,11 @@ Rectangle {
                                     }
                                 }
                                 if (scroll != users_view.contentY) {
-                                    delegate.y = delegate.y - scroll + users_view.contentY
+                                    delegate.y = delegate.y - scroll
                                     scroll = users_view.contentY
                                 }
                                 if (!model_area.pressed) {
-                                    delegate.y = 56 * delegate.model.index
+                                    delegate.y = 56 * delegate.model.index + users_view.contentY
                                     delegate.z = 1
                                     drag_timer.stop()
                                 }
