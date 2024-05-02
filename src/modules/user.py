@@ -25,7 +25,7 @@ class User:
     with open('objects/self/user_info.json', 'a') as f:
       f.write(json.dumps(encrypt_object(self.__user_info, self.__private_key)))
       f.close()
-    with open('objects/self/user-online.json', 'a') as f:
+    with open('objects/self/users-online.json', 'a') as f:
       data = {
         'usersonline' : []
       }
