@@ -41,7 +41,9 @@ def start_server(user: User):
     @app.route('/user', methods=['GET', 'POST'])
     def init():
       if request.method == 'GET':
-        return user.user_info
+        with open('objects/self/user-info.json', 'r') as f:
+          data = json.load(f)
+          return data
       if request.method == 'POST':
         req = eval(request.form.get('data'))
         user.add_user = decrypt_object(req, user.private_key)
