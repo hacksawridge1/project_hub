@@ -21,8 +21,15 @@ class User:
       "user_ip": str(self.__ip),
       "user_pub_key": str(self.__public_key.decode())
     }
-    with open('objects/self/user_info.json', 'w') as f:
+    
+    with open('objects/self/user_info.json', 'a') as f:
       f.write(json.dumps(encrypt_object(self.__user_info, self.__private_key)))
+      f.close()
+    with open('objects/self/user-online.json', 'a') as f:
+      data = {
+        'usersonline' : []
+      }
+      f.write(json.dumps(data))
       f.close()
 
   # methods
@@ -38,10 +45,13 @@ class User:
 
 
   def send_message(self, addr: str, user_name: str, data):
-    message = {
-      'data' : str(encrypt_data(data, find_in_object(self.__users_online_list, f'{addr}')['user_pub_key']))
-    }
-    requests.post(f'http://{addr}:9091/message', data = message) #in progress
+    with open('objects/self/users-online.json', 'r') as f:
+      users_online = json.load(f)
+
+      message = {
+        'data' : str(encrypt_data(data, find_in_object(users_online['usersonline'], f'{addr}')['user_pub_key']))
+      }
+      requests.post(f'http://{addr}:9091/message', data = message) #in progress
 
   def __get_local_ip(self): 
     for interface in netifaces.interfaces():
