@@ -56,8 +56,8 @@ ApplicationWindow {
 
                 // Строка ввода имени
                 Rectangle {
-                    Layout.preferredWidth: 291
-                    Layout.preferredHeight: 27
+                    Layout.preferredWidth: 300
+                    Layout.preferredHeight: 30
                     border.width: 1
                     radius: 8
                     clip: true
@@ -65,16 +65,38 @@ ApplicationWindow {
                     TextInput {
                         id: input
                         anchors.fill: parent
-                        anchors.margins: 4
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        verticalAlignment: Text.AlignVCenter
                         font.pixelSize: 16
                         color: "black"
                         property string placeholderText: "Введите ваше имя..."
                         Text {
                             text: parent.placeholderText
                             font.family: "Inter"
+                            anchors.fill: parent
                             font.pixelSize: parent.font.pixelSize
+                            verticalAlignment: Text.AlignVCenter
                             color: "#aaa"
                             visible: !parent.text
+                        }
+                    }
+
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        z: -1
+
+                        onEntered: {
+                            parent.scale = 1.04
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
                         }
                     }
                 }
@@ -91,9 +113,34 @@ ApplicationWindow {
                     font.family: "Inter"
                     font.pixelSize: 20
 
-                    onClicked: {
-                        authorization.close()
-                        main_control.main_window(input.text)
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        onClicked: {
+                            authorization.close()
+                            main_control.main_window(input.text)
+                        }
+
+                        onPressed: {
+                            parent.scale = 1.0
+                        }
+
+                        onReleased: {
+                            parent.scale = 1.04
+                        }
+
+                        onEntered: {
+                            parent.scale = 1.04
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
+                        }
                     }
                 }
 

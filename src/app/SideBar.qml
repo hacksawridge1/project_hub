@@ -55,16 +55,34 @@ Rectangle {
             TextInput {
                 id: search
                 anchors.fill: parent
-                anchors.margins: 8
+                verticalAlignment: Text.AlignVCenter
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
                 font.pixelSize: 16
                 color: "black"
                 property string placeholderText: "Поиск..."
                 Text {
                     text: parent.placeholderText
                     font.family: "Inter"
+                    anchors.fill: parent
                     font.pixelSize: parent.font.pixelSize
+                    verticalAlignment: Text.AlignVCenter
                     color: "#aaa"
                     visible: !parent.text
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                z: -1
+
+                onEntered: {
+                    parent.scale = 1.03
+                }
+
+                onExited: {
+                    parent.scale = 1.0
                 }
             }
         }

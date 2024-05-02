@@ -65,6 +65,31 @@ ColumnLayout {
                         color: "#808080"
                     }
                 }
+
+                Behavior on scale {
+                    NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onPressed: {
+                        parent.scale = 1.0
+                    }
+
+                    onReleased: {
+                        parent.scale = 1.03
+                    }
+
+                    onEntered: {
+                        parent.scale = 1.03
+                    }
+
+                    onExited: {
+                        parent.scale = 1.0
+                    }
+                }
             }
 
             Text {
@@ -99,6 +124,31 @@ ColumnLayout {
                         height: 32
                         source: "icons/phone.svg"
                     }
+
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        onPressed: {
+                            parent.scale = 1.0
+                        }
+
+                        onReleased: {
+                            parent.scale = 1.1
+                        }
+
+                        onEntered: {
+                            parent.scale = 1.1
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
+                        }
+                    }
                 }
 
                 Rectangle {
@@ -114,6 +164,31 @@ ColumnLayout {
                         height: 32
                         source: "icons/search.svg"
                     }
+
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        onPressed: {
+                            parent.scale = 1.0
+                        }
+
+                        onReleased: {
+                            parent.scale = 1.1
+                        }
+
+                        onEntered: {
+                            parent.scale = 1.1
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
+                        }
+                    }
                 }
 
                 Rectangle {
@@ -128,6 +203,31 @@ ColumnLayout {
                         width: 32
                         height: 32
                         source: "icons/more.svg"
+                    }
+
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        onPressed: {
+                            parent.scale = 1.0
+                        }
+
+                        onReleased: {
+                            parent.scale = 1.1
+                        }
+
+                        onEntered: {
+                            parent.scale = 1.1
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
+                        }
                     }
                 }
             }
@@ -300,7 +400,6 @@ ColumnLayout {
                 }
 
                 MouseArea {
-                    id: attach_file_area
                     anchors.fill: parent
                     hoverEnabled: true
 
@@ -357,18 +456,9 @@ ColumnLayout {
                 }
 
                 MouseArea {
-                    id: message_field_area
                     anchors.fill: parent
                     hoverEnabled: true
                     z: -1
-
-                    onPressed: {
-                        parent.scale = 1.0
-                    }
-
-                    onReleased: {
-                        parent.scale = 1.01
-                    }
 
                     onEntered: {
                         parent.scale = 1.01
@@ -399,7 +489,6 @@ ColumnLayout {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    z: -1
 
                     onClicked: {
                         if(!!message_input.text && message_input.text.trim().length > 0) {
