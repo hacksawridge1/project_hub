@@ -131,7 +131,7 @@ class User:
       self.call_to_remove_user()
 
   def __add_user(self, data: dict):
-    if self.users_online != None:
+    try:
       with open('objects/self/users-online.json', 'r') as f:
         file_data = decrypt_object(json.load(f), self.__private_key)
         if find_in_object(file_data, data) == None:
@@ -141,7 +141,7 @@ class User:
         else:
           print('Пользователь уже существует')
         f.close()
-    else:
+    except Exception:
       with open('objects/self/users-online.json', 'w') as f:
         file_data = {
           'users_online': []
