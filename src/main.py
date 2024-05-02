@@ -5,6 +5,7 @@ from threading import Thread
 import sys
 from time import sleep
 from modules.objects import encrypt_object, decrypt_object
+import json
 
 user_name = input("Введите ваше имя:\t")
 user_passphrase = input("Введите кодовое слово для защиты ваших ключей:\t")
@@ -12,6 +13,10 @@ print('Генерируем данные...')
 
 app = App()
 user = User(user_name)
+
+#with open('objects/self/user-info.json', 'r') as f:
+ #   print(decrypt_object(json.load(f), user.private_key))
+  #  f.close()
 
 server_thread = Thread(target=start_server, args=(user, ))
 server_thread.start()

@@ -141,7 +141,7 @@ class User:
         else:
           print('Пользователь уже существует')
         f.close()
-    except Exception:
+    except FileNotFoundError:
       with open('objects/self/users-online.json', 'w') as f:
         file_data = {
           'users_online': []
