@@ -22,12 +22,12 @@ class User:
       "user_pub_key": str(self.__public_key.decode())
     }
     
-    with open('objects/self/user_info.json', 'a') as f:
+    with open('objects/self/user-info.json', 'a') as f:
       f.write(json.dumps(encrypt_object(self.__user_info, self.__private_key)))
       f.close()
     with open('objects/self/users-online.json', 'a') as f:
       data = {
-        'usersonline' : []
+        'users_online' : []
       }
       f.write(json.dumps(data))
       f.close()
@@ -49,7 +49,7 @@ class User:
       users_online = json.load(f)
 
       message = {
-        'data' : str(encrypt_data(data, find_in_object(users_online['usersonline'], f'{addr}')['user_pub_key']))
+        'data' : str(encrypt_data(data, find_in_object(users_online['users_online'], f'{addr}')['user_pub_key']))
       }
       requests.post(f'http://{addr}:9091/message', data = message) #in progress
 
@@ -78,7 +78,7 @@ class User:
               resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
               self.__add_user(eval(resp.text))
               # used_id.append(resp['user_id'])
-              with open('objects/self/user_info.json', 'r') as f1, open('objects/self/users_online.json', 'r') as f2:
+              with open('objects/self/user-info.json', 'r') as f1, open('objects/self/users-online.json', 'r') as f2:
                 user_info = decrypt_object(json.load(f1), self.__private_key)
                 users_online = decrypt_object(json.load(f2), self.__private_key)
                 requests.post(
@@ -107,7 +107,7 @@ class User:
 
   def __remove_user(self, removed_user: dict):
     try:
-      with open('objects/self/users_online.json', 'w') as f:
+      with open('objects/self/users-online.json', 'w') as f:
         users_online = decrypt_object(json.load(f), self.__private_key)
         f.write(json.dumps(encrypt_object(users_online['users_online'].remove(find_in_object(users_online, removed_user)), self.__public_key)))
         f.close()
@@ -116,7 +116,7 @@ class User:
 
   def call_to_remove_user(self):
     try:
-      with open('objects/self/users_online.json', 'r') as f1, open('objects/self/user_info.json', 'r') as f2:
+      with open('objects/self/users-online.json', 'r') as f1, open('objects/self/user-info.json', 'r') as f2:
         users_online = decrypt_object(json.load(f1), self.__private_key)
         user_info = decrypt_object(json.load(f2), self.__private_key)
         for i in users_online['users_online']:
@@ -124,25 +124,25 @@ class User:
           requests.post(f'http://{user_ip}:{9091}/remove-user', data = {"data" : str(encrypt_object(user_info, i['user_pub_key']))})
         f1.close()
         f2.close()
-        os.remove('objects/self/user_info.json')
-        os.remove('objects/self/users_online.json')
+        os.remove('objects/self/user-info.json')
+        os.remove('objects/self/users-online.json')
     except:
       print("Connection error")
       self.call_to_remove_user()
 
   def __add_user(self, data: dict):
     if self.users_online != None:
-      with open('objects/self/users_online.json', 'r') as f:
+      with open('objects/self/users-online.json', 'r') as f:
         file_data = decrypt_object(json.load(f), self.__private_key)
         if find_in_object(file_data, data) == None:
-          with open('objects/self/users_online.json', 'w') as f:
+          with open('objects/self/users-online.json', 'w') as f:
             f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
             f.close()
         else:
           print('Пользователь уже существует')
         f.close()
     else:
-      with open('objects/self/users_online.json', 'w') as f:
+      with open('objects/self/users-online.json', 'w') as f:
         file_data = {
           'users_online': []
         }
@@ -152,13 +152,13 @@ class User:
   # getters
   @property
   def user_info(self):
-    with open('objects/self/user_info.json', 'r') as f:
+    with open('objects/self/user-info.json', 'r') as f:
       return decrypt_object(json.load(f), self.__private_key)
   
   @property
   def users_online(self):
     try:
-      with open('objects/self/users_online.json', 'r') as f:
+      with open('objects/self/users-online.json', 'r') as f:
         data = json.load(f)
         return decrypt_object(data, self.__private_key)
     except FileNotFoundError:
