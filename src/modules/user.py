@@ -21,11 +21,10 @@ class User:
       "user_ip": str(self.__ip),
       "user_pub_key": str(self.__public_key.decode())
     }
-    
-    with open('objects/self/user-info.json', 'a') as f:
+    with open('objects/self/user-info.json', 'w') as f:
       f.write(json.dumps(encrypt_object(self.__user_info, self.__private_key)))
       f.close()
-    with open('objects/self/users-online.json', 'a') as f:
+    with open('objects/self/users-online.json', 'w') as f:
       data = {
         'users_online' : []
       }
