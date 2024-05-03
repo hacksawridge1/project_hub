@@ -25,11 +25,14 @@ class User:
       f.write(json.dumps(encrypt_object(self.__user_info, self.__private_key)))
       f.close()
     with open('objects/self/users-online.json', 'w') as f:
-      data = {
+      data_to_write = {
         'users_online' : []
       }
-      f.write(json.dumps(data))
+      f.write(json.dumps(data_to_write))
       f.close()
+    with open('objects/self/users-online.json', 'r') as f:
+      print(f.read())
+    print("Ok")
 
   # methods
   def __generate_keys(self):
@@ -131,11 +134,10 @@ class User:
 
   def __add_user(self, data: dict):
     try:
-      with open('objects/self/users-online.json', 'r') as fr, open('objects/self/users-online.json', 'w') as fw:
-        file_data = decrypt_object(json.load(fr), self.__private_key)
+      with open('objects/self/users-online.json', 'r') as f:
+        file_data = decrypt_object(json.load(f), self.__private_key)
         if find_in_object(file_data, data) == None:
-          fw.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
-          fw.close()
+          f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
         else:
           print('Пользователь уже существует')
         f.close()
