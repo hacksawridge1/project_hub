@@ -131,12 +131,11 @@ class User:
 
   def __add_user(self, data: dict):
     try:
-      with open('objects/self/users-online.json', 'r') as f:
-        file_data = decrypt_object(json.load(f), self.__private_key)
+      with open('objects/self/users-online.json', 'r') as fr, open('objects/self/users-online.json', 'w') as fw:
+        file_data = decrypt_object(json.load(fr), self.__private_key)
         if find_in_object(file_data, data) == None:
-          with open('objects/self/users-online.json', 'w') as f:
-            f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
-            f.close()
+          fw.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
+          fw.close()
         else:
           print('Пользователь уже существует')
         f.close()
