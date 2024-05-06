@@ -51,7 +51,7 @@ def start_server(user: User):
     def remove_user():
       req = eval(request.form.get('data'))
       user.remove_user = decrypt_object(req, user.private_key)
-      return user.users_online
+      return 'ok'
     
     @app.post(f'/message')
     def recv_message():
