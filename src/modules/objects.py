@@ -122,6 +122,8 @@ def decrypt_object(object: tuple[set, list, tuple, dict], private_key: str, pass
   return object
 
 def find_in_object(object: tuple[set, list, tuple, dict], match: str):
+  if object == match:
+    return object
   k = 0
   if type(object) in arr_types:
     while k < len(object):

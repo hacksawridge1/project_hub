@@ -132,7 +132,6 @@ class User:
       self.call_to_remove_user()
 
   def __add_user(self, data: dict):
-    print("Input Data:" , data)
     file_data = None 
     with open('objects/self/users-online.json', 'r') as f:
       file_data = decrypt_object(json.load(f), self.__private_key)
