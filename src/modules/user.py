@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from random import randint
 import json
 import os
+from pathlib import Path
 @dataclass
 class User:
 
@@ -131,20 +132,18 @@ class User:
       self.call_to_remove_user()
 
   def __add_user(self, data: dict):
-    #try:
-     # with open('objects/self/users-online.json', 'r+') as f:
-      #  file_data = decrypt_object(json.load(f), self.__private_key)
-       # if find_in_object(file_data, data) == None:
-        #  f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
-        #else:
-        #  print('Пользователь уже существует')
-        #f.close()
-    #except FileNotFoundError:
-    with open('objects/self/users-online.json', 'r+') as f:
+    file_data = None 
+    with open('objects/self/users-online.json', 'r') as f:
       file_data = decrypt_object(json.load(f), self.__private_key)
-      f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
-      print(f.read())
       f.close()
+    print(file_data)
+    if find_in_object(file_data, data) == None:
+      file_data['users_online'].append(data)
+      with open('objects/self/users-online.json', 'w') as f:
+        f.write(json.dumps(encrypt_object(file_data, self.__public_key)))
+        f.close()
+    else:
+      print('Пользователь уже существует')
   
   # getters
   @property
