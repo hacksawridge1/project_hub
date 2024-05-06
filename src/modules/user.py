@@ -47,7 +47,7 @@ class User:
 
   def send_message(self, addr: str, user_name: str, data):
     with open('objects/self/users-online.json', 'r') as f:
-      users_online = json.load(f)
+      users_online = decrypt_object(json.load(f), self.__private_key)
       message = {
         'data' : str(encrypt_data(data, find_in_object(users_online['users_online'], f'{addr}')['user_pub_key']))
       }
@@ -107,12 +107,15 @@ class User:
   #     self.__user_info['user_id'] = str(id)
 
   def __remove_user(self, removed_user: dict):
-    try:
+    file_data = None
+    with open('objects/self/users-online.json', 'r') as f:
+      file_data = decrypt_object(json.load(f), self.__private_key)
+      f.close()
+    if find_in_object(file_data, removed_user) != None:
       with open('objects/self/users-online.json', 'w') as f:
-        users_online = decrypt_object(json.load(f), self.__private_key)
-        f.write(json.dumps(encrypt_object(users_online['users_online'].remove(find_in_object(users_online, removed_user)), self.__public_key)))
+        f.write(json.dumps(encrypt_object(file_data['users_online'].remove(removed_user)), self.__public_key)))
         f.close()
-    except ValueError:
+    else:
       print('Пользователь не найден...')
 
   def call_to_remove_user(self):
