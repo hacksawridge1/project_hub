@@ -1,18 +1,11 @@
 USERS_ONLINE={
   "usersonline": [
-    {
-      "user_name": "some_user_name",
-      "user_ip": "user_ip",
-      "user_id": "user_id",
-      "user_pub_key": "user_public_key"
-    }
   ]
 }
 
 USER_INFO={
   "user_name": "some_user_name",
   "user_ip": "user_ip",
-  "user_id": "user_id",
   "user_pub_key": "user_public_key"
 }
 
