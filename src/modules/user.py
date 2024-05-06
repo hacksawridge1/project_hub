@@ -113,7 +113,7 @@ class User:
       f.close()
     if find_in_object(file_data, removed_user) != None:
       with open('objects/self/users-online.json', 'w') as f:
-        f.write(json.dumps(encrypt_object(file_data['users_online'].remove(removed_user)), self.__public_key)))
+        f.write(json.dumps(encrypt_object(file_data['users_online'].remove(removed_user)), self.__public_key))
         f.close()
     else:
       print('Пользователь не найден...')
