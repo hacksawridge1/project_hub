@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from random import randint
 import json
 import os
-import .settings as set
 @dataclass
 class User:
 
@@ -23,13 +22,14 @@ class User:
       "user_pub_key": str(self.__public_key.decode())
     }
     with open('objects/self/user-info.json', 'w') as f:
-      f.write(json.dumps(encrypt_object(self.__user_info, self.__public_key))
+      f.write(json.dumps(encrypt_object(self.__user_info, self.__public_key)))
       f.close()
-    with open('objects/self/users-online.json', 'w') as f:
+    with open('objects/self/users-online.json', 'w+') as f:
       data = {
         'users_online': []  
       }
-      f.write(json.dumps(encrypt_object(data, self.__private_key))
+      f.write(json.dumps(encrypt_object(data, self.__private_key)))
+      print(f.read())
       f.close()
 
   # methods
@@ -143,6 +143,7 @@ class User:
     with open('objects/self/users-online.json', 'r+') as f:
       file_data = decrypt_object(json.load(f), self.__private_key)
       f.write(json.dumps(encrypt_object(file_data['users_online'].append(data), self.__public_key)))
+      print(f.read())
       f.close()
   
   # getters
