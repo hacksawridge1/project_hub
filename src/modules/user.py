@@ -23,7 +23,7 @@ class User:
       "user_pub_key": str(self.__public_key.decode())
     }
     with open('objects/self/user-info.json', 'w') as f:
-      f.write(json.dumps(encrypt_object(self.__user_info, self.__public_key)))
+      f.write(json.dumps(encrypt_object(self.__user_info, self.__public_key), sort_keys=True))
       f.close()
     with open('objects/self/users-online.json', 'w+') as f:
       data = {
@@ -48,7 +48,6 @@ class User:
   def send_message(self, addr: str, user_name: str, data):
     with open('objects/self/users-online.json', 'r') as f:
       users_online = json.load(f)
-
       message = {
         'data' : str(encrypt_data(data, find_in_object(users_online['users_online'], f'{addr}')['user_pub_key']))
       }
@@ -81,6 +80,7 @@ class User:
               # used_id.append(resp['user_id'])
               with open('objects/self/user-info.json', 'r') as f1, open('objects/self/users-online.json', 'r') as f2:
                 user_info = decrypt_object(json.load(f1), self.__private_key)
+                print(user_info)
                 users_online = decrypt_object(json.load(f2), self.__private_key)
                 requests.post(
                   f'http://{net_ip}{i}:{9091}/user',
@@ -132,11 +132,15 @@ class User:
       self.call_to_remove_user()
 
   def __add_user(self, data: dict):
+    print("Input Data:" , data)
     file_data = None 
     with open('objects/self/users-online.json', 'r') as f:
       file_data = decrypt_object(json.load(f), self.__private_key)
       f.close()
-    print(file_data)
+    for i in file_data['users_online']:
+      print("File data content type:" , type(i))
+    print("File data:", file_data)
+    print("Find object:", find_in_object(file_data, data))
     if find_in_object(file_data, data) == None:
       file_data['users_online'].append(data)
       with open('objects/self/users-online.json', 'w') as f:
