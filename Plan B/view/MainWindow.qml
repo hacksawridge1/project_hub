@@ -6,9 +6,12 @@ import QtQuick.Controls.Universal
 ApplicationWindow {
     id: main_window
     visible: true
-    visibility: Window.Maximized
-    width: 1920
-    height: 1080
+    //visibility: Window.Maximized
+    // width: 1920
+    // height: 1080
+    width: 1200
+    height: 900
+    
     title: "HUB"
 
     RowLayout {

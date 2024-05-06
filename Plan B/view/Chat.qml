@@ -304,6 +304,12 @@ ColumnLayout {
                     anchors.fill: parent
                     hoverEnabled: true
 
+                    onClicked: {
+                        let msg = "Нажата кнопка attachFile"
+                        control.sendButton(msg)
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
+                    }
+
                     onPressed: {
                         parent.scale = 1.0
                     }
@@ -392,6 +398,15 @@ ColumnLayout {
                 font.family: "Inter"
                 font.pixelSize: 24
 
+                onClicked: {
+                    control.sendButton(message_input.text)
+
+                    if(!!message_input.text && message_input.text.trim().length > 0) {
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
+                        message_input.text = ""
+                    }
+                }
+
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
                 }
@@ -400,13 +415,6 @@ ColumnLayout {
                     anchors.fill: parent
                     hoverEnabled: true
                     z: -1
-
-                    onClicked: {
-                        if(!!message_input.text && message_input.text.trim().length > 0) {
-                            chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
-                            message_input.text = ""
-                        }
-                    }
 
                     onPressed: {
                         parent.scale = 1.0
@@ -426,5 +434,9 @@ ColumnLayout {
                 }
             }
         }
+    }
+
+    Connections {
+        target: control
     }
 }

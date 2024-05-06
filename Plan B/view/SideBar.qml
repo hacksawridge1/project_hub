@@ -105,6 +105,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
 
+                    onClicked: {
+                        let msg = "Нажата кнопка settingsButton"
+                        control.settingsButton(msg)
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
+                    }
+
                     onPressed: {
                         parent.scale = 1.0
                     }
@@ -150,6 +156,12 @@ Rectangle {
                     id: notifications_area
                     anchors.fill: parent
                     hoverEnabled: true
+
+                    onClicked: {
+                        let msg = "Нажата кнопка notificationsButton"
+                        control.notificationsButton(msg)
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
+                    }
 
                     onPressed: {
                         parent.scale = 1.0
@@ -199,6 +211,10 @@ Rectangle {
 
                     onClicked: {
                         users_view.currentIndex = -1
+
+                        let msg = "Нажата кнопка chatsButton"
+                        control.chatsButton(msg)
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
                     }
 
                     onPressed: {
@@ -247,6 +263,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
 
+                    onClicked: {
+                        let msg = "Нажата кнопка friendsButton"
+                        control.friendsButton(msg)
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
+                    }
+
                     onPressed: {
                         parent.scale = 1.0
                     }
@@ -292,6 +314,12 @@ Rectangle {
                     id: folders_area
                     anchors.fill: parent
                     hoverEnabled: true
+
+                    onClicked: {
+                        let msg = "Нажата кнопка folders"
+                        control.folders(msg)
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
+                    }
 
                     onPressed: {
                         parent.scale = 1.0
@@ -341,6 +369,10 @@ Rectangle {
 
                     onClicked: {
                         sidebar.add_user("Anton", "0.0.0.0")
+
+                        let msg = "Нажата кнопка themeButton"
+                        control.themeButton(msg)
+                        chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
                     }
 
                     onPressed: {
@@ -442,6 +474,9 @@ Rectangle {
 
                             onClicked: {
                                 users_view.currentIndex = delegate.model.index
+                                let msg = "Нажата кнопка listUsersButton"
+                                control.listUsersButton(msg)
+                                chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
                             }
 
                             onPressed: {
@@ -597,7 +632,9 @@ Rectangle {
                 hoverEnabled: true
 
                 onClicked: {
-                    //Soon...
+                    let msg = "Нажата кнопка profileButton"
+                    control.profileButton(msg)
+                    chat.messages_list.insert(0, {"ip": chat.ip, "message": msg})
                 }
             }
         }
