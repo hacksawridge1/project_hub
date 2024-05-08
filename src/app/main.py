@@ -16,7 +16,8 @@ class MainController(QObject):
     def main_window(self, username):
         engine.rootObjects()[0].deleteLater()
         qml_file = path.dirname(path.abspath(__file__)) + "/MainWindow.qml"
-        control.username = username
+        control.setUsername(username)
+        control.setIp("CUSTOM IP")
         engine.load(qml_file)
 main_control = MainController()
 

@@ -12,7 +12,7 @@ ApplicationWindow {
     title: "HUB"
     
     property string name: control ? control.username : ""
-    property string ip: "192.168.0.139"
+    property string ip: control ? control.ip : ""
 
     RowLayout {
         id: main_grid

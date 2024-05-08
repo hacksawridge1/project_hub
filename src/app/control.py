@@ -20,6 +20,18 @@ class Controller(QObject):
 
     username = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
     # username - end
+    # ip - start
+    __ip = ""
+    ipChanged = Signal()
+    def readIp(self):
+        return self.__ip
+    
+    def setIp(self, value):
+        self.__ip = value
+        self.ipChanged.emit()
+
+    ip = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
+    # ip - end
 
 # Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
 # Инструкция:
