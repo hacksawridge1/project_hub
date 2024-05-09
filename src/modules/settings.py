@@ -1,5 +1,5 @@
 USERS_ONLINE={
-  "usersonline": [
+  "users_online": [
   ]
 }
 

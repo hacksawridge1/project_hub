@@ -196,6 +196,7 @@ class User:
     with open('objects/self/users-online.json', 'r') as f:
       file_data = decrypt_object(json.load(f), self.private_key)
       f.close()
+    print(file_data)
     for i in file_data['users_online']:
       print("File data content type:" , type(i))
     if find_in_object(file_data, data) == None:
