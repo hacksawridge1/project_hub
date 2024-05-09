@@ -43,20 +43,17 @@ def start_server(user: User):
       if request.method == 'GET':
         return user.user_info
       if request.method == 'POST':
-        req = eval(request.form.get('data'))
-        user.add_user = decrypt_object(req, user.private_key)
-        return 'ok'
+        user.add_user = decrypt_object(request.get_json(), user.private_key)
+        return str(request.headers)
     
     @app.post('/remove-user')
     def remove_user():
-      req = eval(request.form.get('data'))
-      user.remove_user = decrypt_object(req, user.private_key)
-      return 'ok'
+      user.remove_user = decrypt_object(request.get_json(), user.private_key)
+      return str(request.headers) 
     
     @app.post(f'/message')
     def recv_message():
-      print(request.form)
-      user.recv_message = request.form
+      user.recv_message = decrypt_object(request.get_json(), user.private_key)
       return str(request.headers)
     
     

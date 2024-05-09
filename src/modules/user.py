@@ -78,24 +78,24 @@ class User:
       f2.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
       users_online = decrypt_object(json.load(f), self.private_key)
       reciever = find_in_object(users_online, reciever_ip)
-      requests.post(f'http://' + reciever_ip + ':9091/message', data = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
+      requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
       f2.close()
       f.close()
 
   def __recv_message(self, data: dict):
-    data = decrypt_object(data, self.private_key)
-    print(data)
+    data_out = decrypt_object(data, self.private_key)
+    print(f'From:{data_out["user_name"]}\nMessage:{data_out["message"]}')
     chat = CHAT
     chat_object = CHAT_OBJECT
-    chat_object["user_name"] = data["user_name"]
-    chat_object["user_ip"] = data["user_ip"]
+    chat_object["user_name"] = data_out["user_name"]
+    chat_object["user_ip"] = data_out["user_ip"]
     chat_object["time"] = f"{localtime().tm_hour}:{localtime().tm_min}" 
-    chat_object["message"] = data["message"]
+    chat_object["message"] = data_out["message"]
     chat["chat"].append(chat_object)
     
     if not os.path.exists(os.getcwd() + f'/objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}'):
       os.makedirs(os.getcwd() + f'/objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}')
-      with open(os.getcwd() + f'/objects/self/{chat_object["user_name"]}_{chat_object["user_ip"]}/chat.json', 'w') as f:
+      with open(os.getcwd() + f'/objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}/chat.json', 'w') as f:
         f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
         f.close()
     else:
@@ -139,7 +139,7 @@ class User:
                 users_online = decrypt_object(json.load(f2), self.private_key)
                 requests.post(
                   f'http://{net_ip}{i}:{9091}/user',
-                  data = { 'data' : str(encrypt_object(user_info, find_in_object(users_online['users_online'], f'{net_ip}{i}')['user_pub_key']))})
+                  json = encrypt_object(user_info, find_in_object(users_online['users_online'], f'{net_ip}{i}')['user_pub_key']))
                 f1.close()
                 f2.close()
               i += 1
@@ -180,7 +180,7 @@ class User:
         user_info = decrypt_object(json.load(f2), self.private_key)
         for i in users_online['users_online']:
           user_ip = i['user_ip'] 
-          requests.post(f'http://{user_ip}:{9091}/remove-user', data = {"data" : str(encrypt_object(user_info, i['user_pub_key']))})
+          requests.post(f'http://{user_ip}:{9091}/remove-user', json = str(encrypt_object(user_info, i['user_pub_key'])))
         f1.close()
         f2.close()
         os.remove('objects/self/user-info.json')
