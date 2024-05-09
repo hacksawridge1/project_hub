@@ -56,7 +56,7 @@ def start_server(user: User):
     @app.post(f'/message')
     def recv_message():
       req = eval(request.form.get('data'))
-      print(f'\nMessage from [{request.remote_addr}]:\t' + decrypt_data(req, user.private_key))
+      user.recv_message(req)
       return str(request.headers)
     
     

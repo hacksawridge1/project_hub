@@ -6,3 +6,4 @@ venv
 *.pub
 __pycache__/
 src/objects/self/*.json
+.vim
