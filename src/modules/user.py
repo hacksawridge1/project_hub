@@ -58,13 +58,13 @@ class User:
     chat_object["user_ip"] = str(self.ip)
     chat_object["time"] = f"{localtime().tm_hour}:{localtime().tm_min}"
     chat_object["message"] = str(message)
-    chat["chat"].append(chat_object)
 
     if not os.path.exists(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}'):
 
       os.makedirs(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}')
 
       with open(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f:
+        chat["chat"].append(encrypt_object(chat_object, self.public_key))
         f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
         f.close()
 
@@ -72,11 +72,12 @@ class User:
 
       with open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'r') as f:
         chat = json.load(f)
-        chat["chat"].append(chat_object)
+        chat["chat"].append(encrypt_object(chat_object, self.private_key))
         f.close()
-
+ 
+    print(chat)
     with open('objects/self/users-online.json', 'r') as f, open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f2:
-      f2.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
+      f2.write(json.dumps(chat, sort_keys=True))
       users_online = decrypt_object(json.load(f), self.private_key)
       reciever = find_in_object(users_online, reciever_ip)
       requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
@@ -108,7 +109,7 @@ class User:
         f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
         f.close()
     
-  def __chat_info(self, user_name, user_ip):
+  def chat_info(self, user_name, user_ip):
     if os.path.exists(os.getcwd() + f'/objects/chat/{user_name}_{user_ip}/chat.json'):
       with open(f'objects/chat/{user_name}_{user_ip}/chat.json', 'r') as f:
         chat = decrypt_object(json.load(f), self.private_key)
@@ -263,13 +264,13 @@ class User:
   def recv_message(self, data: dict):
     return self.__recv_message(data)
 
-  @property
-  def chat_info(self):
-    pass 
+  #@property
+  #def chat_info(self):
+  #  pass 
 
-  @chat_info.setter
-  def chat_info(self, user_name: str, user_ip: str):
-    return self.__chat_info(user_name, user_ip)
+  #@chat_info.setter
+  #def chat_info(self, user_name: str, user_ip: str):
+  #  return self.__chat_info(user_name, user_ip)
 
   # @property
   # def id(self):
