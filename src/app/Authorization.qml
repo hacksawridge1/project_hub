@@ -4,75 +4,99 @@ import QtQuick.Layouts
 import QtQuick.Window
 import QtQuick.Controls.Universal
 
+// Окно авторизации
 ApplicationWindow {
     id: authorization
-
-    visible: true
     width: 600
     height: 400
+    minimumWidth: main_layout.implicitWidth + 20
+    minimumHeight: main_layout.implicitHeight + 20
     title: "Authorization"
     color: "#D9D9D9"
+    visible: true
 
+    // Сетка окна
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 12
+        id: main_layout
+        anchors.centerIn: parent
         spacing: 24
+        clip: false
 
-        Rectangle {
-            Layout.preferredWidth: 552
-            Layout.preferredHeight: 78
+        // Верхний текст окна
+        Text {
+            id: welcome
+            horizontalAlignment: Qt.AlignHCenter
+            text: "В HUB тебе понадобится только\nимя."
+            font.weight: Font.Bold
+            font.family: "Inter"
+            font.pixelSize: 32
             Layout.alignment: Qt.AlignHCenter
-            color: "#D9D9D9"
-            Text {
-                id: welcome
-                anchors.centerIn: parent
-                horizontalAlignment: Qt.AlignHCenter
-                text: "В HUB тебе понадобится только\nимя."
-                font.weight: Font.Bold
-                font.family: "Inter"
-                font.pointSize: 22
-            }
         }
 
-        Rectangle {
-            Layout.preferredWidth: 552
+        // Нижняя части авторизации
+        Item {
+            Layout.preferredWidth: 554
             Layout.preferredHeight: 236
             Layout.alignment: Qt.AlignHCenter
-            color: "#D9D9D9"
+
             ColumnLayout {
                 spacing: 12
                 anchors.fill: parent
                 anchors.topMargin: 24
                 anchors.bottomMargin: 24
+                anchors.leftMargin: 1
+                anchors.rightMargin: 1
 
-                Rectangle {
-                    Layout.preferredWidth: 400
-                    Layout.preferredHeight: 44
-                    color: "#D9D9D9"
-                    Text {
-                        text: "Укажите ваше имя, по которому пользователи\nHUB могут вас определить."
-                        font.family: "Inter"
-                        font.pointSize: 13
-                    }
+                Text {
+                    Layout.bottomMargin: 2
+                    text: "Укажите ваше имя, по которому пользователи\nHUB могут вас определить."
+                    font.family: "Inter"
+                    font.pixelSize: 16
                 }
+
+                // Строка ввода имени
                 Rectangle {
-                    Layout.preferredWidth: 291
-                    Layout.preferredHeight: 27
+                    Layout.preferredWidth: 300
+                    Layout.preferredHeight: 30
                     border.width: 1
+                    radius: 8
                     clip: true
+
                     TextInput {
                         id: input
                         anchors.fill: parent
-                        anchors.margins: 4
-                        font.pixelSize: 15
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 16
                         color: "black"
                         property string placeholderText: "Введите ваше имя..."
                         Text {
-                            text: input.placeholderText
+                            text: parent.placeholderText
                             font.family: "Inter"
-                            font.pixelSize: 16
+                            anchors.fill: parent
+                            font.pixelSize: parent.font.pixelSize
+                            verticalAlignment: Text.AlignVCenter
                             color: "#aaa"
-                            visible: !input.text
+                            visible: !parent.text
+                        }
+                    }
+
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        z: -1
+
+                        onEntered: {
+                            parent.scale = 1.04
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
                         }
                     }
                 }
@@ -83,52 +107,62 @@ ApplicationWindow {
                     Layout.preferredHeight: 42
                     background: Rectangle {
                         border.width: 1
+                        radius: 8
                     }
                     text: "Войти"
                     font.family: "Inter"
-                    font.pointSize: 17
+                    font.pixelSize: 20
+
+                    Behavior on scale {
+                        NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+                    }
+
                     MouseArea {
                         anchors.fill: parent
+                        hoverEnabled: true
+
                         onClicked: {
                             authorization.close()
-                            var component = Qt.createComponent("MainWindow.qml")
-                            MainWindow.main_window = component.createObject()
+                            main_control.main_window(input.text)
+                        }
+
+                        onPressed: {
+                            parent.scale = 1.0
+                        }
+
+                        onReleased: {
+                            parent.scale = 1.04
+                        }
+
+                        onEntered: {
+                            parent.scale = 1.04
+                        }
+
+                        onExited: {
+                            parent.scale = 1.0
                         }
                     }
                 }
 
-                Rectangle {
-                    Layout.preferredWidth: 100
-                    Layout.preferredHeight: 100
-                    color: "#D9D9D9"
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                 }
             }
         }
-        
 
-        RowLayout {
-            Layout.preferredWidth: 56
-            Layout.preferredHeight: 14
-            Layout.alignment: Qt.AlignHCenter
-
-            Image {
-                source: "icons\\HUB 2024.svg"
-            }
-
-            Image {
-                source: "icons\\©.svg"
-            }
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 
-    Rectangle {
-        id: rect_authors
+    Item {
+        id: authors
         width: 1348
         height: 77
         rotation: -49
-        x: 167
-        y: -160
-        color: "#D9D9D9"
+
         Text {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
@@ -136,17 +170,33 @@ ApplicationWindow {
             text: "S/B.I.A/M.N.N/K.I.R/L.A.V/P.M.Y/B.D.A/P.M.S/B.I.A/M.N.N"
             font.weight: Font.Bold
             font.family: "Inter"
-            font.pointSize: 42
+            font.pixelSize: 64
             PathAnimation {
-                target: rect_authors
+                target: authors
                 path: Path {
-                    startX: 127; startY: -120
-                    PathLine {x: -720; y: 855}
+                    startX: authorization.width - 473; startY: authorization.height - 520
+                    PathLine {x: authorization.width - 1442; y: authorization.height + 595}
                 }
                 running: true
                 duration: 5500
                 loops: Animation.Infinite
             }
+        }
+    }
+
+    RowLayout {
+        width: 56
+        height: 14
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 12
+
+        Image {
+            source: "icons/HUB 2024.svg"
+        }
+
+        Image {
+            source: "icons/©.svg"
         }
     }
 }
