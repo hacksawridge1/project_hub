@@ -233,11 +233,11 @@ class User:
 
   @property
   def public_key(self):
-    return self.__public_key.decode()
+    return self.__public_key
 
   @property
   def private_key(self):
-    return self.__private_key.decode()
+    return self.__private_key
 
   @property
   def remove_user(self):
