@@ -37,7 +37,6 @@ def encrypt_data(input_data: str, public_key: str):
   return output_data
 
 def decrypt_data(input_data: str, private_key: str, passphrase = None):
-  print(input_data)
   n = 0
   output_data = str()
   key = RSA.import_key(private_key, passphrase)
@@ -57,6 +56,7 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
 
     n += 1
 
+  print(output_data)
   return output_data
 
 def encrypt_object(object, public_key: str):
