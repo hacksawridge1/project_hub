@@ -45,7 +45,7 @@ def start_server(user: User):
       if request.method == 'POST':
         user.add_user = decrypt_object(request.get_json(), user.private_key)
         return str(request.headers)
-    
+   
     @app.post('/remove-user')
     def remove_user():
       user.remove_user = decrypt_object(request.get_json(), user.private_key)
@@ -54,7 +54,6 @@ def start_server(user: User):
     @app.post(f'/message')
     def recv_message():
       req = request.get_json()
-      print(req)
       user.recv_message = decrypt_object(req, user.private_key)
       return str(request.headers)
     

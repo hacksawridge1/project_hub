@@ -44,7 +44,6 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
 
   while n < len(input_data):
 
-    print(input_data[n])
     if type(input_data[n]) in arr_types:
       for i in input_data[n]:
         output_data += cipher.decrypt(b64.b64decode(i)).decode()
@@ -57,7 +56,6 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
 
     n += 1
 
-  print(output_data)
   return output_data
 
 def encrypt_object(object, public_key: str):
