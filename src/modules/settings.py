@@ -16,7 +16,7 @@ CHAT={
 CHAT_OBJECT = {
     "user_name": "user_name",
     "user_ip": "user_ip",
-    "time": 'H:M:S',
+    "time": 'H:M',
     "message": "message"
 }
 

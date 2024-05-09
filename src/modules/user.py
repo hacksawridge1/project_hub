@@ -5,7 +5,7 @@ import requests
 from dataclasses import dataclass
 import json
 import os
-from datetime import time
+from time import time, localtime
 from .objects import encrypt_object, decrypt_object, find_in_object
 from .settings import * 
 @dataclass
@@ -56,7 +56,7 @@ class User:
     chat_object = CHAT_OBJECT
     chat_object["user_name"] = str(self.name)
     chat_object["user_ip"] = str(self.ip)
-    chat_object["time"] = f"{time.hour}:{time.minute}"
+    chat_object["time"] = f"{localtime().tm_hour}:{localtime().tm_min}"
     chat_object["message"] = str(message)
     chat["chat"].append(chat_object)
 
@@ -71,7 +71,7 @@ class User:
     else:
 
       with open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'r') as f:
-        chat = decrypt_object(json.load(f), self.private_key)
+        chat = json.load(f)
         f.close()
 
     with open('objects/self/users-online.json', 'r') as f, open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f2:
@@ -86,13 +86,13 @@ class User:
       f.close()
 
   def __recv_message(self, data: dict):
-    print(data)
     data = decrypt_object(data, self.private_key)
+    print(data)
     chat = CHAT
     chat_object = CHAT_OBJECT
     chat_object["user_name"] = data["user_name"]
     chat_object["user_ip"] = data["user_ip"]
-    chat_object["time"] = f"{time.hour}:{time.minute}"
+    chat_object["time"] = f"{localtime().tm_hour}:{localtime().tm_min}" 
     chat_object["message"] = data["message"]
     chat["chat"].append(chat_object)
     
@@ -104,7 +104,7 @@ class User:
     else:
 
       with open(f'objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}/chat.json', 'r') as f:
-        chat = decrypt_object(json.load(f), self.private_key)
+        chat = f.read() 
         f.close()
 
       with open(f'objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}/chat.json', 'w') as f:
@@ -113,22 +113,22 @@ class User:
     
   def __chat_info(self, user_name, user_ip):
     if os.path.exists(os.getcwd() + f'/objects/chat/{user_name}_{user_ip}/chat.json'):
-      with open(f'objects/chat/{user_name}_{user_ip}', 'r') as f:
-        chat = decrypt_object(json.load(f), self.__private_key)
+      with open(f'objects/chat/{user_name}_{user_ip}/chat.json', 'r') as f:
+        chat = decrypt_object(json.load(f), self.private_key)
         return chat["chat"]
     else:
       return "С данным пользователем нет переписок"
 
 
   def __initial(self):
-    net_ip = '.'.join(self.__ip.split('.')[:3]) + '.'
+    net_ip = '.'.join(self.ip.split('.')[:3]) + '.'
     i = 2
     users_to_ping = list()
     # used_id = list()
 
     while i < 255:
       try:
-        if f'{net_ip}{i}' != self.__ip:
+        if f'{net_ip}{i}' != self.ip:
           if len(users_to_ping) < 4:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
             if resp.ok:
