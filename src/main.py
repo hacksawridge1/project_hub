@@ -1,13 +1,11 @@
-from modules.user import User
-from modules.app import App
-from modules.new_server import start_server
 from threading import Thread
 import sys
+from modules.user import User
+from modules.new_server import start_server
 
 user_name = input("Введите ваше имя:\t")
 print('Генерируем данные...')
 
-app = App()
 user = User(user_name)
 
 server_thread = Thread(target=start_server, args=(user, ))

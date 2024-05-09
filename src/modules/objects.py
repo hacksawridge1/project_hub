@@ -7,7 +7,7 @@ import base64 as b64
 
 arr_types = [list, tuple, set]
 
-def encrypt_data(input_data: str, public_key: str):
+def encrypt_data(input_data: str, public_key: str) -> list:
   input_data_splited = str(input_data).split()
   output_data = list()
   n = 0
@@ -36,7 +36,7 @@ def encrypt_data(input_data: str, public_key: str):
 
   return output_data
 
-def decrypt_data(input_data: str, private_key: str, passphrase = None):
+def decrypt_data(input_data: str, private_key: str, passphrase = None) -> str:
   n = 0
   output_data = str()
   key = RSA.import_key(private_key, passphrase)
@@ -58,7 +58,7 @@ def decrypt_data(input_data: str, private_key: str, passphrase = None):
 
   return output_data
 
-def encrypt_object(object, public_key: str):
+def encrypt_object(object, public_key: str) -> dict:
   object_copy = deepcopy(object)
   public_key = RSA.import_key(public_key).public_key().export_key(format='PEM').decode('utf-8')
   if type(object_copy) in arr_types:
@@ -90,7 +90,7 @@ def encrypt_object(object, public_key: str):
           
   return object_copy
 
-def decrypt_object(object: tuple[set, list, tuple, dict], private_key: str, passphrase: str = None):
+def decrypt_object(object, private_key: str, passphrase = None) -> dict:
   private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
   if type(object) in arr_types:
     i = 0
@@ -121,7 +121,7 @@ def decrypt_object(object: tuple[set, list, tuple, dict], private_key: str, pass
 
   return object
 
-def find_in_object(object: tuple[set, list, tuple, dict], match: str):
+def find_in_object(object, match):
   if object == match:
     return object
   k = 0
