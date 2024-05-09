@@ -78,10 +78,7 @@ class User:
       f2.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
       users_online = decrypt_object(json.load(f), self.private_key)
       reciever = find_in_object(users_online, reciever_ip)
-      message = {
-        'data' : str(encrypt_object(chat_object, reciever["user_pub_key"]))
-      }
-      requests.post(f'http://' + reciever_ip + ':9091/message', data = message) #in progress
+      requests.post(f'http://' + reciever_ip + ':9091/message', data = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
       f2.close()
       f.close()
 

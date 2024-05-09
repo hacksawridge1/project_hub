@@ -55,9 +55,8 @@ def start_server(user: User):
     
     @app.post(f'/message')
     def recv_message():
-      req = eval(request.form.get('data'))
-      print(req)
-      user.recv_message = req
+      print(request.form)
+      user.recv_message = request.form
       return str(request.headers)
     
     
