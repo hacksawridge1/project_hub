@@ -13,39 +13,23 @@ print('Генерируем данные...')
 app = App()
 user = User(user_name)
 
-data = {
-  "chat": [
-      {
-        "user_name": "ivan",
-        "time": f"{localtime().tm_hour}:{localtime().tm_min}",
-        "user_ip": "192.168.3.0",
-        "message": "some-text"
-      }
-  ]
-}
+server_thread = Thread(target=start_server, args=(user, ))
+server_thread.start()
+init_thread = Thread(target=user.initial)
+init_thread.start()
 
-enc_data = encrypt_object(data, user.public_key)
+print("Генерация прошла успешно")
+print(user.users_online)
 
-print(enc_data)
-print(decrypt_object(enc_data, user.private_key))
+reciever_ip = input('Введите ip пользователя:\t')
+reciever_name = input('Введите имя пользователя:\t')
 
-#server_thread = Thread(target=start_server, args=(user, ))
-#server_thread.start()
-#init_thread = Thread(target=user.initial)
-#init_thread.start()
-
-#print("Генерация прошла успешно")
-#print(user.users_online)
-#
-#reciever_ip = input('Введите ip пользователя:\t')
-#reciever_name = input('Введите имя пользователя:\t')
-#
-#while True:
-#  data = input('Введите сообщение:\t')
-#  if data == 'stop':
-#    user.call_to_remove_user()
-#    sys.exit()
-#  elif data == 'Пользователи':
-#    print(user.users_online)
-#  else:
-#    user.send_message(reciever_ip, reciever_name, data)
+while True:
+  data = input('Введите сообщение:\t')
+  if data == 'stop':
+    user.call_to_remove_user()
+    sys.exit()
+  elif data == 'Пользователи':
+    print(user.users_online)
+  else:
+    user.send_message(reciever_ip, reciever_name, data)
