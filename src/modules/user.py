@@ -84,14 +84,13 @@ class User:
       f.close()
 
   def __recv_message(self, data: dict):
-    data_out = decrypt_object(data, self.private_key)
-    print(f'From:{data_out["user_name"]}\nMessage:{data_out["message"]}')
+    print(f'From:{data["user_name"]}\nMessage:{data["message"]}')
     chat = CHAT
     chat_object = CHAT_OBJECT
-    chat_object["user_name"] = data_out["user_name"]
-    chat_object["user_ip"] = data_out["user_ip"]
+    chat_object["user_name"] = data["user_name"]
+    chat_object["user_ip"] = data["user_ip"]
     chat_object["time"] = f"{localtime().tm_hour}:{localtime().tm_min}" 
-    chat_object["message"] = data_out["message"]
+    chat_object["message"] = data["message"]
     chat["chat"].append(chat_object)
     
     if not os.path.exists(os.getcwd() + f'/objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}'):
