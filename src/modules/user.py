@@ -58,13 +58,14 @@ class User:
     chat_object["user_ip"] = str(self.ip)
     chat_object["time"] = f"{time.hour}:{time.minute}"
     chat_object["message"] = str(message)
+    chat["chat"].append(chat_object)
 
     if not os.path.exists(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}'):
 
       os.makedirs(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}')
 
       with open(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f:
-        f.write(json.dumps(encrypt_object(chat["chat"].append(chat_object), self.public_key), sort_keys=True))
+        f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
         f.close()
 
     else:
@@ -73,18 +74,19 @@ class User:
         chat = decrypt_object(json.load(f), self.private_key)
         f.close()
 
-      with open('objects/self/users-online.json', 'r') as f, open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f2:
-        f2.write(json.dumps(encrypt_object(chat["chat"].append(chat_object), self.public_key), sort_keys=True))
-        users_online = decrypt_object(json.load(f), self.private_key)
-        reciever = find_in_object(users_online, reciever_ip)
-        message = {
-          'data' : str(encrypt_object(chat_object, reciever["user_pub_key"]))
-        }
-        requests.post(f'http://' + reciever_ip + ':9091/message', data = message) #in progress
-        f2.close()
-        f.close()
+    with open('objects/self/users-online.json', 'r') as f, open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f2:
+      f2.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
+      users_online = decrypt_object(json.load(f), self.private_key)
+      reciever = find_in_object(users_online, reciever_ip)
+      message = {
+        'data' : str(encrypt_object(chat_object, reciever["user_pub_key"]))
+      }
+      requests.post(f'http://' + reciever_ip + ':9091/message', data = message) #in progress
+      f2.close()
+      f.close()
 
   def __recv_message(self, data: dict):
+    print(data)
     data = decrypt_object(data, self.private_key)
     chat = CHAT
     chat_object = CHAT_OBJECT
@@ -92,11 +94,12 @@ class User:
     chat_object["user_ip"] = data["user_ip"]
     chat_object["time"] = f"{time.hour}:{time.minute}"
     chat_object["message"] = data["message"]
+    chat["chat"].append(chat_object)
     
     if not os.path.exists(os.getcwd() + f'/objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}'):
       os.makedirs(os.getcwd() + f'/objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}')
       with open(os.getcwd() + f'/objects/self/{chat_object["user_name"]}_{chat_object["user_ip"]}/chat.json', 'w') as f:
-        f.write(json.dumps(encrypt_object(chat["chat"].append(chat_object), self.public_key), sort_keys=True))
+        f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
         f.close()
     else:
 
@@ -105,7 +108,7 @@ class User:
         f.close()
 
       with open(f'objects/chat/{chat_object["user_name"]}_{chat_object["user_ip"]}/chat.json', 'w') as f:
-        f.write(json.dumps(encrypt_object(chat["chat"].append(chat_object), self.public_key), sort_keys=True))
+        f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
         f.close()
     
   def __chat_info(self, user_name, user_ip):
