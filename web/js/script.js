@@ -11,6 +11,9 @@ var download=document.getElementById("download");
 var about=document.getElementById("about");
 var up=document.getElementById("up");
 
+var footer = document.querySelector("footer");
+var footerHeight = footer.offsetHeight;
+
 up.style.visibility = "hidden";
 
 // Загрузка файла
@@ -72,6 +75,20 @@ window.onscroll=()=> {
     else
         up.style.visibility = "hidden";
 }
+
+function updateScrollPosition() {
+    var windowHeight = window.innerHeight;
+    var scrollPosition = window.scrollY;
+
+    if ((scrollPosition + windowHeight) >= (footer.offsetTop - footerHeight)) {
+        up.style.bottom = (scrollPosition + windowHeight - footer.offsetTop + footerHeight - 45) + "px";
+    } else {
+        up.style.bottom = "20px";
+    }
+}
+
+window.addEventListener("load", updateScrollPosition);
+window.addEventListener("scroll", updateScrollPosition);
 
 // Можно добавить слайдер
 
