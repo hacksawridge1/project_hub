@@ -115,7 +115,7 @@ button:hover {
 #download-button {
   display: block;
   margin: 0 auto;
-  background-color: #808080;
+  background-color: #333;
   color: #fff;
   border: none;
   border-radius: 100px;
@@ -126,7 +126,7 @@ button:hover {
 }
 
 #download-button:hover {
-  background-color: #c5c5c5;
+  background-color: #808080;
 }
 
 #up{
