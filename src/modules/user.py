@@ -90,33 +90,30 @@ class User:
   def __initial(self) -> bool:
     net_ip: str = '.'.join(self.ip.split('.')[:3]) + '.'
     i: int = 2
-    users_to_ping: list = list()
 
     try:
       while i < 255:
         try:
           if f'{net_ip}{i}' != self.ip:
-            if len(users_to_ping) < 4:
-              resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
+            resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.15)
 
-              if resp.ok:
-                users_to_ping.append(f'{net_ip}' + str(i))
-                resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
-                self.__add_user(eval(resp.text))
+            if resp.ok:
+              resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
+              data: dict = eval(resp.text)
 
-                with open('objects/self/user-info.json', 'r') as f1, open('objects/self/users-online.json', 'r') as f2:
-                  user_info: dict = decrypt_object(json.load(f1), self.private_key)
-                  users_online: dict = decrypt_object(json.load(f2), self.private_key)
+              with open('objects/self/user-info.json', 'r') as f1, open('objects/self/users-online.json', 'r') as f2:
+                user_info: dict = decrypt_object(json.load(f1), self.private_key)
+                users_online: dict = decrypt_object(json.load(f2), self.private_key)
 
-                  requests.post(
-                    f'http://{net_ip}{i}:{9091}/user',
-                    json = encrypt_object(user_info, find_in_object(users_online['users_online'], f'{net_ip}{i}')['user_pub_key']))
-                  f1.close()
-                  f2.close()
-                i += 1
-                continue
-            else:
-              break
+                users_online["users_online"].append(encrypt_object(data, self.private_key))
+
+                requests.post(
+                  f'http://{net_ip}{i}:{9091}/user',
+                  json = encrypt_object(user_info, data['user_pub_key']))
+                f1.close()
+                f2.close()
+              i += 1
+              continue
           else:
             i += 1
             continue
@@ -207,8 +204,11 @@ class User:
         f2.close()
         os.remove('objects/self/user-info.json')
         os.remove('objects/self/users-online.json')
+        os.remove('objects/chat/*')
+        os.remove('objects/upload/*')
+        os.remove('objects/download/*')
     except:
-      print("Connection error")
+      print('Conn Error')
       self.call_to_remove_user()
 
   # Get chat inform with {user_name, user_ip}(user.chat_info(...))

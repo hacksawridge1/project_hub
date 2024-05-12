@@ -8,6 +8,10 @@ from .settings import *
 
 def start_server(user: User):
     app = Flask(__name__)
+
+    @app.get('/')
+    def hello():
+      return user.name
     
     @app.route('/user', methods=['GET', 'POST'])
     def init():
