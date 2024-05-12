@@ -20,15 +20,19 @@ def start_server(user: User):
       if request.method == 'POST':
         data: dict = decrypt_object(request.get_json(), user.private_key)
         file_data: dict  
+        user_pub_key = None
 
         if data["user_pub_key"]:
-          data.pop("user_pub_key")
+          user_pub_key = data.pop("user_pub_key")
+        else:
+          print("Э, а где ключ?")
 
         with open('objects/self/users-online.json', 'r') as f:
           file_data = decrypt_object(json.load(f), user.private_key)
           f.close()
 
         if find_in_object(file_data, data) == None:
+          data['user_pub_key'] = user_pub_key
           file_data['users_online'].append(data)
 
           with open('objects/self/users-online.json', 'w') as f:
