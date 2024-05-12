@@ -5,89 +5,77 @@
 18 марта 2024 г.
 */
 
-body {
+/* БЛОКИ */
+
+body, html {
+  height: 100%;
   font-family: Arial;
-  line-height: 1.6;
   color: #333;
   background-color: #808080;
 }
 
 header {
-  background-color: #333;
+  height: 50%;
   color: #fff;
-  padding: 5px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("../img/parallax.jpg");
+  background-attachment: fixed;
+  background-size: contain;
+  overflow: hidden;
 }
 
-header h1 {
-  font-size: 36px;
+.header-content {
+  position: relative;
+  z-index: 1;
 }
 
 nav {
-  text-decoration: none;
-  color: #fff;
+  background-color: #292929;
   padding: 10px 20px;
-  margin: 0;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+  text-align: center;
 }
 
 main {
-  position: relative; /* Для позиционирования псевдоэлементов */
-  max-width: 1200px; /* Максимальная ширина вашего контента */
-  margin: 0 auto; /* Центрирование по горизонтали */
-  padding: 20px; /* Отступы вокруг контента */
-  background-color: #c5c5c5; /* Цвет фона центральной колонки */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #c5c5c5;
 }
 
-main section {
-  margin: 50px;
-  margin-top: 10px;
+section {
+  margin: 10px 50px 50px;
+  padding: 20px;
   background-color: #fff;
   border-radius: 25px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
-  padding: 50px;
-}
-
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-#section1 {
-  padding: 40px 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
   text-align: justify;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-#section1 h2 {
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* ЭЛЕМЕНТЫ */
+h1 {
+  color: rgb(255, 236, 128);
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    font-size: .7em;
+    font-size: 12em;
+    font-family: Alex Brush, cursive;
+    animation: burning 1.5s ease-in-out infinite alternate;
+}
+
+h2 {
   font-size: 24px;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
-}
-
-#section2 {
-  padding: 40px 0;
-  text-align: justify;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
-}
-
-#section2 h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
-}
-
-#section3 {
-  padding: 40px 0;
-  text-align: justify;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
-}
-
-#section3 h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
+  text-align: center;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
 }
 
@@ -112,10 +100,27 @@ button:hover {
   color: #000000;
 }
 
+/* КЛАССЫ */
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.image {
+  text-align: center;
+  font-style: italic;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ID ЭЛЕМЕНТЫ */
+
 #download-button {
   display: block;
-  margin: 0 auto;
-  background-color: #333;
+  margin: 50px auto 20px;
+  background-color: #160a7e;
   color: #fff;
   border: none;
   border-radius: 100px;
@@ -126,7 +131,7 @@ button:hover {
 }
 
 #download-button:hover {
-  background-color: #808080;
+  background-color: #5d38e2;
 }
 
 #up{
@@ -142,11 +147,4 @@ button:hover {
 #up:hover {
   background-color: #e2e2e2;
   color: #000000;
-}
-
-footer {
-  background-color: #333;
-  color: #fff;
-  padding: 20px 0;
-  text-align: center;
 }

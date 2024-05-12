@@ -90,7 +90,14 @@ function updateScrollPosition() {
 window.addEventListener("load", updateScrollPosition);
 window.addEventListener("scroll", updateScrollPosition);
 
-// Можно добавить слайдер
+document.addEventListener("DOMContentLoaded", function() {
+    var header = document.querySelector('header');
+    var headerContent = document.querySelector('.header-content');
+    var speed = 0.5; // Установите скорость прокрутки (чем меньше значение, тем медленнее)
 
-// Можно добавить темную/светлую тему
-
+    window.onscroll = function() {
+        var yOffset = window.scrollY;
+        header.style.backgroundPositionY = -yOffset * speed + 'px';
+        headerContent.style.transform = 'translateY(' + yOffset * speed + 'px)';
+    }
+});

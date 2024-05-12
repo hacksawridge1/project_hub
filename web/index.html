@@ -11,54 +11,57 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>HUB</title>
-        <link rel="shortcut icon" href="img/icon.ico" />
+        <link rel="shortcut icon" href="img/icon.ico"/>
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <header>
-            <h1>HUB - мессенджер</h1>
-            <nav>
-                <button id="description">Описание</button>
-                <button id="download">Скачать</button>
-                <button id="about">О нас</button>
-            </nav>
+            <div class="header-content">
+                <h1>HUB</h1>
+            </div>
         </header>
-        <main class="content">
-            <!--Заменить нормальным контентом-->
+
+        <nav>
+            <button id="description">Описание</button>
+            <button id="download">Скачать</button>
+            <button id="about">О нас</button>
+        </nav>
+
+        <main>
             <section id="section1">
                 <div class="container">
                     <h2>HUB – локальный мессенджер для простого общения!</h2>
+                    <div class="image"><img src="img/HUB 3.0.png" width="800" height="500">
+                        <p>Внешний вид приложения HUB</p>
+                    </div>
                     <h3>1. Общение без границ</h3>
-                    HUB позволяет вам легко общаться с кем угодно в любом месте мира.
+                    <p>HUB позволяет вам легко общаться с кем угодно в любом месте мира.</p>
                     <h3>2. Мгновенные сообщения</h3>
-                    В HUB ваши сообщения доставляются быстро и надежно.
+                    <p>В HUB ваши сообщения доставляются быстро и надежно.</p>
                     <h3>3. Групповые чаты и конференции</h3>
-                    Создавайте групповые чаты и конференции, чтобы общаться с несколькими людьми сразу.
+                    <p>Создавайте групповые чаты и конференции, чтобы общаться с несколькими людьми сразу.</p>
                     <h3>4. Безопасность на первом месте</h3>
-                    Мы защищаем ваши данные, используя передовые методы шифрования.
+                    <p>Мы защищаем ваши данные, используя передовые методы шифрования.</p>
                     <h3>5. Мультимедийный опыт</h3>
-                    Помимо текстовых сообщений, вы можете отправлять фото, видео и аудиозаписи.
+                    <p>Помимо текстовых сообщений, вы можете отправлять фото, видео и аудиозаписи.</p>
                     <h3>6. Поддержка множества платформ</h3>
-                    HUB работает на iOS, Android и веб-версии, что делает его удобным для использования на разных устройствах.
+                    <p>HUB работает на iOS, Android и веб-версии, что делает его удобным для использования на разных устройствах.</p>
                     <h3>7. Персонализация и удобство</h3>
-                    Вы можете настроить HUB под свои предпочтения, выбрав темы и настройки уведомлений.
                     Присоединяйтесь к HUB прямо сейчас и откройте для себя новый уровень связи и общения!
                     (ChatGPT)
                 </div>
-
-                <div>
-                    <br><br>
-                </div>
-
-                <div class="image"><img src="img/HUB 3.0.png"></div>
+                
             </section>
 
-            <!--Заменить нормальным контентом-->
             <section id="section2">
                 <div class="container">
                     <h2>Хотите лучше общаться? Скачайте HUB прямо сейчас!</h2>
                     HUB – это мессенджер нового поколения. С ним вы быстро и безопасно связываетесь с друзьями, семьей и коллегами. Отправляйте сообщения, фото и видео, создавайте групповые чаты – все просто и удобно!
+                </div>
+                <button id="download-button" onclick="downloadFile()">Скачать HUB</button>
+
+                <div class="container">
                     <h3>Почему HUB?</h3>
                     1. Быстро и надежно: Сообщения доставляются мгновенно.<br>
                     2. Безопасно: Мы заботимся о вашей конфиденциальности.<br>
@@ -66,15 +69,8 @@
                     <br>
                     Присоединяйтесь к HUB! Доступен на iOS, Android и вебе. <br> Не упустите шанс, скачайте HUB и улучшите свои коммуникации прямо сейчас!
                 </div>
-
-                <div>
-                    <br><br>
-                </div>
-
-                <button id="download-button" onclick="downloadFile()">Скачать HUB</button>
             </section>
 
-            <!--Заменить нормальным контентом-->
             <section id="section3">
                 <div class="container"><img src="img/icon.jpg"></div>
                 <div class="container">
@@ -89,7 +85,7 @@
             <button id="up">Вверх</button>
         </main>
         <footer>
-            2024 г.
+            2024 г. 
         </footer>
     </body>
     <script src="js/script.js"></script>
