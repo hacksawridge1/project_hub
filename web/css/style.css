@@ -64,13 +64,17 @@ footer {
 /* ЭЛЕМЕНТЫ */
 h1 {
   color: rgb(255, 236, 128);
-    display: block;
-    text-transform: uppercase;
-    letter-spacing: 10px;
-    font-size: .7em;
-    font-size: 12em;
-    font-family: Alex Brush, cursive;
-    animation: burning 1.5s ease-in-out infinite alternate;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  font-size: .7em;
+  font-size: 12em;
+  font-family: Alex Brush, cursive;
+  animation: burning 1.5s ease-in-out infinite alternate;
+
+  -webkit-text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.75);
+  -moz-text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.75);
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.75);
 }
 
 h2 {
