@@ -1,7 +1,7 @@
 from threading import Thread
 import sys
 from modules.user import User
-from modules.new_server import start_server
+from modules.server import start_server
 
 user_name = input("Введите ваше имя:\t")
 print('Генерируем данные...')

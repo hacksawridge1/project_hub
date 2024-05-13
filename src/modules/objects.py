@@ -1,7 +1,7 @@
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from textwrap import wrap
-from pprint import pprint
+from typing import Union
 from copy import deepcopy
 import base64 as b64
 
@@ -121,7 +121,7 @@ def decrypt_object(object, private_key: str, passphrase = None) -> dict:
 
   return object
 
-def find_in_object(object, match):
+def find_in_object(object, match) -> Union[dict, None]:
   if object == match:
     return object
   k = 0
