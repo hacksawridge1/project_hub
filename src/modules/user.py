@@ -6,9 +6,8 @@ from dataclasses import dataclass
 import json
 import os
 from typing import Union
-from time import localtime
 from .objects import encrypt_object, decrypt_object, find_in_object
-from .settings import *
+import modules.settings as set
 
 @dataclass
 class User:
@@ -18,27 +17,23 @@ class User:
     self.__name: str = name
     self.__ip: str = str(self.__get_local_ip())
     self.__generate_keys()
-    # self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.__user_info: dict = USER_INFO
-    self.__user_info["user_name"] = str(self.__name)
-    self.__user_info["user_ip"] = str(self.__ip)
-    self.__user_info["user_pub_key"]= str(self.public_key)
+    self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key) 
 
-    if not os.path.exists(os.getcwd() + '/objects/self'): 
-      os.mkdir(os.getcwd() + '/objects/self')
+    if not set.path_to_self().exists():
+      set.path_to_self().mkdir()
 
-    if not os.path.exists(os.getcwd() + '/upload'):
-      os.mkdir(os.getcwd() + '/upload')
+    if not set.path_to_upload().exists():
+      set.path_to_upload().mkdir()
 
-    if not os.path.exists(os.getcwd() + '/download'):
-      os.mkdir(os.getcwd() + '/download')
+    if not set.path_to_download().exists():
+      set.path_to_download().mkdir()
 
-    with open('objects/self/user-info.json', 'w') as f:
+    with set.path_to_self("user-info.json").open("w") as f:
       f.write(json.dumps(encrypt_object(self.__user_info, self.public_key), sort_keys=True))
       f.close()
 
-    with open('objects/self/users-online.json', 'w') as f:
-      f.write(json.dumps(encrypt_object(USERS_ONLINE, self.private_key), sort_keys=True))
+    with set.path_to_self("users-online.json").open("w") as f:
+      f.write(json.dumps(encrypt_object(set.users_online(), self.private_key), sort_keys=True))
       f.close()
 
   # methods
@@ -74,17 +69,21 @@ class User:
               resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
               data: dict = eval(resp.text)
 
-              with open('objects/self/user-info.json', 'r') as f1, open('objects/self/users-online.json', 'r') as f2:
-                user_info: dict = decrypt_object(json.load(f1), self.private_key)
-                users_online: dict = decrypt_object(json.load(f2), self.private_key)
+              with set.path_to_self("users-online.json").open() as f:
+                file_data: dict = decrypt_object(json.load(f), self.private_key) 
+                file_data['users_online'].append(encrypt_object(data, self.public_key))
+                f.close()
 
-                users_online["users_online"].append(encrypt_object(data, self.private_key))
+              with set.path_to_self("users-online.json").open("w") as f:
+                f.write(json.dumps(file_data))
+
+              with set.path_to_self("user-info.json").open() as f:
+                user_info: dict = decrypt_object(json.load(f), self.private_key)
 
                 requests.post(
                   f'http://{net_ip}{i}:{9091}/user',
                   json = encrypt_object(user_info, data['user_pub_key']))
-                f1.close()
-                f2.close()
+                f.close()
               i += 1
               continue
           else:
@@ -99,61 +98,60 @@ class User:
       return False
 
   # Send message (user.send_message(...))
+
   def send_message(self, reciever_ip: str, reciever_name: str, message: str) -> None:
-    chat: dict = CHAT
-    chat_object: dict = CHAT_OBJECT
-    chat_object["user_name"] = str(self.name)
-    chat_object["user_ip"] = str(self.ip)
-    chat_object["time"] = f"{localtime().tm_hour}:{localtime().tm_min}"
-    chat_object["message"] = str(message)
+    chat: dict = set.chat()
+    chat_object: dict = set.chat_object(self.name, self.ip, message)
 
-    if not os.path.exists(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}'):
-
-      os.makedirs(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}')
-
-      with open(os.getcwd() + f'/objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f:
+    if not set.path_to_chat(reciever_name, reciever_ip).exists():
+      set.path_to_chat(reciever_name, reciever_ip).mkdir(parents=True)
+      (set.path_to_chat(reciever_name, reciever_ip) / "chat.json").touch()
+      
+      with set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f:
         chat["chat"].append(encrypt_object(chat_object, self.public_key))
         f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
         f.close()
-
+        
     else:
 
-      with open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'r') as f:
+      with set.path_to_chat(reciever_name, reciever_ip).open() as f:
         chat = json.load(f)
         chat["chat"].append(encrypt_object(chat_object, self.private_key))
         f.close()
 
-    with open('objects/self/users-online.json', 'r') as f, open(f'objects/chat/{reciever_name}_{reciever_ip}/chat.json', 'w') as f2:
-      f2.write(json.dumps(chat, sort_keys=True))
+    with set.path_to_self("users-online.json").open() as f, set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f1:
+      f1.write(json.dumps(chat, sort_keys=True))
       users_online: dict = decrypt_object(json.load(f), self.private_key)
       reciever: dict = find_in_object(users_online, reciever_ip)
       requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
-      f2.close()
+      f1.close()
       f.close()
 
   # Call to remove user on exit (user.call_to_remove_user())
   def call_to_remove_user(self):
     try:
-      with open('objects/self/users-online.json', 'r') as f1, open('objects/self/user-info.json', 'r') as f2:
+      with set.path_to_self("users-online.json").open() as f1, set.path_to_self("user-info.json").open() as f2:
+        
         users_online: dict = decrypt_object(json.load(f1), self.private_key)
         user_info: dict = decrypt_object(json.load(f2), self.private_key)
         for i in users_online['users_online']:
           user_ip: str = i['user_ip'] 
           requests.post(f'http://{user_ip}:{9091}/remove-user', json = str(encrypt_object(user_info, i['user_pub_key'])))
+
         f1.close()
         f2.close()
-        os.remove('objects/self/user-info.json')
-        os.remove('objects/self/users-online.json')
-        os.remove('objects/chat/*')
-        os.remove('objects/upload/*')
-        os.remove('objects/download/*')
-    except Exception:
-      print(f'Conn Error: {Exception}')
-      self.call_to_remove_user()
+
+    except :
+      print("Error")
+      
+    set.path_to_self().rmdir()
+    set.path_to_chat().rmdir()
+    set.path_to_upload().rmdir()
+    set.path_to_download().rmdir()
 
   # Get chat inform with {user_name, user_ip}(user.chat_info(...))
   def chat_info(self, user_name, user_ip) -> Union[list, str]:
-    if os.path.exists(os.getcwd() + f'/objects/chat/{user_name}_{user_ip}/chat.json'):
+    if os.path.exists(f'/objects/chat/{user_name}_{user_ip}/chat.json'):
       with open(f'objects/chat/{user_name}_{user_ip}/chat.json', 'r') as f:
         chat: dict = decrypt_object(json.load(f), self.private_key)
         return chat["chat"]
@@ -161,8 +159,8 @@ class User:
       return "С данным пользователем нет переписок"
 
   def send_file(self, reciever_name: str, reciever_ip: str, file: bytes):
-    if not os.path.exists(os.getcwd() + f'/upload/{reciever_name}_{reciever_ip}'):
-      os.mkdir(os.getcwd() + f'/upload/{reciever_name}_{reciever_ip}')
+    if not os.path.exists(f'/upload/{reciever_name}_{reciever_ip}'):
+      os.mkdir(f'/upload/{reciever_name}_{reciever_ip}')
 
   
   # Info about user
