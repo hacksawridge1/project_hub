@@ -55,47 +55,47 @@ class User:
            if not address_object.is_loopback:
              return address_info['addr']
 
-  def __initial(self) -> bool:
+  def __initial(self):
     net_ip: str = '.'.join(self.ip.split('.')[:3]) + '.'
     i: int = 2
 
-    try:
-      while i < 255:
-        try:
-          if f'{net_ip}{i}' != self.ip:
-            resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.15)
+    while i < 255:
+      try:
+        print(i)
+        if f'{net_ip}{i}' != self.ip:
+          resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
+          print(f'http://{net_ip}{i}:{9091}/')
 
-            if resp.ok:
-              resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
-              data: dict = eval(resp.text)
+          if resp.ok:
+            resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
+            data: dict = eval(resp.text)
+            print(data)
 
-              with set.path_to_self("users-online.json").open() as f:
-                file_data: dict = decrypt_object(json.load(f), self.private_key) 
-                file_data['users_online'].append(encrypt_object(data, self.public_key))
-                f.close()
+            with set.path_to_self("users-online.json").open() as f:
+              file_data: dict = decrypt_object(json.load(f), self.private_key) 
+              file_data['users_online'].append(encrypt_object(data, self.public_key))
+              f.close()
 
-              with set.path_to_self("users-online.json").open("w") as f:
-                f.write(json.dumps(file_data))
+            with set.path_to_self("users-online.json").open("w") as f:
+              f.write(json.dumps(file_data))
 
-              with set.path_to_self("user-info.json").open() as f:
-                user_info: dict = decrypt_object(json.load(f), self.private_key)
+            with set.path_to_self("user-info.json").open() as f:
+              user_info: dict = decrypt_object(json.load(f), self.private_key)
 
-                requests.post(
-                  f'http://{net_ip}{i}:{9091}/user',
-                  json = encrypt_object(user_info, data['user_pub_key']))
-                f.close()
-              i += 1
-              continue
-          else:
+              requests.post(
+                f'http://{net_ip}{i}:{9091}/user',
+                json = encrypt_object(user_info, data['user_pub_key']))
+              f.close()
             i += 1
             continue
-        except requests.exceptions.ConnectionError:
+        else:
           i += 1
           continue
+      except requests.exceptions.ConnectionError:
+        print("Err")
+        i += 1
+        continue
 
-      return True
-    except:
-      return False
 
   # Send message (user.send_message(...))
 
