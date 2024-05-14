@@ -61,10 +61,9 @@ class User:
 
     while i < 255:
       try:
-        print(i)
+        print(f'http://{net_ip}{i}:{9091}/')
         if f'{net_ip}{i}' != self.ip:
-          resp = requests.get(f'http://{net_ip}{i}:{9091}/')
-          print(f'http://{net_ip}{i}:{9091}/')
+          resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
 
           if resp.ok:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
@@ -91,7 +90,6 @@ class User:
           i += 1
           continue
       except requests.exceptions.ConnectionError:
-        print("Err")
         i += 1
         continue
 
