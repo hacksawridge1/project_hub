@@ -96,7 +96,6 @@ class User:
         i += 1
         continue
 
-
   # Send message (user.send_message(...))
 
   def send_message(self, reciever_ip: str, reciever_name: str, message: str) -> None:

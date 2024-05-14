@@ -1,8 +1,5 @@
-import os
-from pathlib import Path
 from flask import Flask, request
 import json
-from time import localtime
 from .user import User
 from .objects import *
 import modules.settings as set
@@ -63,7 +60,7 @@ def start_server(user: User):
       chat_object: dict = set.chat_object(data['user_name'], data['user_ip'], data['message'])
       chat["chat"].append(chat_object)
 
-      if not set.path_to_chat(chat_object['user_name'], chat_object['user_ip']):
+      if not set.path_to_chat(chat_object['user_name'], chat_object['user_ip']).exists():
         set.path_to_chat(chat_object['user_name'], chat_object['user_ip']).mkdir()
 
         with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open("w") as f:
@@ -76,7 +73,7 @@ def start_server(user: User):
           chat = json.load(f) 
           f.close()
 
-        with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open() as f:
+        with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open("w") as f:
           f.write(json.dumps(encrypt_object(chat, user.public_key), sort_keys=True))
           f.close()
 
