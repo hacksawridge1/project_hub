@@ -63,13 +63,12 @@ class User:
       try:
         print(i)
         if f'{net_ip}{i}' != self.ip:
-          resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
+          resp = requests.get(f'http://{net_ip}{i}:{9091}/')
           print(f'http://{net_ip}{i}:{9091}/')
 
           if resp.ok:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
             data: dict = eval(resp.text)
-            print(data)
 
             with set.path_to_self("users-online.json").open() as f:
               file_data: dict = decrypt_object(json.load(f), self.private_key) 
@@ -158,9 +157,14 @@ class User:
       return "С данным пользователем нет переписок"
 
   def send_file(self, reciever_name: str, reciever_ip: str, file: bytes):
-    if not os.path.exists(f'/upload/{reciever_name}_{reciever_ip}'):
-      os.mkdir(f'/upload/{reciever_name}_{reciever_ip}')
+    if not set.path_to_upload().exists():
+      set.path_to_upload().mkdir()
 
+    if not set.path_to_upload(reciever_name, reciever_ip).exists():
+      set.path_to_upload(reciever_name, reciever_ip).mkdir()
+
+    if not set.path_to_upload(reciever_name, reciever_ip, file).exists():
+      pass
   
   # Info about user
   @property

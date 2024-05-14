@@ -57,9 +57,11 @@ def path_to_self(file: Union[str, None] = None):
     PATH_TO_SELF = Path(f"objects/self/")
   return PATH_TO_SELF
 
-def path_to_upload(name: Union[str, None] = None, ip: Union[str, None] = None):
-  if name != None and ip != None:
+def path_to_upload(name: Union[str, None] = None, ip: Union[str, None] = None, file: Union[str, None] = None):
+  if name != None and ip != None and file == None:
     PATH_TO_UPLOAD = Path(f"upload/{name}_{ip}")
+  elif name != None and ip != None and file != None:
+    PATH_TO_UPLOAD = Path(f"upload/{name}_{ip}/{file}")
   else:
     PATH_TO_UPLOAD = Path(f"upload/")
   return PATH_TO_UPLOAD
