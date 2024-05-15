@@ -7,6 +7,7 @@ import modules.settings as set
 def start_server(user: User):
     app = Flask(__name__)
 
+
     @app.get('/')
     def hello():
       return user.name

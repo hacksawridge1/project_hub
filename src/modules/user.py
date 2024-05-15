@@ -20,21 +20,19 @@ class User:
     self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key) 
 
     if not set.path_to_self().exists():
-      set.path_to_self().mkdir()
+      set.path_to_self().mkdir(parents=True)
 
     if not set.path_to_upload().exists():
-      set.path_to_upload().mkdir()
+      set.path_to_upload().mkdir(parents=True)
 
     if not set.path_to_download().exists():
-      set.path_to_download().mkdir()
+      set.path_to_download().mkdir(parents=True)
 
     with set.path_to_self("user-info.json").open("w") as f:
       f.write(json.dumps(encrypt_object(self.__user_info, self.public_key), sort_keys=True))
-      f.close()
 
     with set.path_to_self("users-online.json").open("w") as f:
       f.write(json.dumps(encrypt_object(set.users_online(), self.private_key), sort_keys=True))
-      f.close()
 
   # methods
   def __generate_keys(self):
@@ -63,7 +61,7 @@ class User:
       try:
         print(i)
         if f'{net_ip}{i}' != self.ip:
-          resp = requests.get(f'http://{net_ip}{i}:{9091}/')
+          resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
           print(f'http://{net_ip}{i}:{9091}/')
 
           if resp.ok:
@@ -73,7 +71,6 @@ class User:
             with set.path_to_self("users-online.json").open() as f:
               file_data: dict = decrypt_object(json.load(f), self.private_key) 
               file_data['users_online'].append(encrypt_object(data, self.public_key))
-              f.close()
 
             with set.path_to_self("users-online.json").open("w") as f:
               f.write(json.dumps(file_data))
@@ -84,7 +81,6 @@ class User:
               requests.post(
                 f'http://{net_ip}{i}:{9091}/user',
                 json = encrypt_object(user_info, data['user_pub_key']))
-              f.close()
             i += 1
             continue
         else:
@@ -108,22 +104,18 @@ class User:
       with set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f:
         chat["chat"].append(encrypt_object(chat_object, self.public_key))
         f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
-        f.close()
         
     else:
 
       with set.path_to_chat(reciever_name, reciever_ip).open() as f:
         chat = json.load(f)
         chat["chat"].append(encrypt_object(chat_object, self.private_key))
-        f.close()
 
     with set.path_to_self("users-online.json").open() as f, set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f1:
       f1.write(json.dumps(chat, sort_keys=True))
       users_online: dict = decrypt_object(json.load(f), self.private_key)
       reciever: dict = find_in_object(users_online, reciever_ip)
       requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
-      f1.close()
-      f.close()
 
   # Call to remove user on exit (user.call_to_remove_user())
   def call_to_remove_user(self):
@@ -135,9 +127,6 @@ class User:
         for i in users_online['users_online']:
           user_ip: str = i['user_ip'] 
           requests.post(f'http://{user_ip}:{9091}/remove-user', json = str(encrypt_object(user_info, i['user_pub_key'])))
-
-        f1.close()
-        f2.close()
 
     except :
       print("Error")
@@ -156,7 +145,7 @@ class User:
     else:
       return "С данным пользователем нет переписок"
 
-  def send_file(self, reciever_name: str, reciever_ip: str, file: bytes):
+  def send_file(self, reciever_name: str, reciever_ip: str, file: str):
     if not set.path_to_upload().exists():
       set.path_to_upload().mkdir()
 
