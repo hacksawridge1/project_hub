@@ -9,10 +9,19 @@ from PySide6.QtCore import QObject, Slot
 from control import control
 from modules.user import User
 from threading import Thread
-from modules.new_server import start_server
+from modules.server import start_server
 
 app = QGuiApplication(sys.argv)
 engine = QQmlApplicationEngine()
+main_user = None
+
+def initialize(username):
+    main_user = User(username)
+    control.setIp(main_user.ip)
+    server_thread = Thread(target=start_server, args=(main_user, ))
+    main_user.initial
+    server_thread.daemon = True
+    server_thread.start()
 
 
 class MainController(QObject):
@@ -20,12 +29,10 @@ class MainController(QObject):
     def main_window(self, username):
         engine.rootObjects()[0].deleteLater()
         qml_file = path.dirname(path.abspath(__file__)) + "/MainWindow.qml"
-        main_user = User(username)
-        server_thread = Thread(target=start_server, args=(main_user, ))
-        main_user.initial
-        server_thread.start()
+        user_thread = Thread(target=initialize, args=(username, ))
+        user_thread.daemon = True
+        user_thread.start()
         control.setUsername(username)
-        control.setIp("main_user.ip")
         engine.load(qml_file)
 main_control = MainController()
 

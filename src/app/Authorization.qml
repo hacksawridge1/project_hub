@@ -6,14 +6,26 @@ import QtQuick.Controls.Universal
 
 // Окно авторизации
 ApplicationWindow {
-    id: authorization
+    id: auth
     width: 600
     height: 400
     minimumWidth: main_layout.implicitWidth + 20
     minimumHeight: main_layout.implicitHeight + 20
     title: "Authorization"
-    color: "#D9D9D9"
+    color: get_theme("auth")
     visible: true
+    function get_theme(name) {
+        var theme_name = {"auth": 0, "object": 1, "object(pressed)": 2, "object_border": 3, 
+        "text": 4, "placeholder": 5}
+        var light_theme = ["#D9D9D9", "white", "#9999FF", "black", "black", "#AAAAAA"]
+        var dark_theme = ["#262626", "transparent", "#222266", "white", "white", "#555555"]
+        if (control && control.theme) {
+            return dark_theme[theme_name[name]]
+        } else {
+            return light_theme[theme_name[name]]
+        }
+        return "transparent"
+    }
 
     // Сетка окна
     ColumnLayout {
@@ -27,9 +39,10 @@ ApplicationWindow {
             id: welcome
             horizontalAlignment: Qt.AlignHCenter
             text: "В HUB тебе понадобится только\nимя."
-            font.weight: Font.Bold
+            font.bold: true
             font.family: "Inter"
             font.pixelSize: 32
+            color: auth.get_theme("text")
             Layout.alignment: Qt.AlignHCenter
         }
 
@@ -52,24 +65,27 @@ ApplicationWindow {
                     text: "Укажите ваше имя, по которому пользователи\nHUB могут вас определить."
                     font.family: "Inter"
                     font.pixelSize: 16
+                    color: auth.get_theme("text")
                 }
 
                 // Строка ввода имени
                 Rectangle {
                     Layout.preferredWidth: 300
-                    Layout.preferredHeight: 30
+                    Layout.preferredHeight: 35
                     border.width: 1
+                    border.color: auth.get_theme("object_border")
+                    color: auth.get_theme("object")
                     radius: 8
                     clip: true
 
                     TextInput {
                         id: input
                         anchors.fill: parent
-                        anchors.leftMargin: 5
-                        anchors.rightMargin: 5
+                        anchors.leftMargin: 8
+                        anchors.rightMargin: 8
                         verticalAlignment: Text.AlignVCenter
                         font.pixelSize: 16
-                        color: "black"
+                        color: auth.get_theme("text")
                         property string placeholderText: "Введите ваше имя..."
                         Text {
                             text: parent.placeholderText
@@ -77,7 +93,7 @@ ApplicationWindow {
                             anchors.fill: parent
                             font.pixelSize: parent.font.pixelSize
                             verticalAlignment: Text.AlignVCenter
-                            color: "#aaa"
+                            color: auth.get_theme("placeholder")
                             visible: !parent.text
                         }
                     }
@@ -101,17 +117,21 @@ ApplicationWindow {
                     }
                 }
 
-                Button {
+                Rectangle {
                     id: login
                     Layout.preferredWidth: 140
                     Layout.preferredHeight: 42
-                    background: Rectangle {
-                        border.width: 1
-                        radius: 8
+                    border.width: 1
+                    border.color: auth.get_theme("object_border")
+                    radius: 8
+                    color: auth.get_theme("object")
+                    Text {
+                        anchors.centerIn: parent
+                        text: "Войти"
+                        color: auth.get_theme("text")
+                        font.family: "Inter"
+                        font.pixelSize: 20
                     }
-                    text: "Войти"
-                    font.family: "Inter"
-                    font.pixelSize: 20
 
                     Behavior on scale {
                         NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -122,7 +142,7 @@ ApplicationWindow {
                         hoverEnabled: true
 
                         onClicked: {
-                            authorization.close()
+                            auth.close()
                             main_control.main_window(input.text)
                         }
 
@@ -168,14 +188,15 @@ ApplicationWindow {
             anchors.left: parent.left
             horizontalAlignment: Qt.AlignHCenter
             text: "S/B.I.A/M.N.N/K.I.R/L.A.V/P.M.Y/B.D.A/P.M.S/B.I.A/M.N.N"
-            font.weight: Font.Bold
+            font.bold: true
             font.family: "Inter"
             font.pixelSize: 64
+            color: auth.get_theme("text")
             PathAnimation {
                 target: authors
                 path: Path {
-                    startX: authorization.width - 473; startY: authorization.height - 520
-                    PathLine {x: authorization.width - 1442; y: authorization.height + 595}
+                    startX: auth.width - 473; startY: auth.height - 520
+                    PathLine {x: auth.width - 1442; y: auth.height + 595}
                 }
                 running: true
                 duration: 5500
@@ -190,13 +211,34 @@ ApplicationWindow {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 12
+        spacing: 0
 
-        Image {
-            source: "icons/HUB 2024.svg"
+        Text {
+            Layout.alignment: Qt.AlignBottom
+            text: "HUB"
+            font.bold: true
+            font.italic: true
+            font.family: "Inter"
+            font.pixelSize: 10
+            color: auth.get_theme("text")
         }
-
-        Image {
-            source: "icons/©.svg"
+        Text {
+            Layout.alignment: Qt.AlignBottom
+            Layout.bottomMargin: 1
+            text: "2024"
+            font.bold: true
+            font.italic: true
+            font.family: "Inter"
+            font.pixelSize: 7
+            color: auth.get_theme("text")
+        }
+        Text {
+            Layout.alignment: Qt.AlignBottom
+            text: "©"
+            font.bold: true
+            font.family: "Inter"
+            font.pixelSize: 10
+            color: auth.get_theme("text")
         }
     }
 }

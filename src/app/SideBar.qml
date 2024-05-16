@@ -10,12 +10,25 @@ Rectangle {
     Layout.leftMargin: -1
     Layout.preferredWidth: 305
     Layout.fillHeight: true
-    color: "#D9D9D9"
+    color: get_theme("sidebar")
     border.width: 1
     property int index: users_view.currentIndex
     property ListModel users_list
     property string name
     property string ip
+    property bool theme
+    function get_theme(name) {
+        var theme_name = {"sidebar": 0, "object": 1, "object(pressed)": 2, "object(active)": 3, "object_border": 4, 
+        "text": 5, "second_text": 6, "placeholder": 7}
+        var light_theme = ["#D9D9D9", "white", "#9999FF", "#DDFFFF", "black", "black", "#808080", "#AAAAAA"]
+        var dark_theme = ["#262626", "black", "#222266", "#111133", "white", "white", "#7F7F7F", "#555555"]
+        if (sidebar.theme) {
+            return dark_theme[theme_name[name]]
+        } else {
+            return light_theme[theme_name[name]]
+        }
+        return "transparent"
+    }
 
     function add_user(username, userip) {
         users_list.append({name: username, ip: userip})
@@ -45,7 +58,9 @@ Rectangle {
             Layout.topMargin: 12
             Layout.alignment: Qt.AlignHCenter
             radius: 8
+            border.color: sidebar.get_theme("object_border")
             border.width: 1
+            color: sidebar.get_theme("object")
             clip: true
 
             Behavior on scale {
@@ -59,7 +74,7 @@ Rectangle {
                 anchors.leftMargin: 8
                 anchors.rightMargin: 8
                 font.pixelSize: 16
-                color: "black"
+                color: sidebar.get_theme("text")
                 property string placeholderText: "Поиск..."
                 Text {
                     text: parent.placeholderText
@@ -67,7 +82,7 @@ Rectangle {
                     anchors.fill: parent
                     font.pixelSize: parent.font.pixelSize
                     verticalAlignment: Text.AlignVCenter
-                    color: "#aaa"
+                    color: sidebar.get_theme("placeholder")
                     visible: !parent.text
                 }
             }
@@ -96,16 +111,14 @@ Rectangle {
             spacing: 4.8
 
             // Настройки
-            Button {
+            Rectangle {
                 id: settings
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-
-                background: Rectangle {
-                    border.width: 1
-                    color: (settings_area.pressed) ? "#DDFFFF" : "white"
-                    radius: 8
-                }
+                border.width: 1
+                border.color: sidebar.get_theme("object_border")
+                color: (settings_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                radius: 8
 
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -142,16 +155,14 @@ Rectangle {
             }
 
             // Уведомления
-            Button {
+            Rectangle {
                 id: notifications
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-
-                background: Rectangle {
-                    border.width: 1
-                    color: (notifications_area.pressed) ? "#DDFFFF" : "white"
-                    radius: 8
-                }
+                border.width: 1
+                border.color: sidebar.get_theme("object_border")
+                color: (notifications_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                radius: 8
 
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -188,16 +199,14 @@ Rectangle {
             }
 
             // Общий чат
-            Button {
+            Rectangle {
                 id: public_chat
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-
-                background: Rectangle {
-                    border.width: 1
-                    color: (users_view.currentIndex == -1) ? (public_chat_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (public_chat_area.pressed) ? "#DDFFFF" : "white"
-                    radius: 8
-                }
+                border.width: 1
+                border.color: sidebar.get_theme("object_border")
+                color: (public_chat_area.pressed) ? sidebar.get_theme("object(pressed)") : (users_view.currentIndex == -1) ? sidebar.get_theme("object(active)") : sidebar.get_theme("object")
+                radius: 8
 
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -238,16 +247,14 @@ Rectangle {
             }
 
             // Группы
-            Button {
+            Rectangle {
                 id: groups
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-
-                background: Rectangle {
-                    border.width: 1
-                    color: (groups_area.pressed) ? "#DDFFFF" : "white"
-                    radius: 8
-                }
+                border.width: 1
+                border.color: sidebar.get_theme("object_border")
+                color: (groups_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                radius: 8
 
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -284,16 +291,14 @@ Rectangle {
             }
             
             // Папки
-            Button {
+            Rectangle {
                 id: folders
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-
-                background: Rectangle {
-                    border.width: 1
-                    color: (folders_area.pressed) ? "#DDFFFF" : "white"
-                    radius: 8
-                }
+                border.width: 1
+                border.color: sidebar.get_theme("object_border")
+                color: (folders_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                radius: 8
 
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -330,16 +335,14 @@ Rectangle {
             }
 
             // Тема
-            Button {
+            Rectangle {
                 id: theme
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-
-                background: Rectangle {
-                    border.width: 1
-                    color: (theme_area.pressed) ? "#DDFFFF" : "white"
-                    radius: 8
-                }
+                border.width: 1
+                border.color: sidebar.get_theme("object_border")
+                color: (theme_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                radius: 8
 
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -358,7 +361,11 @@ Rectangle {
                     hoverEnabled: true
 
                     onClicked: {
-                        sidebar.add_user("Anton", "0.0.0.0")
+                        if (control.theme) {
+                            control.theme = false
+                        } else {
+                            control.theme = true
+                        }
                     }
 
                     onPressed: {
@@ -400,18 +407,16 @@ Rectangle {
                     width: users_view.width
                     height: 48
                     required property var model
-                    Button {
+                    Rectangle {
                         id: model_user
                         width: 288
                         height: 48
                         anchors.horizontalCenter: parent.horizontalCenter
                         z: 1
-                        
-                        background: Rectangle {
-                            border.width: 1
-                            color: (users_view.currentIndex == delegate.model.index) ? (model_area.pressed) ? "#AAFFFF" : "#DDDDFF" :  (model_area.pressed) ? "#DDFFFF" : "white"
-                            radius: 8
-                        }
+                        border.width: 1
+                        border.color: sidebar.get_theme("object_border")
+                        color: (model_area.pressed) ? sidebar.get_theme("object(pressed)") : (users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("object(active)") : sidebar.get_theme("object")
+                        radius: 8
 
                         Behavior on scale {
                             NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -436,6 +441,7 @@ Rectangle {
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
                                     text: delegate.model.name
+                                    color: sidebar.get_theme("text")
                                     font.family: "Inter"
                                     font.pixelSize: 13
                                 }
@@ -446,7 +452,7 @@ Rectangle {
                                     text: "IP: " + sidebar.ip
                                     font.family: "Inter"
                                     font.pixelSize: 11
-                                    color: "#808080"
+                                    color: sidebar.get_theme("second_text")
                                 }
                             }
                         }
@@ -544,18 +550,17 @@ Rectangle {
             }
         }
 
-        Button {
+        Rectangle {
             id: user
             Layout.preferredWidth: 304
             Layout.preferredHeight: 70
             Layout.columnSpan: 2
             Layout.alignment: Qt.AlignBottom
             Layout.bottomMargin: -10
-            background: Rectangle {
-                border.width: 1
-                color: (mouse_area.pressed) ? "#DDFFFF" : "white"
-                radius:8
-            }
+            border.width: 1
+            border.color: sidebar.get_theme("object_border")
+            color: (mouse_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+            radius:8
 
             Behavior on scale {
                 NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -590,6 +595,7 @@ Rectangle {
                                 text: sidebar.name
                                 font.family: "Inter"
                                 font.pixelSize: 13
+                                color: sidebar.get_theme("text")
                             }
                         }
                         
@@ -602,7 +608,7 @@ Rectangle {
                                 text: "IP: " + sidebar.ip
                                 font.family: "Inter"
                                 font.pixelSize: 11
-                                color: "#808080"
+                                color: sidebar.get_theme("second_text")
                             }
                         }
                     }

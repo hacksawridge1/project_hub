@@ -16,6 +16,27 @@ ColumnLayout {
     property ListModel messages_list
     property string name
     property string ip
+    property bool theme
+    function get_theme(name) {
+        var theme_name = {"top_panel": 0, "chat": 1, "object": 2, "object(pressed)": 3, "object(active)": 4, "object_border": 5, 
+        "chat_object": 6, "chat_object(pressed)": 7, "chat_object_border": 8, "text": 9, "second_text": 10, "title": 11, 
+        "placeholder": 12, "message": 13, "message_shadow": 14}
+        var light_theme = ["#D9D9D9", "white", "white", "#9999FF", "#DDFFFF", "black", "#D9D9D9", "#D9D9FF", "black", "black",  "#808080", "#545353", "#AAAAAA", "#E9E9E9", "#C0C0C0"]
+        var dark_theme = ["#262626", "black", "black", "#222266", "#111133", "white", "#262626", "#26267A", "white", "white", "#7F7F7F", "#ABACAC", "#555555", "#161616", "#3F3F3F"]
+        if (chat.theme) {
+            return dark_theme[theme_name[name]]
+        } else {
+            return light_theme[theme_name[name]]
+        }
+        return "transparent"
+    }
+
+    function send_message() {
+        if(!!message_input.text && message_input.text.trim().length > 0) {
+            chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
+            message_input.text = ""
+        }
+    }
 
     // Верхняя панель
     Rectangle {
@@ -23,7 +44,7 @@ ColumnLayout {
         Layout.preferredHeight: 80
         Layout.leftMargin: -1
         Layout.rightMargin: -1
-        color: "#D9D9D9"
+        color: chat.get_theme("top_panel")
         visible: (chat.connected) ? true : false
         border.width: 1
 
@@ -36,8 +57,9 @@ ColumnLayout {
                 Layout.preferredWidth: 300
                 Layout.preferredHeight: 56
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                color: "white"
+                color: chat.get_theme("object")
                 border.width: 1
+                border.color: chat.get_theme("object_border")
                 radius: 8
                 visible: (typeof chat.user == "undefined") ? false : true
 
@@ -54,6 +76,7 @@ ColumnLayout {
                         text: (typeof chat.user == "undefined") ? "" : chat.user.name
                         font.family: "Inter"
                         font.pixelSize: 16
+                        color: chat.get_theme("text")
                     }
                     
                     Text {
@@ -62,7 +85,7 @@ ColumnLayout {
                         text: (typeof chat.user == "undefined") ? "" : "был в сети " + (chat.user.last_time > 59 ? Math.round(chat.user.last_time / 60) + " часов назад" : chat.user.last_time + " минут назад")
                         font.family: "Inter"
                         font.pixelSize: 12
-                        color: "#808080"
+                        color: chat.get_theme("second_text")
                     }
                 }
 
@@ -97,10 +120,10 @@ ColumnLayout {
                 Layout.preferredHeight: 48
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 text: "Общий чат"
-                font.weight: Font.Bold
+                font.bold: true
                 font.family: "Inter"
                 font.pixelSize: 38
-                color: "#545353"
+                color: chat.get_theme("title")
                 visible: (typeof chat.user == "undefined") ? true : false
             }
 
@@ -115,7 +138,8 @@ ColumnLayout {
                     Layout.preferredWidth: 44
                     Layout.preferredHeight: 56
                     border.width: 1
-                    color: "white"
+                    border.color: chat.get_theme("object_border")
+                    color: chat.get_theme("object")
                     radius: 8
 
                     Image {
@@ -155,7 +179,8 @@ ColumnLayout {
                     Layout.preferredWidth: 44
                     Layout.preferredHeight: 56
                     border.width: 1
-                    color: "white"
+                    border.color: chat.get_theme("object_border")
+                    color: chat.get_theme("object")
                     radius: 8
 
                     Image {
@@ -195,7 +220,8 @@ ColumnLayout {
                     Layout.preferredWidth: 44
                     Layout.preferredHeight: 56
                     border.width: 1
-                    color: "white"
+                    border.color: chat.get_theme("object_border")
+                    color: chat.get_theme("object")
                     radius: 8
 
                     Image {
@@ -238,16 +264,16 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        color: (chat.connected) ? "white" : "#D9D9D9"
+        color: (chat.connected) ? chat.get_theme("chat") : chat.get_theme("top_panel")
         clip: true
 
         Text {
             anchors.centerIn: parent
             text: "Добро пожаловать в HUB."
-            font.weight: Font.Bold
+            font.bold: true
             font.family: "Inter"
             font.pixelSize: 64
-            color: "#545353"
+            color: chat.get_theme("title")
             visible: (chat.connected) ? false : true
         }
 
@@ -277,7 +303,8 @@ ColumnLayout {
                         Layout.preferredHeight: 42
                         Layout.alignment: Qt.AlignBottom
                         border.width: 1
-                        color: "#D9D9D9"
+                        border.color: chat.get_theme("chat_object_border")
+                        color: chat.get_theme("chat_object")
                         radius: 8
                         opacity: (delegate.model.index != 0 && chat.messages_list.get(delegate.model.index - 1).ip == delegate.model.ip) ? 0 : 1
 
@@ -293,7 +320,7 @@ ColumnLayout {
                             horizontalOffset: 3
                             verticalOffset: 3
                             radius: 4
-                            color: "#C0C0C0"
+                            color: chat.get_theme("message_shadow")
                         }
                     }
 
@@ -305,7 +332,8 @@ ColumnLayout {
                         Layout.preferredHeight: implicitHeight + 32
                         Layout.alignment: Qt.AlignBottom
                         border.width: 1
-                        color: "#E9E9E9"
+                        border.color: chat.get_theme("chat_object_border")
+                        color: chat.get_theme("message")
                         radius: 8
                         clip: true
                         Text {
@@ -317,6 +345,7 @@ ColumnLayout {
                             text: delegate.model.message
                             font.family: "Inter"
                             font.pixelSize: 16
+                            color: chat.get_theme("text")
                         }
 
                         layer.enabled: true
@@ -324,7 +353,7 @@ ColumnLayout {
                             horizontalOffset: 3
                             verticalOffset: 3
                             radius: 4
-                            color: "#C0C0C0"
+                            color: chat.get_theme("message_shadow")
                         }
                     }
                 }
@@ -360,7 +389,7 @@ ColumnLayout {
                 }
                 GradientStop {
                     position: 1
-                    color: "white"
+                    color: chat.get_theme("chat")
                 }
             }
             visible: (chat.connected) ? true : false
@@ -372,6 +401,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: 78
         visible: (chat.connected) ? true : false
+        color: chat.get_theme("chat")
 
         RowLayout {
             anchors.fill: parent
@@ -385,7 +415,8 @@ ColumnLayout {
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
                 border.width: 1
-                color: "#D9D9D9"
+                border.color: chat.get_theme("chat_object_border")
+                color: chat.get_theme("chat_object")
                 radius: 8
 
                 Image {
@@ -427,7 +458,8 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 56
                 border.width: 1
-                color: "#D9D9D9"
+                border.color: chat.get_theme("chat_object_border")
+                color: chat.get_theme("chat_object")
                 radius: 8
                 clip: true
 
@@ -438,7 +470,7 @@ ColumnLayout {
                     anchors.leftMargin: 12
                     anchors.rightMargin: 12
                     font.pixelSize: 24
-                    color: "black"
+                    color: chat.get_theme("text")
                     property string placeholderText: "Введите ваше сообщение..."
                     Text {
                         text: parent.placeholderText
@@ -446,8 +478,11 @@ ColumnLayout {
                         font.pixelSize: parent.font.pixelSize
                         anchors.fill: parent
                         verticalAlignment: Text.AlignVCenter
-                        color: "#aaa"
+                        color: chat.get_theme("placeholder")
                         visible: !parent.text
+                    }
+                    Keys.onReturnPressed: {
+                        chat.send_message()
                     }
                 }
 
@@ -470,31 +505,32 @@ ColumnLayout {
                 }
             }
 
-            Button {
+            Rectangle {
                 Layout.preferredWidth: 143
                 Layout.preferredHeight: 56
-                background: Rectangle {
-                    border.width: 1
-                    color: "#D9D9D9"
-                    radius: 8
+                border.width: 1
+                border.color: chat.get_theme("chat_object_border")
+                color: chat.get_theme("chat_object")
+                radius: 8
+                Text {
+                    anchors.centerIn: parent
+                    text: "Отправить"
+                    font.family: "Inter"
+                    font.pixelSize: 24
+                    color: chat.get_theme("text")
                 }
-                text: "Отправить"
-                font.family: "Inter"
-                font.pixelSize: 24
 
                 Behavior on scale {
                     NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
                 }
 
                 MouseArea {
+                    id: send_area
                     anchors.fill: parent
                     hoverEnabled: true
 
                     onClicked: {
-                        if(!!message_input.text && message_input.text.trim().length > 0) {
-                            chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
-                            message_input.text = ""
-                        }
+                        chat.send_message()
                     }
 
                     onPressed: {

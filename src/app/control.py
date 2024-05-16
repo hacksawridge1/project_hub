@@ -1,3 +1,5 @@
+__author__ = "MIDNIGHT"
+
 from PySide6.QtCore import QObject, Signal, Property
 
 class Controller(QObject):
@@ -32,6 +34,18 @@ class Controller(QObject):
 
     ip = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
     # ip - end
+    # theme - start
+    __theme = True
+    themeChanged = Signal()
+    def readTheme(self):
+        return self.__theme
+    
+    def setTheme(self, value):
+        self.__theme = value
+        self.themeChanged.emit()
+
+    theme = Property(bool, readTheme, setTheme, notify=themeChanged) # type: ignore
+    # theme - end
 
 # Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
 # Инструкция:

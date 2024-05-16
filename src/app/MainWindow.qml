@@ -10,7 +10,8 @@ ApplicationWindow {
     width: 1920
     height: 1080
     title: "HUB"
-    
+
+    property bool theme: control ? control.theme : false
     property string name: control ? control.username : ""
     property string ip: control ? control.ip : ""
 
@@ -20,13 +21,14 @@ ApplicationWindow {
         spacing: 0
         SideBar {
             id: sidebar
+            theme: main_window.theme
             users_list: users_list
             name: main_window.name
             ip: main_window.ip
         }
         Chat {
             id: chat
-            objectName: "chat"
+            theme: main_window.theme
             connected: users_list.count != 0
             user: users_list.get(sidebar.index)
             messages_list: messages_list
@@ -37,6 +39,11 @@ ApplicationWindow {
 
     ListModel {
         id: users_list
+
+        ListElement {
+            name: "HITLER"
+            ip: "0.0.0.0"
+        }
     }
 
     ListModel {
