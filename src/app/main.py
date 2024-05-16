@@ -19,10 +19,9 @@ def initialize(username):
     main_user = User(username)
     control.setIp(main_user.ip)
     server_thread = Thread(target=start_server, args=(main_user, ))
-    main_user.initial
     server_thread.daemon = True
     server_thread.start()
-
+    main_user.initial
 
 class MainController(QObject):
     @Slot(str)
