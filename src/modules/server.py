@@ -58,7 +58,6 @@ def start_server(user: User, control: Controller):
     def recv_message():
       req = request.get_json()
       data: dict = decrypt_object(req, user.private_key)
-      print(f'From:{data["user_name"]}\nMessage:{data["message"]}')
       chat: dict = set.chat()
       chat_object: dict = set.chat_object(data['user_name'], data['user_ip'], data['message'])
       chat["chat"].append(chat_object)
@@ -76,6 +75,8 @@ def start_server(user: User, control: Controller):
 
         with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open("w") as f:
           f.write(json.dumps(encrypt_object(chat, user.public_key), sort_keys=True))
+
+      control.add_message.emit(data['user_name'], data['user_ip'], data['message'])
 
       return str(request.headers)
     
