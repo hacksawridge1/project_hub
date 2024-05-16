@@ -38,6 +38,7 @@ def start_server(user: User):
             f.write(json.dumps(encrypt_object(file_data, user.public_key)))
 
         control.add_user.emit(data["user_name"], data["user_ip"])
+        return "ok"
    
     @app.post('/remove-user')
     def remove_user():
