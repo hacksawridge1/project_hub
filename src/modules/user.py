@@ -119,7 +119,7 @@ class User:
       
       with set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f:
         chat["chat"].append(encrypt_object(chat_object, self.public_key))
-        f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
+        f.write(json.dumps(chat, sort_keys=True))
         
     else:
 

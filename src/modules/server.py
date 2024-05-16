@@ -60,21 +60,22 @@ def start_server(user: User, control: Controller):
       data: dict = decrypt_object(req, user.private_key)
       chat: dict = set.chat()
       chat_object: dict = set.chat_object(data['user_name'], data['user_ip'], data['message'])
-      chat["chat"].append(chat_object)
 
       if not set.path_to_chat(chat_object['user_name'], chat_object['user_ip']).exists():
         set.path_to_chat(chat_object['user_name'], chat_object['user_ip']).mkdir()
 
         with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open("w") as f:
-          f.write(json.dumps(encrypt_object(chat, user.public_key), sort_keys=True))
+          chat["chat"].append(encrypt_object(chat_object, user.public_key))
+          f.write(json.dumps(chat, sort_keys=True))
 
       else:
 
         with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open() as f:
           chat = json.load(f) 
+          chat["chat"].append(encrypt_object(data, user.public_key))
 
         with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open("w") as f:
-          f.write(json.dumps(encrypt_object(chat, user.public_key), sort_keys=True))
+          f.write(json.dumps(chat, sort_keys=True))
 
       control.add_message.emit(data['user_name'], data['user_ip'], data['message'])
 
