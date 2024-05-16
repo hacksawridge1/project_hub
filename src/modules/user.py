@@ -21,7 +21,6 @@ class User:
     self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key) 
 
     if not set.path_to_self().exists():
-<<<<<<< HEAD
       set.path_to_self().mkdir(parents=True)
 
     if not set.path_to_upload().exists():
@@ -29,25 +28,12 @@ class User:
 
     if not set.path_to_download().exists():
       set.path_to_download().mkdir(parents=True)
-=======
-      set.path_to_self().mkdir()
-
-    if not set.path_to_upload().exists():
-      set.path_to_upload().mkdir()
-
-    if not set.path_to_download().exists():
-      set.path_to_download().mkdir()
->>>>>>> develop
 
     with set.path_to_self("user-info.json").open("w") as f:
       f.write(json.dumps(encrypt_object(self.__user_info, self.public_key), sort_keys=True))
 
     with set.path_to_self("users-online.json").open("w") as f:
       f.write(json.dumps(encrypt_object(set.users_online(), self.private_key), sort_keys=True))
-<<<<<<< HEAD
-=======
-      f.close()
->>>>>>> develop
 
   # methods
   def __generate_keys(self):
@@ -60,7 +46,6 @@ class User:
 
     self.__public_key = key.public_key().export_key(format='PEM')
 
-<<<<<<< HEAD
   def __get_local_ip(self):
     #for interface in netifaces.interfaces():
     #  if netifaces.AF_INET in netifaces.ifaddresses(interface):
@@ -80,43 +65,23 @@ class User:
       s.close()
     return IP
 
-  def initial(self):
-=======
-  def __get_local_ip(self) -> Union[str, None]:
-    for interface in netifaces.interfaces():
-      if netifaces.AF_INET in netifaces.ifaddresses(interface):
-        for address_info in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
-           address_object = ipaddress.IPv4Address(address_info['addr'])
-           if not address_object.is_loopback:
-             return address_info['addr']
 
   def __initial(self):
->>>>>>> develop
     net_ip: str = '.'.join(self.ip.split('.')[:3]) + '.'
     i: int = 2
 
     while i < 255:
       try:
-        print(f'http://{net_ip}{i}:{9091}/')
         if f'{net_ip}{i}' != self.ip:
           resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
 
           if resp.ok:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
             data: dict = eval(resp.text)
-<<<<<<< HEAD
-            
-            yield data
-=======
->>>>>>> develop
 
             with set.path_to_self("users-online.json").open() as f:
               file_data: dict = decrypt_object(json.load(f), self.private_key) 
               file_data['users_online'].append(encrypt_object(data, self.public_key))
-<<<<<<< HEAD
-=======
-              f.close()
->>>>>>> develop
 
             with set.path_to_self("users-online.json").open("w") as f:
               f.write(json.dumps(file_data))
@@ -127,10 +92,6 @@ class User:
               requests.post(
                 f'http://{net_ip}{i}:{9091}/user',
                 json = encrypt_object(user_info, data['user_pub_key']))
-<<<<<<< HEAD
-=======
-              f.close()
->>>>>>> develop
             i += 1
             continue
         else:
@@ -153,10 +114,6 @@ class User:
       with set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f:
         chat["chat"].append(encrypt_object(chat_object, self.public_key))
         f.write(json.dumps(encrypt_object(chat, self.public_key), sort_keys=True))
-<<<<<<< HEAD
-=======
-        f.close()
->>>>>>> develop
         
     else:
 
@@ -169,11 +126,6 @@ class User:
       users_online: dict = decrypt_object(json.load(f), self.private_key)
       reciever: dict = find_in_object(users_online, reciever_ip)
       requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
-<<<<<<< HEAD
-=======
-      f1.close()
-      f.close()
->>>>>>> develop
 
   # Call to remove user on exit (user.call_to_remove_user())
   def call_to_remove_user(self):
@@ -185,13 +137,6 @@ class User:
         for i in users_online['users_online']:
           user_ip: str = i['user_ip'] 
           requests.post(f'http://{user_ip}:{9091}/remove-user', json = str(encrypt_object(user_info, i['user_pub_key'])))
-
-<<<<<<< HEAD
-=======
-        f1.close()
-        f2.close()
-
->>>>>>> develop
     except :
       print("Error")
       
@@ -209,13 +154,7 @@ class User:
     else:
       return "С данным пользователем нет переписок"
 
-<<<<<<< HEAD
-  def send_file(self, reciever_name: str, reciever_ip: str, file: str):
-=======
   def send_file(self, reciever_name: str, reciever_ip: str, file: bytes):
->>>>>>> develop
-    if not set.path_to_upload().exists():
-      set.path_to_upload().mkdir()
 
     if not set.path_to_upload(reciever_name, reciever_ip).exists():
       set.path_to_upload(reciever_name, reciever_ip).mkdir()
