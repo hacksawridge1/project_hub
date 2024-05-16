@@ -42,7 +42,7 @@ def group_info(name: str, id: str, owner: str, members: list = [], chat: list = 
   return GROUP_INFO
 
 def path_to_chat(name: Union[str, None] = None, ip: Union[str, None] = None, file: Union[str, None] = None): 
-  if name != None and ip != None:
+  if name != None and ip != None and file == None:
     PATH_TO_CHAT=Path(f"objects/chat/{name}_{ip}")
   elif name != None and ip != None and file != None:
     PATH_TO_CHAT = Path(f"objects/chat/{name}_{ip}/{file}")
