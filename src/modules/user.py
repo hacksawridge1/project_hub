@@ -3,9 +3,12 @@ import socket
 import ipaddress
 from Crypto.PublicKey import RSA
 import requests
+import sys
 from dataclasses import dataclass
 import json
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from app.control import Controller
 from typing import Union
 from .objects import encrypt_object, decrypt_object, find_in_object
 import modules.settings as set
@@ -14,11 +17,12 @@ import modules.settings as set
 class User:
 
   # initial
-  def __init__(self, name: str):
+  def __init__(self, name: str, control: Controller):
     self.__name: str = name
     self.__ip: str = str(self.__get_local_ip())
     self.__generate_keys()
     self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key) 
+    self.control = control
 
     if not set.path_to_self().exists():
       set.path_to_self().mkdir(parents=True)
@@ -78,6 +82,8 @@ class User:
           if resp.ok:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
             data: dict = eval(resp.text)
+
+            self.control.add_user.emit(data["user_name"], data["user_ip"])
 
             with set.path_to_self("users-online.json").open() as f:
               file_data: dict = decrypt_object(json.load(f), self.private_key) 

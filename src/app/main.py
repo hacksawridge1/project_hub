@@ -15,7 +15,7 @@ app = QGuiApplication(sys.argv)
 engine = QQmlApplicationEngine()
 
 def initialize(username):
-    control.main_user = User(username)
+    control.main_user = User(username, control)
     control.ip = control.main_user.ip
     server_thread = Thread(target=start_server, args=(control.main_user, control, ))
     server_thread.daemon = True

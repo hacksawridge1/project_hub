@@ -1,7 +1,6 @@
 __author__ = "MIDNIGHT"
 
 from PySide6.QtCore import QObject, Signal, Slot, Property
-from modules.user import User
 from dataclasses import dataclass
 
 @dataclass
