@@ -3,6 +3,7 @@ import json
 from .user import User
 from .objects import *
 import modules.settings as set
+from ..app.control import control
 
 def start_server(user: User):
     app = Flask(__name__)
@@ -32,6 +33,8 @@ def start_server(user: User):
 
           with set.path_to_self("users-online.json").open("w") as f:
             f.write(json.dumps(encrypt_object(file_data, user.public_key)))
+
+        control.add_user.emit(data["user_name"], data["user_ip"])
    
     @app.post('/remove-user')
     def remove_user():
