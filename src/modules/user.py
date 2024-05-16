@@ -201,4 +201,3 @@ class User:
   @property
   def initial(self):
     self.__initial()
-
