@@ -79,6 +79,7 @@ ApplicationWindow {
         target: control
 
         function onAdd_user(name, ip) {
+            console.log("signal")
             sidebar.add_user(name, ip)
         }
 

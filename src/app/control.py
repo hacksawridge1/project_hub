@@ -1,7 +1,9 @@
 __author__ = "MIDNIGHT"
 
 from PySide6.QtCore import QObject, Signal, Property
+from dataclasses import dataclass
 
+@dataclass
 class Controller(QObject):
     def __init__(self):
         super().__init__()
@@ -13,6 +15,7 @@ class Controller(QObject):
     # username - start
     __username = ""
     usernameChanged = Signal()
+    
     def readUsername(self):
         return self.__username
     

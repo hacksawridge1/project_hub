@@ -31,8 +31,11 @@ class MainController(QObject):
         user_thread = Thread(target=initialize, args=(username, ))
         user_thread.daemon = True
         user_thread.start()
-        control.setUsername(username)
+        control.username = username
+        print(control.username)
         engine.load(qml_file)
+        print(control)
+        control.add_user.emit("Any", "0")
 main_control = MainController()
 
 def authorization(main_control):
