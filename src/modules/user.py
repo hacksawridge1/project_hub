@@ -1,12 +1,13 @@
-import netifaces
+#import netifaces
 import socket
-import ipaddress
+#import ipaddress
 from Crypto.PublicKey import RSA
 import requests
 import sys
 from dataclasses import dataclass
 import json
 import os
+#import asyncio
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.control import Controller
 from typing import Union
