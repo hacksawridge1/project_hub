@@ -1,9 +1,12 @@
+from os import path
+import sys
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from flask import Flask, request
 import json
 from .user import User
 from .objects import *
+from app.control import control
 import modules.settings as set
-from ..app.control import control
 
 def start_server(user: User):
     app = Flask(__name__)
