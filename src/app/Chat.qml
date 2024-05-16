@@ -481,6 +481,7 @@ ColumnLayout {
                     Keys.onReturnPressed: {
                         if(!!message_input.text && message_input.text.trim().length > 0) {
                             chat.add_message(chat.name, chat.ip, message_input.text)
+                            control.send_message(user.name, user.ip, message_input.text)
                             message_input.text = ""
                         }
                     }
@@ -532,8 +533,8 @@ ColumnLayout {
                     onClicked: {
                         if(message_input.text && message_input.text.trim().length > 0) {
                             chat.add_message(chat.name, chat.ip, message_input.text)
-                            message_input.text = ""
                             control.send_message(user.name, user.ip, message_input.text)
+                            message_input.text = ""
                         }
                     }
 
