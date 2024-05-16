@@ -123,7 +123,7 @@ class User:
         
     else:
 
-      with set.path_to_chat(reciever_name, reciever_ip).open() as f:
+      with set.path_to_chat(reciever_name, reciever_ip, "chat.json").open() as f:
         chat = json.load(f)
         chat["chat"].append(encrypt_object(chat_object, self.private_key))
 
