@@ -1,6 +1,7 @@
 __author__ = "MIDNIGHT"
 
-from PySide6.QtCore import QObject, Signal, Property
+from PySide6.QtCore import QObject, Signal, Slot, Property
+from modules.user import User
 from dataclasses import dataclass
 
 @dataclass
@@ -8,8 +9,14 @@ class Controller(QObject):
     def __init__(self):
         super().__init__()
 
+    main_user = None
     add_user = Signal(str, str) # add_user.emit(<имя_пользователя>, <ip>) - создаст нового пользователя
     delete_user = Signal(int) # delete_user.emit(<индекс_в_списке>) - удалит пользователя по индексу
+    add_message = Signal(str, str, str)
+
+    @Slot(str, str, str)
+    def send_message(name, ip, message):
+        main_user.send_message(ip, name, message)
 
     # Для передачи в qml
     # username - start

@@ -50,6 +50,7 @@ ApplicationWindow {
         id: messages_list
 
         ListElement {
+            name: ""
             ip: "160.120.0.23"
             message: "Hello, Hitler"
         }
@@ -78,8 +79,11 @@ ApplicationWindow {
     Connections {
         target: control
 
+        function onAdd_message(name, ip, message) {
+            chat.add_message(name, ip, message)
+        }
+
         function onAdd_user(name, ip) {
-            console.log("signal")
             sidebar.add_user(name, ip)
         }
 

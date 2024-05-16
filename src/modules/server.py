@@ -5,10 +5,10 @@ from flask import Flask, request
 import json
 from .user import User
 from .objects import *
-from app.control import control
+from app.control import Controller
 import modules.settings as set
 
-def start_server(user: User):
+def start_server(user: User, control: Controller):
     app = Flask(__name__)
 
     @app.get('/')
@@ -36,7 +36,11 @@ def start_server(user: User):
 
           with set.path_to_self("users-online.json").open("w") as f:
             f.write(json.dumps(encrypt_object(file_data, user.public_key)))
-
+        
+        print(control)
+        print(control.username)
+        control.username = "USJDSK"
+        print(control.username)
         control.add_user.emit(data["user_name"], data["user_ip"])
         return "ok"
    

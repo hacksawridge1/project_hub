@@ -13,15 +13,14 @@ from modules.server import start_server
 
 app = QGuiApplication(sys.argv)
 engine = QQmlApplicationEngine()
-main_user = None
 
 def initialize(username):
-    main_user = User(username)
-    control.setIp(main_user.ip)
-    server_thread = Thread(target=start_server, args=(main_user, ))
+    control.main_user = User(username)
+    control.ip = control.main_user.ip
+    server_thread = Thread(target=start_server, args=(control.main_user, control, ))
     server_thread.daemon = True
     server_thread.start()
-    main_user.initial
+    control.main_user.initial
 
 class MainController(QObject):
     @Slot(str)
@@ -32,10 +31,7 @@ class MainController(QObject):
         user_thread.daemon = True
         user_thread.start()
         control.username = username
-        print(control.username)
         engine.load(qml_file)
-        print(control)
-        control.add_user.emit("Any", "0")
 main_control = MainController()
 
 def authorization(main_control):

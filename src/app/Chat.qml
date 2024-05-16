@@ -31,11 +31,8 @@ ColumnLayout {
         return "transparent"
     }
 
-    function send_message() {
-        if(!!message_input.text && message_input.text.trim().length > 0) {
-            chat.messages_list.insert(0, {"ip": chat.ip, "message": message_input.text.trim()})
-            message_input.text = ""
-        }
+    function add_message(name, ip, message) {
+        chat.messages_list.insert(0, {"name": name, "ip": ip, "message": message})
     }
 
     // Верхняя панель
@@ -482,7 +479,10 @@ ColumnLayout {
                         visible: !parent.text
                     }
                     Keys.onReturnPressed: {
-                        chat.send_message()
+                        if(!!message_input.text && message_input.text.trim().length > 0) {
+                            chat.add_message(chat.name, chat.ip, message_input.text)
+                            message_input.text = ""
+                        }
                     }
                 }
 
@@ -530,7 +530,11 @@ ColumnLayout {
                     hoverEnabled: true
 
                     onClicked: {
-                        chat.send_message()
+                        if(!!message_input.text && message_input.text.trim().length > 0) {
+                            chat.add_message(chat.name, chat.ip, message_input.text)
+                            message_input.text = ""
+                            control.send_message(chat.name, chat.ip, message_input.text)
+                        }
                     }
 
                     onPressed: {
