@@ -43,4 +43,5 @@ def authorization(main_control):
 if __name__ == "__main__":
     authorization(main_control)
     app.exec()
+    control.main_user.call_to_remove_user()
     sys.exit(0)

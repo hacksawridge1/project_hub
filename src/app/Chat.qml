@@ -336,7 +336,7 @@ ColumnLayout {
                         Text {
                             id: messagebox_text
                             width: parent.implicitWidth
-                            wrapMode: Text.WordWrap
+                            wrapMode: Text.Wrap
                             anchors.centerIn: parent
                             anchors.margins: 16
                             text: delegate.model.message

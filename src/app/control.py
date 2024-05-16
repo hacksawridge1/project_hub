@@ -15,7 +15,6 @@ class Controller(QObject):
 
     @Slot(str, str, str)
     def send_message(self, name, ip, message):
-        print(message)
         self.main_user.send_message(ip, name, message)
 
     # Для передачи в qml
