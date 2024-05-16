@@ -1,4 +1,5 @@
 import netifaces
+import socket
 import ipaddress
 from Crypto.PublicKey import RSA
 import requests
@@ -45,28 +46,39 @@ class User:
 
     self.__public_key = key.public_key().export_key(format='PEM')
 
-  def __get_local_ip(self) -> Union[str, None]:
-    for interface in netifaces.interfaces():
-      if netifaces.AF_INET in netifaces.ifaddresses(interface):
-        for address_info in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
-           address_object = ipaddress.IPv4Address(address_info['addr'])
-           if not address_object.is_loopback:
-             return address_info['addr']
+  def __get_local_ip(self):
+    #for interface in netifaces.interfaces():
+    #  if netifaces.AF_INET in netifaces.ifaddresses(interface):
+    #    for address_info in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
+    #       address_object = ipaddress.IPv4Address(address_info['addr'])
+    #       if not address_object.is_loopback:
+    #         yield address_info['addr']
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+      # doesn't even have to be reachable
+      s.connect(('10.254.254.254', 1))
+      IP = s.getsockname()[0]
+    except Exception:
+      IP = '127.0.0.1'
+    finally:
+      s.close()
+    return IP
 
-  def __initial(self):
+  def initial(self):
     net_ip: str = '.'.join(self.ip.split('.')[:3]) + '.'
     i: int = 2
 
     while i < 255:
       try:
-        print(i)
         if f'{net_ip}{i}' != self.ip:
           resp = requests.get(f'http://{net_ip}{i}:{9091}/', timeout=0.1)
-          print(f'http://{net_ip}{i}:{9091}/')
 
           if resp.ok:
             resp = requests.get(f'http://{net_ip}{i}:{9091}/user')
             data: dict = eval(resp.text)
+            
+            yield data
 
             with set.path_to_self("users-online.json").open() as f:
               file_data: dict = decrypt_object(json.load(f), self.private_key) 
@@ -87,7 +99,6 @@ class User:
           i += 1
           continue
       except requests.exceptions.ConnectionError:
-        print("Err")
         i += 1
         continue
 
@@ -192,7 +203,7 @@ class User:
     return self.__private_key.decode()
 
   # Initial on setup
-  @property
-  def initial(self):
-    self.__initial()
+  #@property
+  #def initial(self):
+  #  self.__initial()
 

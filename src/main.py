@@ -10,8 +10,9 @@ user = User(user_name)
 
 server_thread = Thread(target=start_server, args=(user, ))
 server_thread.start()
-init_thread = Thread(target=user.initial)
-init_thread.start()
+print(next(user.initial()))
+#init_thread = Thread(target=user.initial)
+#init_thread.start()
 
 print(user.users_online)
 
