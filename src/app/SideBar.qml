@@ -449,7 +449,7 @@ Rectangle {
                                 Text {
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
-                                    text: "IP: " + sidebar.ip
+                                    text: "IP: " + delegate.model.ip
                                     font.family: "Inter"
                                     font.pixelSize: 11
                                     color: sidebar.get_theme("second_text")
