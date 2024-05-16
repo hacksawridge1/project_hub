@@ -198,14 +198,7 @@ class User:
   def private_key(self):
     return self.__private_key.decode()
 
-  # Initial on setup
-<<<<<<< HEAD
-  #@property
-  #def initial(self):
-  #  self.__initial()
-=======
   @property
   def initial(self):
     self.__initial()
->>>>>>> develop
 
