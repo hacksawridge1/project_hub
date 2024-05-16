@@ -14,8 +14,8 @@ class Controller(QObject):
     add_message = Signal(str, str, str)
 
     @Slot(str, str, str)
-    def send_message(name, ip, message):
-        main_user.send_message(ip, name, message)
+    def send_message(self, name, ip, message):
+        self.main_user.send_message(ip, name, message)
 
     # Для передачи в qml
     # username - start
