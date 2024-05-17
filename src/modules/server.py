@@ -62,7 +62,7 @@ def start_server(user: User, control: Controller):
       chat_object: dict = set.chat_object(data['user_name'], data['user_ip'], data['message'])
 
       if not set.path_to_chat(chat_object['user_name'], chat_object['user_ip']).exists():
-        set.path_to_chat(chat_object['user_name'], chat_object['user_ip']).mkdir()
+        set.path_to_chat(chat_object['user_name'], chat_object['user_ip']).mkdir(parents=True)
 
         with set.path_to_chat(chat_object['user_name'], chat_object['user_ip'], "chat.json").open("w") as f:
           chat["chat"].append(encrypt_object(chat_object, user.public_key))
