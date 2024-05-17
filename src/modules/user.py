@@ -131,6 +131,7 @@ class User:
     with set.path_to_self("users-online.json").open() as f, set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f1:
       f1.write(json.dumps(chat, sort_keys=True))
       users_online: dict = decrypt_object(json.load(f), self.private_key)
+      print(users_online)
       reciever: dict = find_in_object(users_online, reciever_ip)
       requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
 
