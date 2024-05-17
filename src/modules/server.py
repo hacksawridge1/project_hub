@@ -37,7 +37,7 @@ def start_server(user: User, control: Controller):
           with set.path_to_self("users-online.json").open("w") as f:
             f.write(json.dumps(encrypt_object(file_data, user.public_key)))
         
-        control.add_user.emit(data["user_name"], data["user_ip"])
+          control.add_user.emit(data["user_name"], data["user_ip"])
         return "ok"
    
     @app.post('/remove-user')

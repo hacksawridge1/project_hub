@@ -5,6 +5,7 @@ from Crypto.PublicKey import RSA
 import requests
 import sys
 from dataclasses import dataclass
+import shutil
 import json
 import os
 #import asyncio
@@ -88,10 +89,12 @@ class User:
 
             with set.path_to_self("users-online.json").open() as f:
               file_data: dict = decrypt_object(json.load(f), self.private_key) 
+
+            if find_in_object(file_data, data) == None:
               file_data['users_online'].append(encrypt_object(data, self.public_key))
 
-            with set.path_to_self("users-online.json").open("w") as f:
-              f.write(json.dumps(file_data))
+              with set.path_to_self("users-online.json").open("w") as f:
+                f.write(json.dumps(file_data))
 
             with set.path_to_self("user-info.json").open() as f:
               user_info: dict = decrypt_object(json.load(f), self.private_key)
@@ -147,10 +150,10 @@ class User:
     except :
       print("Error")
       
-    set.path_to_self().rmdir()
-    set.path_to_chat().rmdir()
-    set.path_to_upload().rmdir()
-    set.path_to_download().rmdir()
+    shutil.rmtree("objects/chat/")
+    shutil.rmtree("objects/self/")
+    shutil.rmtree("upload")
+    shutil.rmtree("download")
 
   # Get chat inform with {user_name, user_ip}(user.chat_info(...))
   def chat_info(self, user_name, user_ip) -> Union[list, str]:
