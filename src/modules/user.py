@@ -1,14 +1,14 @@
 #import netifaces
-import socket
 #import ipaddress
+import sys
+#import asyncio
+import socket
 from Crypto.PublicKey import RSA
 import requests
-import sys
 from dataclasses import dataclass
 import shutil
 import json
 import os
-#import asyncio
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.control import Controller
 from typing import Union
@@ -114,7 +114,7 @@ class User:
 
   # Send message (user.send_message(...))
 
-  def send_message(self, reciever_ip: str, reciever_name: str, message: str) -> None:
+  def send_message(self, reciever_ip: str, reciever_name: str, message: str) -> None | str:
     chat: dict = set.chat()
     chat_object: dict = set.chat_object(self.name, self.ip, message)
 
@@ -137,7 +137,10 @@ class User:
       users_online: dict = decrypt_object(json.load(f), self.private_key)
       print(users_online)
       reciever: dict = find_in_object(users_online, reciever_ip)
-      requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
+      if reciever != None:
+        requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
+      else:
+        return "Пользователь не найден"
 
   # Call to remove user on exit (user.call_to_remove_user())
   def call_to_remove_user(self):
