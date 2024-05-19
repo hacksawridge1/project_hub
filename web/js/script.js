@@ -16,6 +16,9 @@ var footerHeight = footer.offsetHeight;
 
 up.style.visibility = "hidden";
 
+window.addEventListener("load", updateScrollPosition);
+window.addEventListener("scroll", updateScrollPosition);
+
 // Загрузка файла
 function downloadFile() {
     const file = "img/Authorization 1.0.png";
@@ -69,13 +72,7 @@ up.onclick=()=> {
     document.documentElement.scrollTop=0;
 }
 
-window.onscroll=()=> {
-    if(document.body.scrollTop>200 || document.documentElement.scrollTop>200)
-        up.style.visibility = "visible";
-    else
-        up.style.visibility = "hidden";
-}
-
+// Что бы кнопка на вверх не залазила на футер
 function updateScrollPosition() {
     var windowHeight = window.innerHeight;
     var scrollPosition = window.scrollY;
@@ -87,9 +84,7 @@ function updateScrollPosition() {
     }
 }
 
-window.addEventListener("load", updateScrollPosition);
-window.addEventListener("scroll", updateScrollPosition);
-
+// Параллакс эффект для фона
 document.addEventListener("DOMContentLoaded", function() {
     var header = document.querySelector('header');
     var headerContent = document.querySelector('.header-content');
@@ -99,5 +94,10 @@ document.addEventListener("DOMContentLoaded", function() {
         var yOffset = window.scrollY;
         header.style.backgroundPositionY = -yOffset * speed + 'px';
         headerContent.style.transform = 'translateY(' + yOffset * speed + 'px)';
+
+        if(document.body.scrollTop>200 || document.documentElement.scrollTop>200)
+            up.style.visibility = "visible";
+        else
+            up.style.visibility = "hidden";
     }
 });

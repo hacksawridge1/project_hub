@@ -83,6 +83,11 @@ h2 {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
 }
 
+h3 {
+  text-align: center;
+  font-style: italic;
+}
+
 img {
   display: block;
   margin: 0 auto;
@@ -90,6 +95,7 @@ img {
 
 button {
   background-color: #333;
+  width: 8em;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -115,15 +121,36 @@ button:hover {
 .image {
   text-align: center;
   font-style: italic;
-  max-width: 100%;
+  max-width: 800px;
   height: auto;
+}
+
+.logoImage {
+  text-align: center;
+  font-style: italic;
+  width: 300px;
+  height: auto;
+}
+
+.advantages {
+  margin-top: 20px;
+}
+
+.advantage {
+  margin-bottom: 15px;
+}
+
+.advantage-title {
+  font-weight: bold;
+  color: #007BFF;
 }
 
 /* ID ЭЛЕМЕНТЫ */
 
 #download-button {
   display: block;
-  margin: 50px auto 20px;
+  width: 10em;
+  margin: 10px auto 30px;
   background-color: #160a7e;
   color: #fff;
   border: none;
