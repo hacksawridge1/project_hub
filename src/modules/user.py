@@ -135,7 +135,6 @@ class User:
     with set.path_to_self("users-online.json").open() as f, set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f1:
       f1.write(json.dumps(chat, sort_keys=True))
       users_online: dict = decrypt_object(json.load(f), self.private_key)
-      print(users_online)
       reciever: dict = find_in_object(users_online, reciever_ip)
       if reciever != None:
         requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
@@ -146,7 +145,6 @@ class User:
   def call_to_remove_user(self):
     try:
       with set.path_to_self("users-online.json").open() as f1, set.path_to_self("user-info.json").open() as f2:
-        
         users_online: dict = decrypt_object(json.load(f1), self.private_key)
         user_info: dict = decrypt_object(json.load(f2), self.private_key)
         for i in users_online['users_online']:
@@ -167,9 +165,9 @@ class User:
         chat: dict = decrypt_object(json.load(f), self.private_key)
         return chat["chat"]
     else:
-      return "С данным пользователем нет переписок"
+      raise FileNotFoundError
 
-  def send_file(self, reciever_name: str, reciever_ip: str, file: bytes):
+  def send_file(self, reciever_name: str, reciever_ip: str, file: str):
 
     if not set.path_to_upload(reciever_name, reciever_ip).exists():
       set.path_to_upload(reciever_name, reciever_ip).mkdir()
