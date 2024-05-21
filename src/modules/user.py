@@ -20,7 +20,8 @@ class User:
 
   # initial
   def __init__(self, name: str, control: Controller):
-    self.__name: str = name
+    if name != None:
+      self.__name: str = name
     self.__ip: str = str(self.__get_local_ip())
     self.__generate_keys()
     self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key) 
