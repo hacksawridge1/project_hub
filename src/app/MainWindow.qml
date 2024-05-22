@@ -41,7 +41,51 @@ ApplicationWindow {
         id: users_list
 
         ListElement {
+            name: "Максим"
+            ip: "0.0.0.0"
+        }
+        ListElement {
             name: "HITLER"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "YAROSLAV"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "Максим"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "HITLER"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "YAROSLAV"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "Максим"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "HITLER"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "YAROSLAV"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "Максим"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "HITLER"
+            ip: "0.0.0.0"
+        }
+        ListElement {
+            name: "YAROSLAV"
             ip: "0.0.0.0"
         }
     }

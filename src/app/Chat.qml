@@ -21,8 +21,8 @@ ColumnLayout {
         var theme_name = {"top_panel": 0, "chat": 1, "object": 2, "object(pressed)": 3, "object(active)": 4, "object_border": 5, 
         "chat_object": 6, "chat_object(pressed)": 7, "chat_object_border": 8, "text": 9, "second_text": 10, "title": 11, 
         "placeholder": 12, "message": 13, "message_shadow": 14}
-        var light_theme = ["#D9D9D9", "white", "white", "#9999FF", "#DDFFFF", "black", "#D9D9D9", "#D9D9FF", "black", "black",  "#808080", "#545353", "#AAAAAA", "#E9E9E9", "#C0C0C0"]
-        var dark_theme = ["#262626", "black", "black", "#222266", "#111133", "white", "#262626", "#26267A", "white", "white", "#7F7F7F", "#ABACAC", "#555555", "#161616", "#3F3F3F"]
+        var light_theme = ["#D9D9D9", "#D9D9D9", "white", "#9999FF", "#DDFFFF", "black", "white", "#9999FF", "black", "black",  "#808080", "#545353", "#AAAAAA", "white", "#C0C0C0"]
+        var dark_theme = ["#262626", "#262626", "black", "#222266", "#111133", "white", "black", "#222266", "white", "white", "#7F7F7F", "#ABACAC", "#555555", "black", "#3F3F3F"]
         if (chat.theme) {
             return dark_theme[theme_name[name]]
         } else {
@@ -39,20 +39,17 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 80
-        Layout.leftMargin: -1
-        Layout.rightMargin: -1
         color: chat.get_theme("top_panel")
         visible: (chat.connected) ? true : false
-        border.width: 1
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 12 + 1
-            anchors.rightMargin: 12 + 1
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
 
             Rectangle {
-                Layout.preferredWidth: 300
-                Layout.preferredHeight: 56
+                Layout.preferredWidth: 500
+                Layout.preferredHeight: 64
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                 color: chat.get_theme("object")
                 border.width: 1
@@ -63,8 +60,8 @@ ColumnLayout {
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 8
-                    anchors.topMargin: 10
-                    anchors.bottomMargin: 12
+                    anchors.topMargin: 16
+                    anchors.bottomMargin: 16
                     spacing: 4
 
                     Text {
@@ -72,7 +69,7 @@ ColumnLayout {
                         Layout.fillHeight: true
                         text: (typeof chat.user == "undefined") ? "" : chat.user.name
                         font.family: "Inter"
-                        font.pixelSize: 16
+                        font.pixelSize: 14
                         color: chat.get_theme("text")
                     }
                     
@@ -144,6 +141,12 @@ ColumnLayout {
                         width: 32
                         height: 32
                         source: "icons/phone.svg"
+
+                        ColorOverlay {
+                            anchors.fill: parent
+                            source: parent
+                            color: (chat.theme) ? "white" : "black"
+                        }
                     }
 
                     Behavior on scale {
@@ -185,6 +188,12 @@ ColumnLayout {
                         width: 32
                         height: 32
                         source: "icons/search.svg"
+
+                        ColorOverlay {
+                            anchors.fill: parent
+                            source: parent
+                            color: (chat.theme) ? "white" : "black"
+                        }
                     }
 
                     Behavior on scale {
@@ -226,6 +235,12 @@ ColumnLayout {
                         width: 32
                         height: 32
                         source: "icons/more.svg"
+
+                        ColorOverlay {
+                            anchors.fill: parent
+                            source: parent
+                            color: (chat.theme) ? "white" : "black"
+                        }
                     }
 
                     Behavior on scale {
@@ -279,7 +294,9 @@ ColumnLayout {
             anchors.fill: parent
             verticalLayoutDirection: ListView.BottomToTop
             model: chat.messages_list
+            boundsBehavior: Flickable.StopAtBounds
             visible: (chat.connected) ? true : false
+
             delegate: Item {
                 id: delegate
                 width: messages_view.width
@@ -310,6 +327,12 @@ ColumnLayout {
                             width: 32
                             height: 32
                             source: "icons/user.svg"
+
+                            ColorOverlay {
+                                anchors.fill: parent
+                                source: parent
+                                color: (chat.theme) ? "#ABACAC" : "#545353"
+                            }
                         }
 
                         layer.enabled: true
@@ -356,6 +379,7 @@ ColumnLayout {
                 }
             }
             add: Transition {
+                id: addTrans
                 NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
                 NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
                 NumberAnimation { property: "x"; from: (messages_view.width) / 2; to: 0; duration: 400 }
@@ -421,6 +445,12 @@ ColumnLayout {
                     width: 32
                     height: 32
                     source: "icons/attach-file-add.svg"
+
+                    ColorOverlay {
+                        anchors.fill: parent
+                        source: parent
+                        color: (chat.theme) ? "white" : "black"
+                    }
                 }
 
                 Behavior on scale {

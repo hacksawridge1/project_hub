@@ -1,21 +1,29 @@
 __author__ = "MIDNIGHT"
 
 from PySide6.QtCore import QObject, Signal, Slot, Property
-from dataclasses import dataclass
+from threading import Thread, Lock
 
-@dataclass
 class Controller(QObject):
-    def __init__(self):
-        super().__init__()
-
+    _instance = None
+    _lock = Lock()
     main_user = None
+    
+
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super(Controller, cls).__new__(cls)
+            return cls._instance
+
     add_user = Signal(str, str) # add_user.emit(<имя_пользователя>, <ip>) - создаст нового пользователя
     delete_user = Signal(int) # delete_user.emit(<индекс_в_списке>) - удалит пользователя по индексу
     add_message = Signal(str, str, str)
 
     @Slot(str, str, str)
     def send_message(self, name, ip, message):
-        self.main_user.send_message(ip, name, message)
+        user_thread = Thread(target=self.main_user.send_message, args=(ip, name, message, ))
+        user_thread.daemon = True
+        user_thread.start()
 
     # Для передачи в qml
     # username - start
