@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Window
+import QtQuick.Window 
 import QtQuick.Controls.Universal
+import MainController
+import Controller
 
 // Окно авторизации
 ApplicationWindow {
@@ -19,7 +21,7 @@ ApplicationWindow {
         "text": 4, "placeholder": 5}
         var light_theme = ["#D9D9D9", "white", "#9999FF", "black", "black", "#AAAAAA"]
         var dark_theme = ["#262626", "transparent", "#222266", "white", "white", "#555555"]
-        if (control && control.theme) {
+        if (Control.theme) {
             return dark_theme[theme_name[name]]
         } else {
             return light_theme[theme_name[name]]
@@ -143,7 +145,7 @@ ApplicationWindow {
 
                         onClicked: {
                             auth.close()
-                            main_control.main_window(input.text)
+                            MainControl.main_window(input.text)
                         }
 
                         onPressed: {

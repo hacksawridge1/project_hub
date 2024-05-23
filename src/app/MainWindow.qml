@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
+import Controller
 
 ApplicationWindow {
     id: main_window
@@ -11,9 +12,9 @@ ApplicationWindow {
     height: 1080
     title: "HUB"
 
-    property bool theme: control ? control.theme : false
-    property string name: control ? control.username : ""
-    property string ip: control ? control.ip : ""
+    property bool theme: Control ? Control.theme : false
+    property string name: Control ? Control.username : ""
+    property string ip: Control ? Control.ip : ""
 
     RowLayout {
         id: main_grid
@@ -95,7 +96,7 @@ ApplicationWindow {
     }
 
     Connections {
-        target: control
+        target: Control
 
         function onAdd_message(name, ip, message) {
             chat.add_message(name, ip, message)

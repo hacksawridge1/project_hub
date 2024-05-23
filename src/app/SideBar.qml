@@ -1,9 +1,8 @@
 pragma ComponentBehavior: Bound
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Controls.Universal
 import Qt5Compat.GraphicalEffects
+import Controller
 
 // Прямоугольник боковой панели
 Rectangle {
@@ -16,12 +15,12 @@ Rectangle {
     property string name
     property string ip
     property bool theme
-    function get_theme(name) {
+    function get_theme(name, theme = sidebar.theme) {
         var theme_name = {"sidebar": 0, "object": 1, "object(hovered)": 2, "object(pressed)": 3, "object_border": 4, 
         "text": 5, "second_text": 6, "placeholder": 7}
         var light_theme = ["#D9D9D9", "white", "#929292", "#585858", "black", "black", "#808080", "#AAAAAA"]
-        var dark_theme = ["#262626", "#585858", "#262626", "#3f4343", "black", "white", "#7F7F7F", "#555555"]
-        if (sidebar.theme) {
+        var dark_theme = ["#262626", "#464646", "#262626", "#3f4343", "black", "white", "#AFAFAF", "#555555"]
+        if (theme) {
             return dark_theme[theme_name[name]]
         } else {
             return light_theme[theme_name[name]]
@@ -57,7 +56,7 @@ Rectangle {
             Layout.alignment: Qt.AlignHCenter
             radius: 8
             border.color: sidebar.get_theme("object_border")
-            border.width: 1
+            border.width: (sidebar.theme) ? 0 : 1
             color: sidebar.get_theme("object")
             clip: true
 
@@ -113,7 +112,7 @@ Rectangle {
                 id: settings
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-                border.width: 1
+                border.width: (sidebar.theme) ? 0 : 1
                 border.color: sidebar.get_theme("object_border")
                 color: (settings_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
                 radius: 8
@@ -163,7 +162,7 @@ Rectangle {
                 id: notifications
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-                border.width: 1
+                border.width: (sidebar.theme) ? 0 : 1
                 border.color: sidebar.get_theme("object_border")
                 color: (notifications_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
                 radius: 8
@@ -213,7 +212,7 @@ Rectangle {
                 id: public_chat
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-                border.width: 1
+                border.width: (sidebar.theme) ? 0 : 1
                 border.color: sidebar.get_theme("object_border")
                 color: (public_chat_area.pressed) ? sidebar.get_theme("object(pressed)") : (users_view.currentIndex == -1) ? sidebar.get_theme("object(active)") : sidebar.get_theme("object")
                 radius: 8
@@ -267,7 +266,7 @@ Rectangle {
                 id: groups
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-                border.width: 1
+                border.width: (sidebar.theme) ? 0 : 1
                 border.color: sidebar.get_theme("object_border")
                 color: (groups_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
                 radius: 8
@@ -317,7 +316,7 @@ Rectangle {
                 id: folders
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-                border.width: 1
+                border.width: (sidebar.theme) ? 0 : 1
                 border.color: sidebar.get_theme("object_border")
                 color: (folders_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
                 radius: 8
@@ -367,7 +366,7 @@ Rectangle {
                 id: theme
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
-                border.width: 1
+                border.width: (sidebar.theme) ? 0 : 1
                 border.color: sidebar.get_theme("object_border")
                 color: (theme_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
                 radius: 8
@@ -395,10 +394,10 @@ Rectangle {
                     hoverEnabled: true
 
                     onClicked: {
-                        if (control.theme) {
-                            control.theme = false
+                        if (Control.theme) {
+                            Control.theme = false
                         } else {
-                            control.theme = true
+                            Control.theme = true
                         }
                     }
 
@@ -450,7 +449,7 @@ Rectangle {
                         height: 56
                         anchors.horizontalCenter: parent.horizontalCenter
                         z: 1
-                        border.width: 1
+                        border.width: (sidebar.theme) ? 0 : 1
                         border.color: sidebar.get_theme("object_border")
                         color: (model_area.pressed || users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("object(pressed)") : (model_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                         radius: 8
@@ -475,7 +474,7 @@ Rectangle {
                                 ColorOverlay {
                                     anchors.fill: parent
                                     source: parent
-                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index || sidebar.theme) ? "#ABACAC" : "#545353"
+                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse || sidebar.theme) ? "#ABACAC" : "#545353"
                                 }
                             }
 
@@ -489,7 +488,7 @@ Rectangle {
                                     Layout.fillHeight: true
                                     Layout.alignment: Qt.AlignBottom
                                     text: delegate.model.name
-                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index) ? "white" : sidebar.get_theme("text")
+                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
                                     font.family: "Inter"
                                     font.pixelSize: 14
                                 }
@@ -501,14 +500,14 @@ Rectangle {
                                     text: "IP: " + delegate.model.ip
                                     font.family: "Inter"
                                     font.pixelSize: 12
-                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index) ? "#AFAFAF" : sidebar.get_theme("second_text")
+                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
                                 }
                             }
                         }
 
                         onYChanged: {
                             if (z == 100) {
-                                var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 56)
+                                var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 64)
                                 if (delegate.model.index !== endIndex && endIndex > -1 && endIndex < users_list.count) {
                                     var startIndex = delegate.model.index
                                     users_view.dragY = delegate.y
@@ -524,7 +523,7 @@ Rectangle {
                             target: users_view
                             function onContentYChanged() {
                                 if (model_user.z == 100) {
-                                    var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 56)
+                                    var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 64)
                                     if (delegate.model.index !== endIndex && endIndex > -1 && endIndex < users_list.count) {
                                         var startIndex = delegate.model.index
                                         users_view.dragY = delegate.y
@@ -589,25 +588,6 @@ Rectangle {
                             PropertyAction { target: model_user; property: "parent"; value: delegate }
                             PropertyAction { target: model_user; property: "y"; value: 0 }
                         }
-
-                        Timer {
-                            id: dragAct
-                            interval: 1
-                            repeat: true
-                            onTriggered: {
-                                if (parent.z == 100) {
-                                    var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 56)
-                                    if (delegate.model.index !== endIndex && endIndex > -1 && endIndex < users_list.count) {
-                                        var startIndex = delegate.model.index
-                                        users_view.dragY = delegate.y
-                                        users_view.model.move(delegate.model.index, endIndex, 1)
-                                    }
-                                    if (parent.scale < 1) {
-                                        parent.scale = 1.03
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
 
@@ -633,9 +613,9 @@ Rectangle {
             Layout.alignment: Qt.AlignBottom
             Layout.leftMargin: -1
             Layout.bottomMargin: -1
-            border.width: 1
+            border.width: (sidebar.theme) ? 0 : 1
             border.color: sidebar.get_theme("object_border")
-            color: (mouse_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+            color: (mouse_area.pressed) ? sidebar.get_theme("object(pressed)") : (mouse_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
 
             Behavior on scale {
                 NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -656,7 +636,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (sidebar.theme) ? "#ABACAC" : "#545353"
+                        color: (mouse_area.pressed || mouse_area.containsMouse || sidebar.theme) ? "#ABACAC" : "#545353"
                     }
                 }
 
@@ -673,7 +653,7 @@ Rectangle {
                             text: sidebar.name
                             font.family: "Inter"
                             font.pixelSize: 14
-                            color: sidebar.get_theme("text")
+                            color: (mouse_area.pressed || mouse_area.entered) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
                         }
                     }
                     
@@ -686,7 +666,7 @@ Rectangle {
                             text: "IP: " + sidebar.ip
                             font.family: "Inter"
                             font.pixelSize: 12
-                            color: sidebar.get_theme("second_text")
+                            color: (mouse_area.pressed || mouse_area.entered) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
                         }
                     }
                 }

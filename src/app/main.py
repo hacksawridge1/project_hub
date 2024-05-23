@@ -4,9 +4,9 @@ import sys
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtQml import QQmlApplicationEngine
+from PySide6.QtQml import QQmlApplicationEngine, qmlRegisterSingletonInstance
 from PySide6.QtCore import QObject, Slot
-from control import control
+from control import control, Controller
 from modules.user import User
 from threading import Thread
 from modules.server import start_server
@@ -36,12 +36,13 @@ main_control = MainController()
 
 def authorization(main_control):
     qml_file = path.dirname(path.abspath(__file__)) + "/Authorization.qml"
-    engine.rootContext().setContextProperty("main_control", main_control)
-    engine.rootContext().setContextProperty("control", control)
+    qmlRegisterSingletonInstance(MainController, "MainController", 1, 0, "MainControl", main_control) # type: ignore
+    qmlRegisterSingletonInstance(Controller, "Controller", 1, 0, "Control", control) # type: ignore
     engine.load(qml_file)
 
 if __name__ == "__main__":
     authorization(main_control)
     app.exec()
-    control.main_user.call_to_remove_user()
+    if (control.main_user):
+        control.main_user.call_to_remove_user()
     sys.exit(0)

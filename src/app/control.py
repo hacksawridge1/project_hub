@@ -1,13 +1,13 @@
 __author__ = "MIDNIGHT"
 
+from typing import Any
 from PySide6.QtCore import QObject, Signal, Slot, Property
 from threading import Thread, Lock
 
 class Controller(QObject):
     _instance = None
     _lock = Lock()
-    main_user = None
-    
+    main_user: Any = None
 
     def __new__(cls):
         with cls._lock:
@@ -37,7 +37,7 @@ class Controller(QObject):
         self.__username = value
         self.usernameChanged.emit()
 
-    username = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
+    username: Any = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
     # username - end
     # ip - start
     __ip = ""
@@ -49,7 +49,7 @@ class Controller(QObject):
         self.__ip = value
         self.ipChanged.emit()
 
-    ip = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
+    ip: Any = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
     # ip - end
     # theme - start
     __theme = True
@@ -61,7 +61,7 @@ class Controller(QObject):
         self.__theme = value
         self.themeChanged.emit()
 
-    theme = Property(bool, readTheme, setTheme, notify=themeChanged) # type: ignore
+    theme: Any = Property(bool, readTheme, setTheme, notify=themeChanged) # type: ignore
     # theme - end
 
 # Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
