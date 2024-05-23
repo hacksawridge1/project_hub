@@ -153,10 +153,14 @@ class User:
     except :
       print("Error")
       
-    shutil.rmtree("objects/chat/")
-    shutil.rmtree("objects/self/")
-    shutil.rmtree("upload")
-    shutil.rmtree("download")
+    if set.path_to_chat().exists():
+      shutil.rmtree("objects/chat/")
+    if set.path_to_self().exists():
+      shutil.rmtree("objects/self/")
+    if set.path_to_upload().exists():
+      shutil.rmtree("upload")
+    if set.path_to_download().exists():
+      shutil.rmtree("download")
 
   # Get chat inform with {user_name, user_ip}(user.chat_info(...))
   def chat_info(self, user_name, user_ip) -> Union[list, str]:
@@ -172,8 +176,10 @@ class User:
     if not set.path_to_upload(reciever_name, reciever_ip).exists():
       set.path_to_upload(reciever_name, reciever_ip).mkdir()
 
-    if not set.path_to_upload(reciever_name, reciever_ip, file).exists():
-      pass
+    with open(file, 'rb') as f:
+      data = f.read()
+
+
   
   # Info about user
   @property
