@@ -7,34 +7,43 @@ import base64 as b64
 
 arr_types = [list, tuple, set]
 
-def encrypt_data(input_data: str, public_key: str) -> list:
-  input_data_splited = str(input_data).split()
-  output_data = list()
-  n = 0
-  key = RSA.import_key(public_key)
-  cipher = PKCS1_OAEP.new(key)
-
-  for i in input_data_splited:
-
-    if len(i) > 50:
-      output_data.append(wrap(i, 50))
+# TODO
+def encrypt_data(input_data: Union[str, bytes], public_key: str) -> list:
+  try:
+    if isinstance(input_data, str):
+      input_data_splited = str(input_data).split()
+    elif isinstance(input_data, bytes):
+      input_data_splited = input_data.split()
     else:
-      output_data.append(i)
+      raise TypeError
+    output_data = list()
+    n = 0
+    key = RSA.import_key(public_key)
+    cipher = PKCS1_OAEP.new(key)
 
-  while n < len(output_data):
+    for i in input_data_splited:
 
-    k = 0
-    if type(output_data[n]) in arr_types:
-      while k < len(output_data[n]):
-        b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n][k]}'.encode()))
-        output_data[n][k] = b64_data.decode()
-        k += 1
-    else:
-      b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n]}'.encode()))
-      output_data[n] = b64_data.decode()
-    n += 1
+      if len(i) > 50:
+        output_data.append(wrap(i, 50))
+      else:
+        output_data.append(i)
 
-  return output_data
+    while n < len(output_data):
+
+      k = 0
+      if type(output_data[n]) in arr_types:
+        while k < len(output_data[n]):
+          b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n][k]}'.encode()))
+          output_data[n][k] = b64_data.decode()
+          k += 1
+      else:
+        b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n]}'.encode()))
+        output_data[n] = b64_data.decode()
+      n += 1
+
+    return output_data
+  except TypeError:
+    print("Неверный тип")
 
 def decrypt_data(input_data: str, private_key: str, passphrase = None) -> str:
   n = 0

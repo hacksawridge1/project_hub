@@ -6,13 +6,14 @@ import socket
 from Crypto.PublicKey import RSA
 import requests
 from dataclasses import dataclass
-import shutil
+from shutil import rmtree
 import json
 import os
+from zlib import compress
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.control import Controller
 from typing import Union
-from .objects import encrypt_object, decrypt_object, find_in_object
+from .objects import decrypt_data, encrypt_object, decrypt_object, find_in_object
 import modules.settings as set
 
 @dataclass
@@ -155,13 +156,13 @@ class User:
       print("Error")
       
     if set.path_to_chat().exists():
-      shutil.rmtree("objects/chat/")
+      rmtree("objects/chat/")
     if set.path_to_self().exists():
-      shutil.rmtree("objects/self/")
+      rmtree("objects/self/")
     if set.path_to_upload().exists():
-      shutil.rmtree("upload")
+      rmtree("upload/")
     if set.path_to_download().exists():
-      shutil.rmtree("download")
+      rmtree("download/")
 
   # Get chat inform with {user_name, user_ip}(user.chat_info(...))
   def chat_info(self, user_name, user_ip) -> Union[list, str]:
@@ -172,15 +173,35 @@ class User:
     else:
       raise FileNotFoundError
 
-  def send_file(self, reciever_name: str, reciever_ip: str, file: str):
+  def upload_file(self, reciever_name: str, reciever_ip: str, file: str):
+
+    file_name: str = file.split("/")[-1]
 
     if not set.path_to_upload(reciever_name, reciever_ip).exists():
       set.path_to_upload(reciever_name, reciever_ip).mkdir()
 
     with open(file, 'rb') as f:
-      data = f.read()
+      data: bytes = f.read()
+  
+    zip_data: bytes = compress(data) 
 
+    with set.path_to_upload(reciever_name, reciever_ip, file_name + ".zip").open('wb') as f:
+      f.write(zip_data)
+# TODO
+  def download_file(self, sender_name:str, sender_ip: str, file_name: str):
+    try:
+      resp = requests.get(f"http://{sender_ip}:9091/download/{file_name}").json()
+      if resp.ok:
 
+        if not set.path_to_download(sender_name, sender_ip).exists():
+          set.path_to_download(sender_name, sender_ip).mkdir(parents=True)
+        
+        with set.path_to_download(sender_name, sender_ip, file_name).open('wb') as f:
+          file_data: bytes = decrypt_data(resp['file_data'], self.private_key)
+      else:
+        raise requests.exceptions.HTTPError
+    except requests.exceptions.HTTPError as err:
+      return f"Status Code:\t {err.response.status_code}"
   
   # Info about user
   @property

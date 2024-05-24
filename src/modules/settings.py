@@ -44,10 +44,8 @@ def group_info(name: str, id: str, owner: str, members: list = [], chat: list = 
 def path_to_chat(name: Union[str, None] = None, ip: Union[str, None] = None, file: Union[str, None] = None): 
   if name != None and ip != None and file == None:
     PATH_TO_CHAT=Path(f"objects/chat/{name}_{ip}")
-
   elif name != None and ip != None and file != None:
     PATH_TO_CHAT = Path(f"objects/chat/{name}_{ip}/{file}")
-
   else: 
     PATH_TO_CHAT = Path(f"objects/chat/")
 
@@ -56,7 +54,6 @@ def path_to_chat(name: Union[str, None] = None, ip: Union[str, None] = None, fil
 def path_to_self(file: Union[str, None] = None):
   if file != None:
     PATH_TO_SELF = Path(f"objects/self/{file}")
-
   else:
     PATH_TO_SELF = Path(f"objects/self/")
 
@@ -65,19 +62,18 @@ def path_to_self(file: Union[str, None] = None):
 def path_to_upload(name: Union[str, None] = None, ip: Union[str, None] = None, file: Union[str, None] = None):
   if name != None and ip != None and file == None:
     PATH_TO_UPLOAD = Path(f"upload/{name}_{ip}")
-
   elif name != None and ip != None and file != None:
     PATH_TO_UPLOAD = Path(f"upload/{name}_{ip}/{file}")
-
   else:
     PATH_TO_UPLOAD = Path(f"upload/")
 
   return PATH_TO_UPLOAD
 
-def path_to_download(name: Union[str, None] = None, ip: Union[str, None] = None):
-  if name != None and ip != None:
+def path_to_download(name: Union[str, None] = None, ip: Union[str, None] = None, file_name: Union[str, None] = None):
+  if name != None and ip != None and file_name == None:
     PATH_TO_DOWNLOAD = Path(f"download/{name}_{ip}")
-
+  elif name != None and ip != None and file_name != None:
+    PATH_TO_DOWNLOAD = Path(f"download/{name}_{ip}/{file_name}")
   else: 
     PATH_TO_DOWNLOAD = Path(f"download/")
 
