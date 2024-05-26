@@ -21,8 +21,10 @@ header {
   align-items: center;
   justify-content: center;
   background-image: url("../img/parallax.jpg");
+  background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: contain;
+  background-position: center;
+  background-size: cover;
   overflow: hidden;
 }
 
@@ -104,9 +106,9 @@ button {
   width: 8em;
   color: #fff;
   border: none;
-  padding: 0.625em 1.25em;
+  padding: 0.625em;
   border-radius: 0.3125em;
-  font-size: 1.125em;
+  font-size: 1.5em;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -119,23 +121,33 @@ button:hover {
 /* КЛАССЫ */
 
 .container {
-  max-width: 62.5em;
   margin: 0 auto;
   padding: 1.25em;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .image {
   text-align: center;
   font-style: italic;
-  max-width: 50em;
+  width: 100%;
   height: auto;
 }
 
 .logoImage {
   text-align: center;
   font-style: italic;
-  width: 18.75em;
-  height: auto;
+  width: 40%;
+  height: 100%;
+  object-fit: cover;
+  margin: 2.5em auto 1em;
 }
 
 .advantages {
@@ -156,7 +168,7 @@ button:hover {
 
 #download-button {
   display: block;
-  width: 12em;
+  width: 35%;
   margin: 0.625em auto 1.875em;
   background-color: #160a7e;
   color: #fff;
@@ -174,10 +186,10 @@ button:hover {
 
 #up{
   position: fixed;
-  width: 5em;
+  width: 2.5em;
   bottom: 1.25em;
   right: 1.25em;
-  padding: 0.625em 1.25em;
+  padding: 0.625em;
   background-color: #333;
   color: #fff;
   text-decoration: none;
@@ -186,4 +198,96 @@ button:hover {
 #up:hover {
   background-color: #e2e2e2;
   color: #000000;
+}
+
+@media screen and (max-width: 800px) {
+  .advantage {
+    text-shadow: none;
+  }
+
+  h1 {
+    font-size: 8em;
+  }
+
+  header {
+    height: 25%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../img/parallax.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+  }
+
+  section {
+    font-size: 0.75em;
+    margin: 0.75em;
+    padding: 1em;
+  }
+
+  main {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1em 0 0.5em;
+    background-color: #c5c5c5;
+  }
+
+  button {
+    background-color: #333;
+    width: 6em;
+    color: #fff;
+    border: none;
+    padding: 0.625em;
+    border-radius: 0.3125em;
+    font-size: 1.125em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .logoImage {
+    width: 40%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0 auto 1em;
+  }
+
+  #up{
+    position: fixed;
+    width: 2.5em;
+    bottom: 1.25em;
+    right: 1.25em;
+    border-radius: 100%;
+    padding: 0.625em;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  #up:hover {
+    background-color: #333;
+    color: #fff;
+  }
+
+  #download-button {
+    display: block;
+    width: 30%;
+    height: 5%;
+    margin: 0 auto 0;
+    background-color: #160a7e;
+    color: #fff;
+    border: none;
+    border-radius: 6.25em;
+    padding: 1em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  #download-button:hover {
+    background-color: #160a7e;
+  }
 }
