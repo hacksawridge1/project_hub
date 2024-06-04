@@ -7,26 +7,30 @@ import base64 as b64
 
 arr_types = [list, tuple, set]
 
-# TODO
-def encrypt_data(input_data: Union[str, bytes], public_key: str) -> list:
+# TODO: add bytes support
+def encrypt_data(input_data: Union[str, bytes], public_key: str) -> Union[list,str]:
   try:
-    if isinstance(input_data, str):
-      input_data_splited = str(input_data).split()
-    elif isinstance(input_data, bytes):
-      input_data_splited = input_data.split()
-    else:
-      raise TypeError
-    output_data = list()
+    input_data_splited = None
+    output_data: Union[list,bytes,None] = None
     n = 0
     key = RSA.import_key(public_key)
     cipher = PKCS1_OAEP.new(key)
 
-    for i in input_data_splited:
+    if isinstance(input_data, str):
+      input_data_splited = str(input_data).split()
+      output_data = list()
+    elif not isinstance(input_data, str) and not isinstance(input_data, bytes):
+      raise TypeError
 
-      if len(i) > 50:
-        output_data.append(wrap(i, 50))
-      else:
-        output_data.append(i)
+    if input_data_splited != None and isinstance(output_data, list):
+      for i in input_data_splited:
+
+        if len(i) > 50:
+          output_data.append(wrap(i, 50))
+        else:
+          output_data.append(i)
+    else:
+      output_data = input_data
 
     while n < len(output_data):
 
@@ -43,7 +47,7 @@ def encrypt_data(input_data: Union[str, bytes], public_key: str) -> list:
 
     return output_data
   except TypeError:
-    print("Неверный тип")
+    return "Incorrect Type: type must be str or bytes"
 
 def decrypt_data(input_data: str, private_key: str, passphrase = None) -> str:
   n = 0

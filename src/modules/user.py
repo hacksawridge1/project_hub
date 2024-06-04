@@ -187,7 +187,7 @@ class User:
 
     with set.path_to_upload(reciever_name, reciever_ip, file_name + ".zip").open('wb') as f:
       f.write(zip_data)
-# TODO
+# TODO:
   def download_file(self, sender_name:str, sender_ip: str, file_name: str):
     try:
       resp = requests.get(f"http://{sender_ip}:9091/download/{file_name}").json()
@@ -198,6 +198,7 @@ class User:
         
         with set.path_to_download(sender_name, sender_ip, file_name).open('wb') as f:
           file_data: bytes = decrypt_data(resp['file_data'], self.private_key)
+          f.write(file_data)
       else:
         raise requests.exceptions.HTTPError
     except requests.exceptions.HTTPError as err:
