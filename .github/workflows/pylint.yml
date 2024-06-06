@@ -1,16 +1,13 @@
 name: Pylint
 
-on:
-  push:
-    branches:
-      - feature-optimization
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.12"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -23,4 +20,11 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
+        pylint_score=$(pylint --score=y $(git ls-files '*.py') | grep -oP '(?<=Your code has been rated at ).*(?=/10)')
+        if (( $(echo "$pylint_score > 8.5" | bc -l) )); then
+          echo "Проверка прошла успешно!"
+        else
+          echo "Пересмотрите код..."
+        fi
         pylint $(git ls-files '*.py')
+  
