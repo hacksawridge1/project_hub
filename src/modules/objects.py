@@ -10,39 +10,47 @@ arr_types = [list, tuple, set]
 # TODO: add bytes support
 def encrypt_data(input_data: Union[str, bytes], public_key: str) -> Union[list,str]:
   try:
-    input_data_splited = None
-    output_data: Union[list,bytes,None] = None
-    n = 0
+    input_data_splited: Union[list,None] = None
+    output_data: Union[list,bytearray] = list()
+    n: int = 0
     key = RSA.import_key(public_key)
     cipher = PKCS1_OAEP.new(key)
 
     if isinstance(input_data, str):
       input_data_splited = str(input_data).split()
-      output_data = list()
     elif not isinstance(input_data, str) and not isinstance(input_data, bytes):
       raise TypeError
 
-    if input_data_splited != None and isinstance(output_data, list):
+    if input_data_splited != None:
       for i in input_data_splited:
-
         if len(i) > 50:
           output_data.append(wrap(i, 50))
         else:
           output_data.append(i)
+    elif isinstance(input_data, bytes):
+      if len(input_data) > 50:
+        output_data.append(input_data[i:i+50] for i in range(0, len(input_data), 50))
     else:
-      output_data = input_data
+      raise TypeError
 
     while n < len(output_data):
-
-      k = 0
+      k: int = 0
       if type(output_data[n]) in arr_types:
         while k < len(output_data[n]):
-          b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n][k]}'.encode()))
-          output_data[n][k] = b64_data.decode()
+          if isinstance(output_data[n][k], str):
+            b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n][k]}'.encode()))
+            output_data[n][k] = b64_data.decode()
+          elif isinstance(output_data[n][k], bytes):
+            b64_data = b64.b64encode(cipher.encrypt(output_data[n][k]))
+            output_data[n][k] = b64_data
           k += 1
       else:
-        b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n]}'.encode()))
-        output_data[n] = b64_data.decode()
+        if isinstance(output_data[n], str):
+          b64_data = b64.b64encode(cipher.encrypt(f'{output_data[n]}'.encode()))
+          output_data[n] = b64_data.decode()
+        elif isinstance(output_data[n], bytes):
+          b64_data = b64.b64encode(cipher.encrypt(output_data[n]))
+          output_data[n] = b64_data
       n += 1
 
     return output_data
