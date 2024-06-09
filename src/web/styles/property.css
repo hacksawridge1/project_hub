@@ -1,0 +1,47 @@
+:root {
+	/* Background*/
+	--bg-color--main: var(--color--gray);
+	--bg-color--white: var(--color--white);
+	--bg-color--black: var(--color--black);
+
+	/* Text */
+	--text--main: "Inter", sans-serif;
+	--text-color--main: var(--color--black);
+	--text-color--secondary: var(--color--gray-dark);
+	--text-size--S: 12px;
+	--text-size--M: 16px;
+	--text-size--L: 24px;
+	--text-size--XL: 40px;
+	--text-size--XXL: 84px;
+	--text-weight--M: 400;
+	--text-weight--L: 700;
+
+	/* Icons */
+	--icon-size--main: 32px;
+	--icon-color--main: var(--color--black);
+	--icon-color--secondary: var(--color--gray-dark-2);
+	
+	/* Border */
+	--border-color--main: var(--color--black);
+	--border-width--main: 2px;
+	--border-radius--main: 8px;
+	--border-style--main: solid;
+	--border--main: var(--border-width--main) var(--border-style--main) var(--border-color--main);
+
+	/* Indentation */
+	--indent-16: 16px;
+	--indent-12: 12px;
+	--indent-8: 8px;
+	--indent-6: 6px;
+	--indent-4: 4px;
+	
+	/* Colors */
+	--color--white: #ffffff;
+	--color--black: #000000;
+	--color--gray: #D9D9D9;
+	--color--gray-dark: #808080;
+	--color--gray-dark-2: #545454;
+
+	/* Animation */
+	--transition--main: all .1s linear;
+}

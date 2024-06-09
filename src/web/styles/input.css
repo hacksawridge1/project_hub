@@ -1,0 +1,58 @@
+.input {
+	/* Background */
+	--bg-color--light: var(--color--white);
+	--bg-color--dark: var(--color--black);
+
+	/* Sizes */
+	--width: 100%;
+	--height: 100%;
+
+	/* Indents */
+	--padding--top: 8px;
+	--padding--right: 8px;
+	--padding--btm: 8px;
+	--padding--left: 8px;
+	--padding: var(--padding--top) var(--padding--right) var(--padding--btm) var(--padding--left);
+
+	/* Text */
+	--text: var(--text--main);
+	--text-size: var(--text-size--M);
+	--text-weight: var(--text-weight-M);
+	--text-color: var(--text-color--main);
+	--text-color--secondary: var(--text-color--secondary);
+	
+	/* Border */
+	--border: var(--border--main);
+	--border-radius: var(--border-radius--main);
+
+	/* Animation */
+	--transition: all .1s linear;
+	--transform: scale(1.03);
+	--transform--wide: scale(1.01);
+}
+
+.input {
+	width: var(--width);
+	height: var(--height);
+	padding: var(--padding);
+	background-color: var(--bg-color--light);
+	color: var(--text-color);
+	font-family: var(--text);
+	font-size: var(--text-size);
+	font-weight: var(--text-weight);
+	border: var(--border);
+	border-radius: var(--border-radius);
+	transition: var(--transition);
+}
+
+.input::placeholder {
+	color: var(--text-color--secondary);
+}
+
+.input:hover {
+	transform: var(--transform);
+}
+
+.input.input--wide:hover {
+	transform: var(--transform--wide);
+}

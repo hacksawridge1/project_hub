@@ -1,0 +1,55 @@
+.message {
+	display: flex;
+	align-items: flex-end;
+	padding: 0 var(--indent-16);
+	gap: var(--indent-8);
+}
+
+.message:last-of-type {
+	padding-bottom: var(--indent-16);
+}
+
+.message__avatar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--indent-6);
+	color: var(--color--gray-dark-2);
+	font-family: "icomoon";
+	font-size: var(--icon-size--main);
+	background-color: var(--bg-color--white);
+	border: var(--border--main);
+	border-radius: var(--border-radius--main);
+	transition: var(--transition--main);
+}
+
+.message__avatar:hover {
+	transform: scale(1.1);
+}
+
+.message__content {
+	display: flex;
+	max-width: 700px;
+	min-height: 48px;
+	padding: var(--indent-12);
+	color: var(--text-color--main);
+	font-family: var(--text--main);
+	font-size: var(--text-size--M);
+	font-weight: var(--text-weight--M);
+	background-color: var(--bg-color--white);
+	border: var(--border--main);
+	border-radius: var(--border-radius--main);
+	transition: var(--transition--main);
+}
+
+.message__content:hover {
+	transform: scale(1.01);
+}
+
+.message__content.message__content--right {
+	flex-direction: row-reverse;
+}
+
+.message__time {
+	color: var(--text-color--secondary);
+}
