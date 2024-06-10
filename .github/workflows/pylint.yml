@@ -26,5 +26,3 @@ jobs:
         else
           echo "Пересмотрите код..."
         fi
-        pylint $(git ls-files '*.py')
-  
