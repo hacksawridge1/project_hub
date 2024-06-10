@@ -47,7 +47,7 @@ class User:
   def __generate_keys(self):
     key = RSA.generate(2048)
     self.__private_key = key.export_key(format='PEM',
-                                        passphrase=None,
+                                        passphrase=None, #type: ignore
                                         pkcs=8,
                                         protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
                                         prot_params={'iteration_count': 21000})
@@ -115,7 +115,6 @@ class User:
         continue
 
   # Send message (user.send_message(...))
-
   def send_message(self, reciever_ip: str, reciever_name: str, message: str) -> None | str:
     chat: dict = set.chat()
     chat_object: dict = set.chat_object(self.name, self.ip, message)
@@ -137,7 +136,7 @@ class User:
     with set.path_to_self("users-online.json").open() as f, set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f1:
       f1.write(json.dumps(chat, sort_keys=True))
       users_online: dict = decrypt_object(json.load(f), self.private_key)
-      reciever: dict = find_in_object(users_online, reciever_ip)
+      reciever: dict = find_in_object(users_online, reciever_ip) #type: ignore
       if reciever != None:
         requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
       else:
@@ -197,7 +196,7 @@ class User:
           set.path_to_download(sender_name, sender_ip).mkdir(parents=True)
         
         with set.path_to_download(sender_name, sender_ip, file_name).open('wb') as f:
-          file_data: bytes = decrypt_data(resp['file_data'], self.private_key)
+          file_data: bytes = decrypt_data(resp['file_data'], self.private_key) #type: ignore
           f.write(file_data)
       else:
         raise requests.exceptions.HTTPError

@@ -1,77 +1,44 @@
 .btn {
-		/* Background */
-	--bg-color--light: var(--bg-color--white);
-	--bg-color--dark: var(--bg-color--black);
+	--btn-bg: var(--bg-color--secondary);
 
-	/* Sizes */
-	--width: 100%;
-	--height: 100%;
-	--max-height: 56px;
+	--btn-width: 160px;
+	--btn-height: 56px;
 
-	/* Indents */
-	--padding--top: 8px;
-	--padding--right: 8px;
-	--padding--btm: 8px;
-	--padding--left: 8px;
-	--padding: var(--padding--top) var(--padding--right) var(--padding--btm) var(--padding--left);
+	--btn-ff: var(--font--primary);
+	--btn-fs: var(--font-size--L);
+	--btn-fw: var(--font-weight--M);
 
-	/* Text */
-	--text: var(--text--main);
-	--text-size: var(--text-size--L);
-	--text-weight: var(--text-weight-M);
-	--text-color: var(--text-color--main);
-	--text-color--secondary: var(--text-color--secondary);
-	
-	/* Border */
-	--border: var(--border--main);
-	--border-radius: var(--border-radius--main);
+	--btn-bc: var(--border-color--primary);
+	--btn-bw: var(--border-width--S);
+	--btn-bs: var(--border-style--primary);
+	--btn-border: var(--btn-bc) var(--btn-bw) var(--btn-bs);
+	--btn-br: var(--border-radius--primary);
 
-	/* Animation */
-	--transition: all .1s linear;
-	--transform: scale(1.03);
-
-	/* Icon only */
-	--io-padding--top: 12px;
-	--io-padding--right: 6px;
-	--io-padding--btm: 12px;
-	--io-padding--left: 6px;
-	--io-padding: var(--io-padding--top) var(--io-padding--right) var(--io-padding--btm) var(--io-padding--left);
-	--io-text-size: 32px;
-	--io-width: fit-content;
-	--io-max-width: 44px;
-	--io-transform: scale(1.1);
+	--btn-transition: all 0.1s linear;
+	--btn-transform: scale(1.03);
+	--btn-transform--active: scale(0.97);
 }
 
 .btn {
+	cursor: pointer;
+	user-select: none;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	/*width: var(--width);*/
-	height: var(--height);
-	max-height: var(--max-height);
-	padding: var(--padding);
-	color: var(--text-color);
-	font-family: var(--text);
-	font-size: var(--text-size);
-	font-weight: var(--text-weight);
-	background-color: var(--bg-color--light);
-	border: var(--border);
-	border-radius: var(--border-radius);
-	transition: var(--transition);
+	width: var(--btn-width);
+	height: var(--btn-height);
+	font-family: var(--btn-ff);
+	font-size: var(--btn-fs);
+	font-weight: var(--btn-fw);
+	background-color: var(--btn-bg);
+	border: var(--btn-border);
+	border-radius: var(--btn-br);
+	transition: var(--btn-transition);
 }
 
 .btn:hover {
-	transform: var(--transform);
+	transform: var(--btn-transform);
 }
-
-.btn.icon-only {
-	width: var(--io-width);
-	max-width: var(--io-max-width);
-	font-family: "icomoon";
-	font-size: var(--io-text-size);
-	padding: var(--io-padding);
-}
-
-.btn.icon-only:hover {
-	transform: var(--io-transform);
+.btn:active {
+	transform: var(--btn-transform--active);
 }

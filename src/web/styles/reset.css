@@ -10,13 +10,14 @@ html {
 }
 
 body {
-	display: flex;
 	height: 100%;
-	background-color: var(--bg-color--main)
+	padding-top: 80px;
+	background-color: var(--bg-color--primary);
+	font-family: var(--font--primary);
 }
 
 a {
-	color: var(--text-color--main);
+	color: var(--font-color--primary);
 	text-decoration: none;
 }
 
@@ -43,3 +44,10 @@ button {
   font: inherit;
 }
 
+.default-link {
+	text-decoration: underline;
+}
+
+.default-link:hover {
+	text-decoration: none;
+}

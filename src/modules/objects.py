@@ -7,7 +7,7 @@ import base64 as b64
 
 arr_types = [list, tuple, set]
 
-# TODO: add bytes support
+#TODO: add bytes support
 def encrypt_data(input_data: Union[str, bytes], public_key: str) -> Union[list,str]:
   try:
     input_data_splited: Union[list,None] = None
@@ -29,7 +29,9 @@ def encrypt_data(input_data: Union[str, bytes], public_key: str) -> Union[list,s
           output_data.append(i)
     elif isinstance(input_data, bytes):
       if len(input_data) > 50:
-        output_data.append(input_data[i:i+50] for i in range(0, len(input_data), 50))
+        output_data = split_line(input_data, 50)
+      else:
+        output_data.append(input_data)
     else:
       raise TypeError
 
@@ -55,29 +57,53 @@ def encrypt_data(input_data: Union[str, bytes], public_key: str) -> Union[list,s
 
     return output_data
   except TypeError:
-    return "Incorrect Type: type must be str or bytes"
+    return "(Encrypt) Incorrect Type: Input data must be string or bytes"
 
-def decrypt_data(input_data: str, private_key: str, passphrase = None) -> str:
-  n = 0
-  output_data = str()
-  key = RSA.import_key(private_key, passphrase)
-  cipher = PKCS1_OAEP.new(key)
+def decrypt_data(input_data: list, private_key: str, passphrase = None) -> Union[str, bytes, None]:
+  try:
+    if not isinstance(input_data, list):
+      raise TypeError
+    output_data: Union[str, bytes, None] = None
+    n: int = 0
+    key = RSA.import_key(private_key, passphrase)
+    cipher = PKCS1_OAEP.new(key)
 
-  while n < len(input_data):
+    while n < len(input_data):
+      print(input_data[n])
 
-    if type(input_data[n]) in arr_types:
-      for i in input_data[n]:
-        output_data += cipher.decrypt(b64.b64decode(i)).decode()
-      if n < len(input_data) - 1:
-        output_data += ' '
-    else:
-      output_data += cipher.decrypt(b64.b64decode(input_data[n])).decode()
-      if n < len(input_data) - 1:
-        output_data += ' '
+      if type(input_data[n]) in arr_types:
+        for i in input_data[n]: #type: ignore
+          if isinstance(i, bytes):
+            if output_data == None:
+              output_data = cipher.decrypt(b64.b64decode(i)) #type: ignore
+            else:
+              output_data += cipher.decrypt(b64.b64decode(i)) #type: ignore
+          elif isinstance(i, str):
+            if output_data == None:
+              output_data = cipher.decrypt(b64.b64decode(i)).decode() #type: ignore
+            else:
+              output_data += cipher.decrypt(b64.b64decode(i)).decode() #type: ignore
+        if n < len(input_data) - 1 and not isinstance(input_data[n], bytes):
+          output_data += ' ' #type: ignore
+      else:
+        if isinstance(input_data[n], bytes):
+          if output_data == None:
+            output_data = cipher.decrypt(b64.b64decode(input_data[n])) #type: ignore
+          else:
+            output_data += cipher.decrypt(b64.b64decode(input_data[n])) #type: ignore
+        elif isinstance(input_data[n], str):
+          if output_data == None:
+            output_data = cipher.decrypt(b64.b64decode(input_data[n])).decode() #type: ignore
+          else:
+            output_data += cipher.decrypt(b64.b64decode(input_data[n])).decode() #type: ignore
+        if n < len(input_data) - 1 and not isinstance(input_data[n], bytes):
+          output_data += ' ' #type: ignore
 
-    n += 1
+      n += 1
 
-  return output_data
+    return output_data #type: ignore
+  except TypeError as err:
+    return err#"Incorrect Type: Input data must be string"
 
 def encrypt_object(object, public_key: str) -> dict:
   object_copy = deepcopy(object)
@@ -113,16 +139,17 @@ def encrypt_object(object, public_key: str) -> dict:
 
 def decrypt_object(object, private_key: str, passphrase = None) -> dict:
   private_key = RSA.import_key(private_key, passphrase).export_key(format='PEM').decode('utf-8')
+
   if type(object) in arr_types:
     i = 0
     while i < len(object):
 
-      if type(object[i]) is dict:
+      if isinstance(object[i], dict):
         object[i] = decrypt_object(object[i], private_key, passphrase)
       else:
         object[i] = decrypt_data(object[i], private_key, passphrase)
       i += 1
-  elif type(object) is dict:
+  elif isinstance(object, dict):
     for i in object:
       k = 0
 
@@ -131,7 +158,7 @@ def decrypt_object(object, private_key: str, passphrase = None) -> dict:
         if type(object[i]) in arr_types:
           while k < len(object[i]):
 
-            if type(object[i][k]) is dict:
+            if isinstance(object[i][k], dict):
               object[i][k] = decrypt_object(object[i][k], private_key, passphrase)
             else:
               object[i] = decrypt_data(object[i], private_key)
@@ -141,6 +168,14 @@ def decrypt_object(object, private_key: str, passphrase = None) -> dict:
           object[i] = decrypt_data(object[i], private_key)
 
   return object
+
+def split_line(input_data: Union[str, bytes], count: int) -> list:
+  output_data: list = list()
+
+  for i in range(0, len(input_data), count):
+    output_data.append(input_data[i:i+count])
+
+  return output_data
 
 def find_in_object(object, match) -> Union[dict, None]:
   if object == match:
