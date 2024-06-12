@@ -20,7 +20,7 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint_score=$(pylint --score=y --rcfile .pylintrc $(git ls-files '*.py') | grep -oP '(?<=Your code has been rated at ).*(?=/10)')
+        pylint_score=$(pylint --score=y $(git ls-files '*.py') | grep -oP '(?<=Your code has been rated at ).*(?=/10)')
         echo "Оценка Pylint: $pylint_score"
         if (( $(echo "$pylint_score > 8.5" | bc -l) )); then
           echo "Проверка прошла успешно!"
