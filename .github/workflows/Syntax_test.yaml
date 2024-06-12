@@ -20,15 +20,17 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
+        set -x
+        
         pylint_output=$(pylint --score=y --rcfile .pylintrc $(git ls-files '*.py'))
-        pylint_score=$(echo "$pylint_output" | grep -oP '(?<=Your code has been rated at ).*(?=/10)')
+        pylint_score=$(echo "$pylint_output" | grep -oP '(?<=Your code has been rated at ).*(?=/10)' || true)
         echo "Pylint Score: $pylint_score"
         
         if (( $(echo "$pylint_score > 8.5" | bc -l) )); then
           echo "Check passed successfully!"
         else
           echo "Code quality is below standard. Review the errors below:"
-          pylint_errors=$(echo "$pylint_output" | grep -A1 '=== Your code has been rated')
+          pylint_errors=$(echo "$pylint_output" | grep -A1 '=== Your code has been rated' || true)
           echo "$pylint_errors"
-          exit 1 # Добавляем это, чтобы тест проваливался
+          exit 1
         fi
