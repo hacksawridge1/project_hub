@@ -1,9 +1,11 @@
-pragma ComponentBehavior: Bound
+//pragma ComponentBehavior: Bound
+import QtCore
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Universal
 import Qt5Compat.GraphicalEffects
+import QtQuick.Dialogs
 
 // Сетка чата
 ColumnLayout {
@@ -18,11 +20,10 @@ ColumnLayout {
     property string ip
     property bool theme
     function get_theme(name) {
-        var theme_name = {"top_panel": 0, "chat": 1, "object": 2, "object(pressed)": 3, "object(active)": 4, "object_border": 5, 
-        "chat_object": 6, "chat_object(pressed)": 7, "chat_object_border": 8, "text": 9, "second_text": 10, "title": 11, 
-        "placeholder": 12, "message": 13, "message_shadow": 14}
-        var light_theme = ["#D9D9D9", "white", "white", "#9999FF", "#DDFFFF", "black", "#D9D9D9", "#D9D9FF", "black", "black",  "#808080", "#545353", "#AAAAAA", "#E9E9E9", "#C0C0C0"]
-        var dark_theme = ["#262626", "black", "black", "#222266", "#111133", "white", "#262626", "#26267A", "white", "white", "#7F7F7F", "#ABACAC", "#555555", "#161616", "#3F3F3F"]
+        var theme_name = {"top_panel": 0, "chat": 1, "object": 2, "object(hovered)": 3, "object(pressed)": 4, "object_border": 5, 
+        "text": 6, "second_text": 7, "title": 8, "placeholder": 9, "message_shadow": 10}
+        var light_theme = ["#D9D9D9", "#D9D9D9", "white", "#929292", "#585858", "black", "black", "#808080", "#545353", "#AAAAAA", "#C0C0C0"]
+        var dark_theme = ["#262626", "#262626", "#464646", "#222266", "#111133", "transparent", "white", "#AFAFAF", "#AFAFAF", "#D1D1D1", "#101010"]
         if (chat.theme) {
             return dark_theme[theme_name[name]]
         } else {
@@ -39,20 +40,17 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 80
-        Layout.leftMargin: -1
-        Layout.rightMargin: -1
         color: chat.get_theme("top_panel")
         visible: (chat.connected) ? true : false
-        border.width: 1
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 12 + 1
-            anchors.rightMargin: 12 + 1
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
 
             Rectangle {
-                Layout.preferredWidth: 300
-                Layout.preferredHeight: 56
+                Layout.preferredWidth: 500
+                Layout.preferredHeight: 64
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                 color: chat.get_theme("object")
                 border.width: 1
@@ -63,8 +61,8 @@ ColumnLayout {
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 8
-                    anchors.topMargin: 10
-                    anchors.bottomMargin: 12
+                    anchors.topMargin: 16
+                    anchors.bottomMargin: 16
                     spacing: 4
 
                     Text {
@@ -72,7 +70,7 @@ ColumnLayout {
                         Layout.fillHeight: true
                         text: (typeof chat.user == "undefined") ? "" : chat.user.name
                         font.family: "Inter"
-                        font.pixelSize: 16
+                        font.pixelSize: 14
                         color: chat.get_theme("text")
                     }
                     
@@ -144,6 +142,12 @@ ColumnLayout {
                         width: 32
                         height: 32
                         source: "icons/phone.svg"
+
+                        ColorOverlay {
+                            anchors.fill: parent
+                            source: parent
+                            color: (chat.theme) ? "white" : "black"
+                        }
                     }
 
                     Behavior on scale {
@@ -185,6 +189,12 @@ ColumnLayout {
                         width: 32
                         height: 32
                         source: "icons/search.svg"
+
+                        ColorOverlay {
+                            anchors.fill: parent
+                            source: parent
+                            color: (chat.theme) ? "white" : "black"
+                        }
                     }
 
                     Behavior on scale {
@@ -226,6 +236,12 @@ ColumnLayout {
                         width: 32
                         height: 32
                         source: "icons/more.svg"
+
+                        ColorOverlay {
+                            anchors.fill: parent
+                            source: parent
+                            color: (chat.theme) ? "white" : "black"
+                        }
                     }
 
                     Behavior on scale {
@@ -279,7 +295,9 @@ ColumnLayout {
             anchors.fill: parent
             verticalLayoutDirection: ListView.BottomToTop
             model: chat.messages_list
+            boundsBehavior: Flickable.StopAtBounds
             visible: (chat.connected) ? true : false
+
             delegate: Item {
                 id: delegate
                 width: messages_view.width
@@ -300,8 +318,8 @@ ColumnLayout {
                         Layout.preferredHeight: 42
                         Layout.alignment: Qt.AlignBottom
                         border.width: 1
-                        border.color: chat.get_theme("chat_object_border")
-                        color: chat.get_theme("chat_object")
+                        border.color: chat.get_theme("object_border")
+                        color: chat.get_theme("object")
                         radius: 8
                         opacity: (delegate.model.index != 0 && chat.messages_list.get(delegate.model.index - 1).ip == delegate.model.ip) ? 0 : 1
 
@@ -310,6 +328,12 @@ ColumnLayout {
                             width: 32
                             height: 32
                             source: "icons/user.svg"
+
+                            ColorOverlay {
+                                anchors.fill: parent
+                                source: parent
+                                color: (chat.theme) ? "#ABACAC" : "#545353"
+                            }
                         }
 
                         layer.enabled: true
@@ -329,8 +353,8 @@ ColumnLayout {
                         Layout.preferredHeight: implicitHeight + 32
                         Layout.alignment: Qt.AlignBottom
                         border.width: 1
-                        border.color: chat.get_theme("chat_object_border")
-                        color: chat.get_theme("message")
+                        border.color: chat.get_theme("object_border")
+                        color: chat.get_theme("object")
                         radius: 8
                         clip: true
                         Text {
@@ -356,6 +380,7 @@ ColumnLayout {
                 }
             }
             add: Transition {
+                id: addTrans
                 NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
                 NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
                 NumberAnimation { property: "x"; from: (messages_view.width) / 2; to: 0; duration: 400 }
@@ -381,7 +406,7 @@ ColumnLayout {
             anchors.fill: parent
             gradient: Gradient {
                 GradientStop {
-                    position: 0.98
+                    position: 0.985
                     color: "transparent"
                 }
                 GradientStop {
@@ -412,8 +437,8 @@ ColumnLayout {
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 56
                 border.width: 1
-                border.color: chat.get_theme("chat_object_border")
-                color: chat.get_theme("chat_object")
+                border.color: chat.get_theme("object_border")
+                color: chat.get_theme("object")
                 radius: 8
 
                 Image {
@@ -421,6 +446,17 @@ ColumnLayout {
                     width: 32
                     height: 32
                     source: "icons/attach-file-add.svg"
+
+                    ColorOverlay {
+                        anchors.fill: parent
+                        source: parent
+                        color: (chat.theme) ? "white" : "black"
+                    }
+                }
+
+                FileDialog {
+                    id: file_attach
+                    currentFolder: StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0]
                 }
 
                 Behavior on scale {
@@ -430,6 +466,13 @@ ColumnLayout {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
+
+                    onClicked: {
+                        file_attach.open()
+                        if (file_attach.selectedFile) {
+
+                        }
+                    }
 
                     onPressed: {
                         parent.scale = 1.0
@@ -455,8 +498,8 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 56
                 border.width: 1
-                border.color: chat.get_theme("chat_object_border")
-                color: chat.get_theme("chat_object")
+                border.color: chat.get_theme("object_border")
+                color: chat.get_theme("object")
                 radius: 8
                 clip: true
 
@@ -510,8 +553,8 @@ ColumnLayout {
                 Layout.preferredWidth: 143
                 Layout.preferredHeight: 56
                 border.width: 1
-                border.color: chat.get_theme("chat_object_border")
-                color: chat.get_theme("chat_object")
+                border.color: chat.get_theme("object_border")
+                color: chat.get_theme("object")
                 radius: 8
                 Text {
                     anchors.centerIn: parent

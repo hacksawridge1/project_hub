@@ -153,15 +153,15 @@ class User:
           requests.post(f'http://{user_ip}:{9091}/remove-user', json = str(encrypt_object(user_info, i['user_pub_key'])))
     except :
       print("Error")
-
-    if set.path_to_chat().exists():
-      rmtree("objects/chat/")
-    if set.path_to_self().exists():
-      rmtree("objects/self/")
-    if set.path_to_upload().exists():
-      rmtree("upload/")
-    if set.path_to_download().exists():
-      rmtree("download/")
+    
+    if (set.path_to_self().exists()):
+      rmtree(set.path_to_self())
+    if (set.path_to_chat().exists()):
+      rmtree(set.path_to_chat())
+    if (set.path_to_upload().exists()):
+      rmtree(set.path_to_upload())
+    if (set.path_to_download().exists()):
+      rmtree(set.path_to_download())
 
   # Get chat inform with {user_name, user_ip}(user.chat_info(...))
   def chat_info(self, user_name, user_ip) -> Union[list, str]:

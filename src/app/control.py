@@ -1,21 +1,29 @@
 __author__ = "MIDNIGHT"
 
+from typing import Any
 from PySide6.QtCore import QObject, Signal, Slot, Property
-from dataclasses import dataclass
+from threading import Thread, Lock
 
-@dataclass
 class Controller(QObject):
-    def __init__(self):
-        super().__init__()
+    _instance = None
+    _lock = Lock()
+    main_user: Any = None
 
-    main_user = None
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super(Controller, cls).__new__(cls)
+            return cls._instance
+
     add_user = Signal(str, str) # add_user.emit(<имя_пользователя>, <ip>) - создаст нового пользователя
     delete_user = Signal(int) # delete_user.emit(<индекс_в_списке>) - удалит пользователя по индексу
     add_message = Signal(str, str, str)
 
     @Slot(str, str, str)
     def send_message(self, name, ip, message):
-        self.main_user.send_message(ip, name, message)
+        user_thread = Thread(target=self.main_user.send_message, args=(ip, name, message, ))
+        user_thread.daemon = True
+        user_thread.start()
 
     # Для передачи в qml
     # username - start
@@ -29,7 +37,7 @@ class Controller(QObject):
         self.__username = value
         self.usernameChanged.emit()
 
-    username = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
+    username: Any = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
     # username - end
     # ip - start
     __ip = ""
@@ -41,7 +49,7 @@ class Controller(QObject):
         self.__ip = value
         self.ipChanged.emit()
 
-    ip = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
+    ip: Any = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
     # ip - end
     # theme - start
     __theme = True
@@ -53,7 +61,7 @@ class Controller(QObject):
         self.__theme = value
         self.themeChanged.emit()
 
-    theme = Property(bool, readTheme, setTheme, notify=themeChanged) # type: ignore
+    theme: Any = Property(bool, readTheme, setTheme, notify=themeChanged) # type: ignore
     # theme - end
 
 # Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
