@@ -1,20 +1,20 @@
-#import netifaces
-#import ipaddress
 import sys
-#import asyncio
 import socket
-from Crypto.PublicKey import RSA
-import requests
-from dataclasses import dataclass
-from shutil import rmtree
 import json
 import os
 from zlib import compress
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app.control import Controller
+from shutil import rmtree
+from dataclasses import dataclass
 from typing import Union
-from .objects import decrypt_data, encrypt_object, decrypt_object, find_in_object
+import requests
+from Crypto.PublicKey import RSA
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import modules.settings as set
+from app.control import Controller
+from .objects import decrypt_data, encrypt_object, decrypt_object, find_in_object
+#import netifaces
+#import ipaddress
+#import asyncio
 
 @dataclass
 class User:
@@ -25,7 +25,7 @@ class User:
       self.__name: str = name
     self.__ip: str = str(self.__get_local_ip())
     self.__generate_keys()
-    self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key) 
+    self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key)
     self.control = control
 
     if not set.path_to_self().exists():
@@ -89,7 +89,7 @@ class User:
 
 
             with set.path_to_self("users-online.json").open() as f:
-              file_data: dict = decrypt_object(json.load(f), self.private_key) 
+              file_data: dict = decrypt_object(json.load(f), self.private_key)
 
             if find_in_object(file_data, data) == None:
               file_data['users_online'].append(encrypt_object(data, self.public_key))
@@ -122,11 +122,11 @@ class User:
     if not set.path_to_chat(reciever_name, reciever_ip).exists():
       set.path_to_chat(reciever_name, reciever_ip).mkdir(parents=True)
       (set.path_to_chat(reciever_name, reciever_ip) / "chat.json").touch()
-      
+
       with set.path_to_chat(reciever_name, reciever_ip, "chat.json").open("w") as f:
         chat["chat"].append(encrypt_object(chat_object, self.public_key))
         f.write(json.dumps(chat, sort_keys=True))
-        
+
     else:
 
       with set.path_to_chat(reciever_name, reciever_ip, "chat.json").open() as f:
@@ -138,7 +138,7 @@ class User:
       users_online: dict = decrypt_object(json.load(f), self.private_key)
       reciever: dict = find_in_object(users_online, reciever_ip) #type: ignore
       if reciever != None:
-        requests.post(f'http://' + reciever_ip + ':9091/message', json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
+        requests.post("http://" + reciever_ip + ":9091/message", json = encrypt_object(chat_object, reciever["user_pub_key"])) #in progress
       else:
         return "Пользователь не найден"
 
@@ -149,11 +149,11 @@ class User:
         users_online: dict = decrypt_object(json.load(f1), self.private_key)
         user_info: dict = decrypt_object(json.load(f2), self.private_key)
         for i in users_online['users_online']:
-          user_ip: str = i['user_ip'] 
+          user_ip: str = i['user_ip']
           requests.post(f'http://{user_ip}:{9091}/remove-user', json = str(encrypt_object(user_info, i['user_pub_key'])))
     except :
       print("Error")
-      
+
     if set.path_to_chat().exists():
       rmtree("objects/chat/")
     if set.path_to_self().exists():
@@ -181,8 +181,8 @@ class User:
 
     with open(file, 'rb') as f:
       data: bytes = f.read()
-  
-    zip_data: bytes = compress(data) 
+
+    zip_data: bytes = compress(data)
 
     with set.path_to_upload(reciever_name, reciever_ip, file_name + ".zip").open('wb') as f:
       f.write(zip_data)
@@ -194,7 +194,7 @@ class User:
 
         if not set.path_to_download(sender_name, sender_ip).exists():
           set.path_to_download(sender_name, sender_ip).mkdir(parents=True)
-        
+
         with set.path_to_download(sender_name, sender_ip, file_name).open('wb') as f:
           file_data: bytes = decrypt_data(resp['file_data'], self.private_key) #type: ignore
           f.write(file_data)
@@ -202,13 +202,13 @@ class User:
         raise requests.exceptions.HTTPError
     except requests.exceptions.HTTPError as err:
       return f"Status Code:\t {err.response.status_code}"
-  
+
   # Info about user
   @property
   def user_info(self):
     with open('objects/self/user-info.json', 'r') as f:
       return decrypt_object(json.load(f), self.private_key)
-  
+
   # Return users_online
   @property
   def users_online(self):
@@ -218,12 +218,12 @@ class User:
         return decrypt_object(data, self.private_key)
     except FileNotFoundError:
       return None
-  
+
   # Return ip
   @property
   def ip(self):
     return self.__ip
-  
+
   # Return name
   @property
   def name(self):
