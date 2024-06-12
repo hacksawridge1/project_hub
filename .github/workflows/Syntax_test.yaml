@@ -18,22 +18,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pylint
-    - name: Analysing the code with pylint and handle errors
+    - name: Analysing the code with pylint
       run: |
-        pylint_output=$(pylint $(git ls-files '*.py'))
+        pylint_output=$(pylint --score=y --rcfile .pylintrc $(git ls-files '*.py'))
         pylint_score=$(echo "$pylint_output" | grep -oP '(?<=Your code has been rated at ).*(?=/10)')
-        
-        if [ -z "$pylint_score" ]; then
-          echo "An error occurred while running pylint. Check the pylint_output for details:"
-          echo "$pylint_output"
-          exit 1
-        fi
-        
         echo "Pylint Score: $pylint_score"
         
         if (( $(echo "$pylint_score > 8.5" | bc -l) )); then
           echo "Check passed successfully!"
         else
-          echo "Please review the code..."
-          exit 1
+          echo "Code quality is below standard. Review the errors below:"
+          pylint_errors=$(echo "$pylint_output" | grep -A1 '=== Your code has been rated')
+          echo "$pylint_errors"
+          exit 1 # Добавляем это, чтобы тест проваливался
         fi
