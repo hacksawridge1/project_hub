@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from PySide6.QtCore import QObject, Signal, Property
 
 class Controller(QObject):
@@ -6,11 +7,43 @@ class Controller(QObject):
 
     add_user = Signal(str, str) # add_user.emit(<имя_пользователя>, <ip>) - создаст нового пользователя
     delete_user = Signal(int) # delete_user.emit(<индекс_в_списке>) - удалит пользователя по индексу
+=======
+__author__ = "MIDNIGHT"
+
+from typing import Any
+from PySide6.QtCore import QObject, Signal, Slot, Property
+from threading import Thread, Lock
+
+class Controller(QObject):
+    _instance = None
+    _lock = Lock()
+    main_user: Any = None
+
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                cls._instance = super(Controller, cls).__new__(cls)
+            return cls._instance
+
+    add_user = Signal(str, str) # add_user.emit(<имя_пользователя>, <ip>) - создаст нового пользователя
+    delete_user = Signal(int) # delete_user.emit(<индекс_в_списке>) - удалит пользователя по индексу
+    add_message = Signal(str, str, str)
+
+    @Slot(str, str, str)
+    def send_message(self, name, ip, message):
+        user_thread = Thread(target=self.main_user.send_message, args=(ip, name, message, ))
+        user_thread.daemon = True
+        user_thread.start()
+>>>>>>> develop
 
     # Для передачи в qml
     # username - start
     __username = ""
     usernameChanged = Signal()
+<<<<<<< HEAD
+=======
+    
+>>>>>>> develop
     def readUsername(self):
         return self.__username
     
@@ -18,8 +51,37 @@ class Controller(QObject):
         self.__username = value
         self.usernameChanged.emit()
 
+<<<<<<< HEAD
     username = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
     # username - end
+=======
+    username: Any = Property(str, readUsername, setUsername, notify=usernameChanged) # type: ignore
+    # username - end
+    # ip - start
+    __ip = ""
+    ipChanged = Signal()
+    def readIp(self):
+        return self.__ip
+    
+    def setIp(self, value):
+        self.__ip = value
+        self.ipChanged.emit()
+
+    ip: Any = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
+    # ip - end
+    # theme - start
+    __theme = False
+    themeChanged = Signal()
+    def readTheme(self):
+        return self.__theme
+    
+    def setTheme(self, value):
+        self.__theme = value
+        self.themeChanged.emit()
+
+    theme: Any = Property(bool, readTheme, setTheme, notify=themeChanged) # type: ignore
+    # theme - end
+>>>>>>> develop
 
 # Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
 # Инструкция:

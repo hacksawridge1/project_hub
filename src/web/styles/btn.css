@@ -1,0 +1,44 @@
+.btn {
+	--btn-bg: var(--bg-color--secondary);
+
+	--btn-width: 160px;
+	--btn-height: 56px;
+
+	--btn-ff: var(--font--primary);
+	--btn-fs: var(--font-size--L);
+	--btn-fw: var(--font-weight--M);
+
+	--btn-bc: var(--border-color--primary);
+	--btn-bw: var(--border-width--S);
+	--btn-bs: var(--border-style--primary);
+	--btn-border: var(--btn-bc) var(--btn-bw) var(--btn-bs);
+	--btn-br: var(--border-radius--primary);
+
+	--btn-transition: all 0.1s linear;
+	--btn-transform: scale(1.03);
+	--btn-transform--active: scale(0.97);
+}
+
+.btn {
+	cursor: pointer;
+	user-select: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--btn-width);
+	height: var(--btn-height);
+	font-family: var(--btn-ff);
+	font-size: var(--btn-fs);
+	font-weight: var(--btn-fw);
+	background-color: var(--btn-bg);
+	border: var(--btn-border);
+	border-radius: var(--btn-br);
+	transition: var(--btn-transition);
+}
+
+.btn:hover {
+	transform: var(--btn-transform);
+}
+.btn:active {
+	transform: var(--btn-transform--active);
+}

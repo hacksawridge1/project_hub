@@ -5,4 +5,7 @@ venv
 *.pem
 *.pub
 __pycache__/
-src/security/secret
+src/objects/self/*.json
+.vim
+src/objects/chat/*
+.todo
