@@ -7,7 +7,7 @@ import Controller
 // Прямоугольник боковой панели
 Rectangle {
     id: sidebar
-    Layout.preferredWidth: 304
+    Layout.preferredWidth: 500
     Layout.fillHeight: true
     color: get_theme("sidebar")
     property int index: users_view.currentIndex
@@ -43,6 +43,8 @@ Rectangle {
         users_list.remove(index)
     }
 
+    property var costil
+
     // Сетка боковой панели
     ColumnLayout {
         anchors.fill: parent
@@ -50,13 +52,15 @@ Rectangle {
 
         // Поисковое поле
         Rectangle {
-            Layout.preferredWidth: 288
-            Layout.preferredHeight: 35
+            Layout.fillWidth: true
+            Layout.preferredHeight: 44
             Layout.topMargin: 12
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
             Layout.alignment: Qt.AlignHCenter
             radius: 8
             border.color: sidebar.get_theme("object_border")
-            border.width: (sidebar.theme) ? 0 : 1
+            border.width: (sidebar.theme) ? 0 : 2
             color: sidebar.get_theme("object")
             clip: true
 
@@ -101,8 +105,10 @@ Rectangle {
 
         // Кнопки меню (настройки, уведомления, общий чат, группы, папки, тема)
         RowLayout {
-            Layout.preferredWidth: 288
-            Layout.preferredHeight: 48
+            Layout.fillWidth: true
+            Layout.preferredHeight: 56
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
             Layout.topMargin: 12
             Layout.alignment: Qt.AlignHCenter
             spacing: 4.8
@@ -110,11 +116,11 @@ Rectangle {
             // Настройки
             Rectangle {
                 id: settings
-                Layout.preferredWidth: 44
+                Layout.preferredWidth: 75
                 Layout.preferredHeight: 56
-                border.width: (sidebar.theme) ? 0 : 1
+                border.width: (sidebar.theme) ? 0 : 2
                 border.color: sidebar.get_theme("object_border")
-                color: (settings_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                color: (settings_area.pressed) ? sidebar.get_theme("object(pressed)") : (settings_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                 radius: 8
 
                 Behavior on scale {
@@ -130,7 +136,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (sidebar.theme) ? "white" : "black"
+                        color: (settings_area.pressed || settings_area.containsMouse || sidebar.theme) ? "white" : "black"
                     }
                 }
 
@@ -160,11 +166,11 @@ Rectangle {
             // Уведомления
             Rectangle {
                 id: notifications
-                Layout.preferredWidth: 44
+                Layout.preferredWidth: 75
                 Layout.preferredHeight: 56
-                border.width: (sidebar.theme) ? 0 : 1
+                border.width: (sidebar.theme) ? 0 : 2
                 border.color: sidebar.get_theme("object_border")
-                color: (notifications_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                color: (notifications_area.pressed) ? sidebar.get_theme("object(pressed)") : (notifications_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                 radius: 8
 
                 Behavior on scale {
@@ -180,7 +186,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (sidebar.theme) ? "white" : "black"
+                        color: (notifications_area.pressed || notifications_area.containsMouse || sidebar.theme) ? "white" : "black"
                     }
                 }
 
@@ -210,11 +216,11 @@ Rectangle {
             // Общий чат
             Rectangle {
                 id: public_chat
-                Layout.preferredWidth: 44
+                Layout.preferredWidth: 75
                 Layout.preferredHeight: 56
-                border.width: (sidebar.theme) ? 0 : 1
+                border.width: (sidebar.theme) ? 0 : 2
                 border.color: sidebar.get_theme("object_border")
-                color: (public_chat_area.pressed) ? sidebar.get_theme("object(pressed)") : (users_view.currentIndex == -1) ? sidebar.get_theme("object(active)") : sidebar.get_theme("object")
+                color: (public_chat_area.pressed || users_view.currentIndex == -1) ? sidebar.get_theme("object(pressed)") : (public_chat_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                 radius: 8
 
                 Behavior on scale {
@@ -230,7 +236,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (sidebar.theme) ? "white" : "black"
+                        color: (public_chat_area.pressed || users_view.currentIndex == -1 || public_chat_area.containsMouse || sidebar.theme) ? "white" : "black"
                     }
                 }
 
@@ -264,11 +270,11 @@ Rectangle {
             // Группы
             Rectangle {
                 id: groups
-                Layout.preferredWidth: 44
+                Layout.preferredWidth: 75
                 Layout.preferredHeight: 56
-                border.width: (sidebar.theme) ? 0 : 1
+                border.width: (sidebar.theme) ? 0 : 2
                 border.color: sidebar.get_theme("object_border")
-                color: (groups_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                color: (groups_area.pressed) ? sidebar.get_theme("object(pressed)") : (groups_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                 radius: 8
 
                 Behavior on scale {
@@ -284,7 +290,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (sidebar.theme) ? "white" : "black"
+                        color: (groups_area.pressed || groups_area.containsMouse || sidebar.theme) ? "white" : "black"
                     }
                 }
 
@@ -314,11 +320,11 @@ Rectangle {
             // Папки
             Rectangle {
                 id: folders
-                Layout.preferredWidth: 44
+                Layout.preferredWidth: 75
                 Layout.preferredHeight: 56
-                border.width: (sidebar.theme) ? 0 : 1
+                border.width: (sidebar.theme) ? 0 : 2
                 border.color: sidebar.get_theme("object_border")
-                color: (folders_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                color: (folders_area.pressed) ? sidebar.get_theme("object(pressed)") : (folders_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                 radius: 8
 
                 Behavior on scale {
@@ -334,7 +340,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (sidebar.theme) ? "white" : "black"
+                        color: (folders_area.pressed || folders_area.containsMouse || sidebar.theme) ? "white" : "black"
                     }
                 }
 
@@ -364,11 +370,11 @@ Rectangle {
             // Тема
             Rectangle {
                 id: theme
-                Layout.preferredWidth: 44
+                Layout.preferredWidth: 75
                 Layout.preferredHeight: 56
-                border.width: (sidebar.theme) ? 0 : 1
+                border.width: (sidebar.theme) ? 0 : 2
                 border.color: sidebar.get_theme("object_border")
-                color: (theme_area.pressed) ? sidebar.get_theme("object(pressed)") : sidebar.get_theme("object")
+                color: (theme_area.pressed) ? sidebar.get_theme("object(pressed)") : (theme_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                 radius: 8
 
                 Behavior on scale {
@@ -384,7 +390,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (sidebar.theme) ? "white" : "black"
+                        color: (theme_area.pressed || theme_area.containsMouse || sidebar.theme) ? "white" : "black"
                     }
                 }
 
@@ -418,6 +424,10 @@ Rectangle {
                     }
                 }
             }
+
+            Item {
+                Layout.fillWidth: true
+            }
         }
 
         Item {
@@ -440,16 +450,16 @@ Rectangle {
                 delegate: Item {
                     id: delegate
                     width: users_view.width
-                    height: 56
+                    height: 64
                     required property var model
 
                     Rectangle {
                         id: model_user
-                        width: 288
-                        height: 56
+                        width: delegate.width - 16
+                        height: delegate.height
                         anchors.horizontalCenter: parent.horizontalCenter
                         z: 1
-                        border.width: (sidebar.theme) ? 0 : 1
+                        border.width: (sidebar.theme) ? 0 : 2
                         border.color: sidebar.get_theme("object_border")
                         color: (model_area.pressed || users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("object(pressed)") : (model_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                         radius: 8
@@ -462,8 +472,8 @@ Rectangle {
                         RowLayout {
                             anchors.fill: parent
                             anchors.margins: 8
-                            anchors.topMargin: 12
-                            anchors.bottomMargin: 12
+                            anchors.topMargin: 8
+                            anchors.bottomMargin: 8
                             spacing: 8
 
                             Image {
@@ -479,35 +489,54 @@ Rectangle {
                             }
 
                             ColumnLayout {
-                                Layout.fillWidth: true
+                                Layout.preferredWidth: 94
                                 Layout.fillHeight: true
-                                spacing: 4
+                                spacing: 3
 
                                 Text {
-                                    Layout.fillWidth: true
                                     Layout.fillHeight: true
-                                    Layout.alignment: Qt.AlignBottom
+                                    verticalAlignment: Text.AlignBottom
                                     text: delegate.model.name
                                     color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
                                     font.family: "Inter"
                                     font.pixelSize: 14
+                                    elide: Text.ElideRight
                                 }
                                 
                                 Text {
-                                    Layout.fillWidth: true
                                     Layout.fillHeight: true
-                                    Layout.alignment: Qt.AlignVCenter
+                                    verticalAlignment: Text.AlignTop
                                     text: "IP: " + delegate.model.ip
                                     font.family: "Inter"
                                     font.pixelSize: 12
                                     color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
                                 }
                             }
+
+                            Rectangle {
+                                Layout.preferredWidth: 1
+                                Layout.fillHeight: true
+                                color: sidebar.get_theme("sidebar")
+                            }
+
+                            Text {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                Layout.topMargin: -4
+                                Layout.bottomMargin: -4
+                                wrapMode: Text.Wrap
+                                text: (delegate.model.last_message) ? delegate.model.last_message : ""
+                                font.family: "Inter"
+                                font.pixelSize: 17
+                                color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
+                                lineHeight: 0.75
+                                elide: Text.ElideRight
+                            }
                         }
 
                         onYChanged: {
                             if (z == 100) {
-                                var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 64)
+                                var endIndex = Math.round((model_user.y + users_view.contentY - 6) / (delegate.height + users_view.spacing))
                                 if (delegate.model.index !== endIndex && endIndex > -1 && endIndex < users_list.count) {
                                     var startIndex = delegate.model.index
                                     users_view.dragY = delegate.y
@@ -523,7 +552,7 @@ Rectangle {
                             target: users_view
                             function onContentYChanged() {
                                 if (model_user.z == 100) {
-                                    var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 64)
+                                    var endIndex = Math.round((model_user.y + users_view.contentY - 6) / 72)
                                     if (delegate.model.index !== endIndex && endIndex > -1 && endIndex < users_list.count) {
                                         var startIndex = delegate.model.index
                                         users_view.dragY = delegate.y
@@ -607,13 +636,13 @@ Rectangle {
 
         Rectangle {
             id: user
-            Layout.preferredWidth: 304 + 1
-            Layout.preferredHeight: 60 + 1
+            Layout.preferredWidth: 500 + 2
+            Layout.preferredHeight: 64 + 2
             Layout.columnSpan: 2
             Layout.alignment: Qt.AlignBottom
-            Layout.leftMargin: -1
-            Layout.bottomMargin: -1
-            border.width: (sidebar.theme) ? 0 : 1
+            Layout.leftMargin: -2
+            Layout.bottomMargin: -2
+            border.width: (sidebar.theme) ? 0 : 2
             border.color: sidebar.get_theme("object_border")
             color: (mouse_area.pressed) ? sidebar.get_theme("object(pressed)") : (mouse_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
 
@@ -624,8 +653,8 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent
                 anchors.margins: 8
-                anchors.bottomMargin: 8 + 1
-                anchors.leftMargin: 8 + 1
+                anchors.bottomMargin: 8 + 2
+                anchors.leftMargin: 8 + 2
                 spacing: 8
 
                 Image {
@@ -639,35 +668,29 @@ Rectangle {
                         color: (mouse_area.pressed || mouse_area.containsMouse || sidebar.theme) ? "#ABACAC" : "#545353"
                     }
                 }
-
                 ColumnLayout {
-                    Layout.preferredWidth: 176
-                    Layout.preferredHeight: 32
-                    spacing: 4
-                    Item {
-                        Layout.preferredWidth: 172
-                        Layout.preferredHeight: 14
-                        clip: true
-                        Text {
-                            anchors.fill: parent
-                            text: sidebar.name
-                            font.family: "Inter"
-                            font.pixelSize: 14
-                            color: (mouse_area.pressed || mouse_area.entered) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
-                        }
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 3
+
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        verticalAlignment: Text.AlignBottom
+                        text: sidebar.name
+                        color: (mouse_area.pressed || mouse_area.containsMouse) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
+                        font.family: "Inter"
+                        font.pixelSize: 14
                     }
                     
-                    Item {
-                        Layout.preferredWidth: 172
-                        Layout.preferredHeight: 14
-                        clip: true
-                        Text {
-                            anchors.fill: parent
-                            text: "IP: " + sidebar.ip
-                            font.family: "Inter"
-                            font.pixelSize: 12
-                            color: (mouse_area.pressed || mouse_area.entered) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
-                        }
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        verticalAlignment: Text.AlignTop
+                        text: "IP: " + sidebar.ip
+                        font.family: "Inter"
+                        font.pixelSize: 12
+                        color: (mouse_area.pressed || mouse_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
                     }
                 }
             }

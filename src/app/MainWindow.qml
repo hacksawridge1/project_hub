@@ -26,6 +26,7 @@ ApplicationWindow {
             users_list: users_list
             name: main_window.name
             ip: main_window.ip
+            costil: main_window.costil
         }
         Chat {
             id: chat
@@ -35,6 +36,11 @@ ApplicationWindow {
             messages_list: messages_list
             name: main_window.name
             ip: main_window.ip
+
+            onUserChanged: {
+                chat.costil()
+                //messages_list.insert(0, {"name": "Ильяз", "ip": "192.168.3.152", "type": "file", "size": "120 Kb", "message": "file_name.zip", "time": "17:31"})
+            }
         }
     }
 
@@ -42,57 +48,77 @@ ApplicationWindow {
         id: users_list
 
         ListElement {
+            name: "Коля"
+            ip: "192.168.3.152"
+            last_message: "Привет, мне что-нибудь надо по проекту сделать?"
+        }
+        ListElement {
+            name: "Артур"
+            ip: "192.168.3.152"
+            last_message: "Передаю привет своей маме!!!"
+        }
+        ListElement {
+            name: "Иван"
+            ip: "192.168.3.152"
+            last_message: "Понял"
+        }
+        ListElement {
+            name: "Дима"
+            ip: "192.168.3.152"
+            last_message: "Приложение не успевает реагировать так быстро"
+        }
+        ListElement {
+            name: "Imaginer"
+            ip: "192.168.3.152"
+            last_message: "Надо подойти в 8 кабинет срочно."
+        }
+        ListElement {
+            name: "Ильяз"
+            ip: "192.168.3.152"
+            last_message: "Файл."
+        }
+        ListElement {
+            name: "Любитель..."
+            ip: "192.168.3.152"
+            last_message: "Блин, выпил кофе, теперь тревожность появилась."
+        }
+        ListElement {
+            name: "Матвей"
+            ip: "192.168.3.152"
+            last_message: "Привет, мне что-нибудь надо по проекту сделать?"
+        }
+        ListElement {
+            name: "Лера"
+            ip: "192.168.3.152"
+            last_message: "Может к Жене зайти?"
+        }
+        ListElement {
+            name: "Лёша"
+            ip: "192.168.3.152"
+            last_message: "Тридцать пять часов в поезде"
+        }
+        ListElement {
+            name: "Даня"
+            ip: "192.168.3.152"
+            last_message: "Не за что и удачи"
+        }
+        ListElement {
             name: "Максим"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "HITLER"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "YAROSLAV"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "Максим"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "HITLER"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "YAROSLAV"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "Максим"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "HITLER"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "YAROSLAV"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "Максим"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "HITLER"
-            ip: "0.0.0.0"
-        }
-        ListElement {
-            name: "YAROSLAV"
-            ip: "0.0.0.0"
+            ip: "192.168.3.152"
+            last_message: "Я не буду ничего делать."
         }
     }
 
     ListModel {
         id: messages_list
+        //ListElement {
+            //name: "Ильяз"
+            //ip: "192.168.3.152"
+            //type: "file"
+            //size: "120 Kb"
+            //message: "file_name.zip"
+            //time: "17:31"
+        //}
     }
 
     Connections {

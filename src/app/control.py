@@ -52,7 +52,7 @@ class Controller(QObject):
     ip: Any = Property(str, readIp, setIp, notify=ipChanged) # type: ignore
     # ip - end
     # theme - start
-    __theme = True
+    __theme = False
     themeChanged = Signal()
     def readTheme(self):
         return self.__theme
