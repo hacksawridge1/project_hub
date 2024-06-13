@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Projecct HUB</title>
+	<link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+	<div class="header">
+		<a href="#">
+			<button class="btn">
+				Project HUB
+			</button>
+		</a>
+		<div class="header__nav">
+			<button class="btn">
+				Загрузить
+			</button>
+			<a href="#About-Us">
+				<button class="btn">
+					О нас
+				</button>
+			</a>
+			<a href="#About-Project">
+				<button class="btn">
+					О проекте
+				</button>
+			</a>
+			<a href="#Contacts">
+				<button class="btn">
+					Контакты
+				</button>
+			</a>
+		</div>
+	</div>
+	<div class="section section--left">
+		<div class="section__title" id="About-Us">
+			<p>Кто мы такие?</h2>
+		</div>
+		<div class="section__content">
+			<p><b>Мы - 443</b>, команда молодых, но стремительно развивающихся энтузиастов-разработчиков. Любим и разрабатываем качественное, быстрое, кроссплатформенное, лёгкое и удобное ПО. Мы стараемся развиваться во всех направлениях, начиная от разработки системных утилит до веб-разработки.</p>
+			<p>В нашей команде всего 7 человек:
+				<ul>
+					<li>Бэкенд-разработчик - Мята Николай Николаевич;</li>
+					<li>Тимлид - Бородкин Иван Алексеевич;</li>
+					<li>Фронтенд-разработчик - Поюровский Матвей Юрьевич;</li>
+					<li>Фронтенд-разработчик - Покидько Максим Сергеевич;</li>
+					<li>Верстальщик - Биль Дмитрий Александрович;</li>
+					<li>DevOps-разработчик - Хатип Ильяз Решадович;</li>
+					<li>UI/UX-Дизайнер - Лакин Артур Владимирович;</li>
+				</ul>
+			</p>
+			<p>Наша <b>философия</b> заключается в простоте, но комфорте, минимализме, но красоте, в лёгкости, но функциональности, современности, но уважении к традициям. Каждое наше приложение не перенасыщенно излишними возможностями, чем сейчас болеет современное ПО, они отвечают чётко за поставленные задачи и делают это лучше всех.</p>
+		</div>
+	</div>
+	<div class="section section--right" id="About-Project">
+		<div class="section__title">
+			<p>Что такое Project HUB?</h2>
+		</div>
+		<div class="section__content">
+			<p><b>Project HUB - локальный мессенджер</b> новго поколения, лишённый всех недостатков своих предшественников. Вам больше не надо задумываться над развёртыванием серверной инфраструктуры, найме специалистов, которые поддерживали бесперебойную доставку данных, ведь всё это мы сделали за вас. См ( <a class="default-link" href="#How-It-Works">Как это работает ?</a> )</p>
+			<p><b>Project HUB</b> - это <b>решение</b>, призванное <b>облегчить</b> взаимодействие между пользователями в локальной сети, путём обеспечения <b>быстрой, безопасной, удобной</b> передачи данных.</p>
+		</div>
+	</div>
+	<div class="section section--left">
+		<div class="section__title">
+			<p>А это сейчас актуально?</h2>
+		</div>
+		<div class="section__content">
+			<p><b>Актуальность проекта</b> обусловленна ярковыраженной зависимостью какого-либо взаимодействия, между людьми, от доступа к интернету. </p>
+			<p>Когда у вас нет доступа в интернет или просто проблемы с сетью, но вам необходимо срочно передать какие-нибудь файлы, или же оповестить кого-то о чём-то важном, то на помощь приходит <b>Project HUB</b>. Он позволит вам в любую минуту отослать фото, видео, текстовые файлы, сообщения, вашему собеседнику. Помимо прочего, вам доступны функции голосовой- и видео-связи, создание групп, фильтрация пользователей, поиск людей со смежных локальный сетей и всё это <b>быстро, безопасно и удобно.</b></p>
+		</div>
+	</div>
+	<div class="section section--right">
+		<div class="section__title">
+			<p>Какие технологии мы использовали?</h2>
+		</div>
+		<div class="section__content">
+			<p><b>Project HUB</b> разрабатывался с помощью современного, высокоуровневого языка <b>Python</b>, пользовательская сторона была написана с помощью фреймфорка <b>QT</b> и его реализацией на <b>Python</b> в виде фреймворка <b>PySide6</b>, серверная часть разработана благодаря <b>Flask</b>, защита данных обеспечена <b>асимметричным шифрованием</b> 2048-битными ключами <b>RSA</b> по стандарту <b>PKCS#1 OAEP (RSA)</b>.</p>
+		</div>
+	</div>
+	<div class="section section--left" id="How-It-Works">
+		<div class="section__title">
+			<p>Как это работает?</h2>
+		</div>
+		<div class="section__content">
+			<p>Одна из <b>особенностей</b> нашего <b>решения</b> заключается в том, что мы, в отличии от наших аналогов, не храним данные на конкретном сервере, мы храним <b>сжатые</b> данные у каждого клиента в <b>зашифрованном</b> виде, благодаря чему стало возможным использовать приложение <b>независимо от местоположения</b>.</p>
+			<p>Мы <b>шифруем</b> абсолютно все данные, независимо от того, хранятся они или передаются, пользователя, для обеспечение <b>наибольшей безопасности</b> информации, поэтому вы можете не переживать, что у злоумышленника получится украсть какую-либо информацию о вас, ведь даже если он и получит что-то, всё равно ничего не поймёт.</p>
+		</div>
+	</div>
+	<div class="footer" id="Contacts">
+		<div class="footer__inner">
+			<p class="footer__text-decor footer__text-decor--left">Project HUB</p>
+			<div class="footer__content">
+				<div class="footer__links">
+					<p class="footer__links-title">Email:</p>
+					<p>gml: <a class="default-link footer__links-link" href="mailto:borodkin.ivan2003@gmail.com">borodkin.ivan2003@gmail.com</a></p>
+					<p>ml: <a class="default-link footer__links-link" href="mailto:ivan.borodkin1@mail.ru">ivan.borodkin1@mail.ru</a></p>
+				</div>
+				<div class="footer__links">
+					<p class="footer__links-title">Socials:</p>
+					<p>vk: <a class="default-link footer__links-link" href="https://vk.com/idtentei">https://vk.com/idtentei</a></p>
+					<p>tg: <a class="default-link footer__links-link" href="https://t.me/u_wnt_knw_wh_im">https://t.me/u_wnt_knw_wh_im</a></p>
+				</div>
+			</div>
+			<p class="footer__text-decor footer__text-decor--right">443/2024</p>
+		</div>
+	</div>
+</body>
+</html>
