@@ -23,8 +23,8 @@ class User:
   def __init__(self, name: str, control: Controller):
     if name is not None:
       self.__name: str = name
-		else:
-			self.__name: str = "User"
+    else:
+      self.__name: str = "User"
     self.__ip: str = str(self.__get_local_ip())
     self.__generate_keys()
     self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key)
