@@ -27,7 +27,7 @@ jobs:
         
 
     - name: Run unit tests file1
-      run: python src/app/test.py
+      run: python src/app/tests.py
 
     - name: Run unit tests file2
       run: python src/modules/test.py
