@@ -1,9 +1,6 @@
 name: Pylint
 
-on:
-  push:
-    branches:
-      - main  
+on: [push]
 
 jobs:
   build:
@@ -23,11 +20,17 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint_score=$(pylint --score=y --rcfile .pylintrc $(git ls-files '*.py') | grep -oP '(?<=Your code has been rated at ).*(?=/10)')
-        echo "Оценка Pylint: $pylint_score"
+        set -x
+        
+        pylint_output=$(pylint --score=y --rcfile .pylintrc $(git ls-files '*.py'))
+        pylint_score=$(echo "$pylint_output" | grep -oP '(?<=Your code has been rated at ).*(?=/10)' || true)
+        echo "Pylint Score: $pylint_score"
+        
         if (( $(echo "$pylint_score > 8.5" | bc -l) )); then
-          echo "Проверка прошла успешно!"
+          echo "Check passed successfully!"
         else
-          echo "Пересмотрите код..."
-          exit 1 # Добавляем это, чтобы тест проваливался
+          echo "Code quality is below standard. Review the errors below:"
+          pylint_errors=$(echo "$pylint_output" | grep -A1 '=== Your code has been rated' || true)
+          echo "$pylint_errors"
+          exit 1
         fi
