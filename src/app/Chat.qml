@@ -372,7 +372,7 @@ ColumnLayout {
                         border.color: chat.get_theme("object_border")
                         color: chat.get_theme("object")
                         radius: 8
-                        opacity: (delegate.model.index != 0 && chat.messages_list.get(delegate.model.index - 1).ip == delegate.model.ip) ? 0 : 1
+                        opacity: (chat.messages_list.get(delegate.model.index - 1) && chat.messages_list.get(delegate.model.index - 1).ip == delegate.model.ip) ? 0 : 1
 
                         Image {
                             anchors.centerIn: parent
