@@ -82,7 +82,7 @@ def start_server(user: User, control: Controller):
 
       return str(request.headers)
 
-    @app.get(f"/download/<str:file_name>")
+    @app.get(f"/download/<string:file_name>")
     def download(file_name):
       recv = request.get_json()
       data: dict = decrypt_object(recv, user.private_key)

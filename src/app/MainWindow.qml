@@ -39,7 +39,6 @@ ApplicationWindow {
 
             onUserChanged: {
                 chat.costil()
-                //messages_list.insert(0, {"name": "Ильяз", "ip": "192.168.3.152", "type": "file", "size": "120 Kb", "message": "file_name.zip", "time": "17:31"})
             }
         }
     }

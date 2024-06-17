@@ -21,8 +21,8 @@ class User:
 
   # initial
   def __init__(self, name: str, control: Controller):
-    if name != None:
-      self.__name: str = name
+    if name is None:
+      name = "User"
     self.__ip: str = str(self.__get_local_ip())
     self.__generate_keys()
     self.__user_info: dict = set.user_info(self.name, self.ip, self.public_key)
@@ -154,13 +154,13 @@ class User:
     except :
       print("Error")
     
-    if (set.path_to_self().exists()):
+    if set.path_to_self().exists():
       rmtree(set.path_to_self())
-    if (set.path_to_chat().exists()):
+    if set.path_to_chat().exists():
       rmtree(set.path_to_chat())
-    if (set.path_to_upload().exists()):
+    if set.path_to_upload().exists():
       rmtree(set.path_to_upload())
-    if (set.path_to_download().exists()):
+    if set.path_to_download().exists():
       rmtree(set.path_to_download())
 
   # Get chat inform with {user_name, user_ip}(user.chat_info(...))
