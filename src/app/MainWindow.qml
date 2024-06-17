@@ -110,14 +110,6 @@ ApplicationWindow {
 
     ListModel {
         id: messages_list
-        //ListElement {
-            //name: "Ильяз"
-            //ip: "192.168.3.152"
-            //type: "file"
-            //size: "120 Kb"
-            //message: "file_name.zip"
-            //time: "17:31"
-        //}
     }
 
     Connections {

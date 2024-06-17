@@ -16,12 +16,12 @@ ApplicationWindow {
     title: "Authorization"
     color: get_theme("auth")
     visible: true
-    function get_theme(name) {
-        var theme_name = {"auth": 0, "object": 1, "object(pressed)": 2, "object_border": 3, 
-        "text": 4, "placeholder": 5}
-        var light_theme = ["#D9D9D9", "white", "#9999FF", "black", "black", "#AAAAAA"]
-        var dark_theme = ["#262626", "transparent", "#222266", "white", "white", "#555555"]
-        if (Control.theme) {
+    function get_theme(name, theme = Control.theme) {
+        var theme_name = {"auth": 0, "object": 1, "object(hovered)": 2, "object(pressed)": 3, "object_border": 4, 
+        "text": 5, "placeholder": 6}
+        var light_theme = ["#D9D9D9", "white", "#929292", "#585858", "black", "black", "#AAAAAA"]
+        var dark_theme = ["#262626", "#464646", "#929292", "#E2E2E2", "transparent", "white", "#D1D1D1"]
+        if (theme) {
             return dark_theme[theme_name[name]]
         } else {
             return light_theme[theme_name[name]]
@@ -74,7 +74,7 @@ ApplicationWindow {
                 Rectangle {
                     Layout.preferredWidth: 300
                     Layout.preferredHeight: 35
-                    border.width: 1
+                    border.width: 2
                     border.color: auth.get_theme("object_border")
                     color: auth.get_theme("object")
                     radius: 8
@@ -123,14 +123,14 @@ ApplicationWindow {
                     id: login
                     Layout.preferredWidth: 140
                     Layout.preferredHeight: 42
-                    border.width: 1
+                    border.width: 2
                     border.color: auth.get_theme("object_border")
                     radius: 8
-                    color: auth.get_theme("object")
+                    color: (login_area.pressed) ? auth.get_theme("object(pressed)") : (login_area.containsMouse) ? auth.get_theme("object(hovered)") : auth.get_theme("object")
                     Text {
                         anchors.centerIn: parent
                         text: "Войти"
-                        color: auth.get_theme("text")
+                        color: (Control.theme) ? (login_area.pressed) ? auth.get_theme("text", false) : auth.get_theme("text") : (login_area.pressed || login_area.containsMouse) ? auth.get_theme("text", true) : auth.get_theme("text")
                         font.family: "Inter"
                         font.pixelSize: 20
                     }
@@ -140,6 +140,7 @@ ApplicationWindow {
                     }
 
                     MouseArea {
+                        id: login_area
                         anchors.fill: parent
                         hoverEnabled: true
 
