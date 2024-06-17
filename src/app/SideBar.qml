@@ -19,7 +19,7 @@ Rectangle {
         var theme_name = {"sidebar": 0, "object": 1, "object(hovered)": 2, "object(pressed)": 3, "object_border": 4, 
         "text": 5, "second_text": 6, "placeholder": 7}
         var light_theme = ["#D9D9D9", "white", "#929292", "#585858", "black", "black", "#808080", "#AAAAAA"]
-        var dark_theme = ["#262626", "#464646", "#262626", "#3f4343", "black", "white", "#AFAFAF", "#555555"]
+        var dark_theme = ["#262626", "#464646", "#929292", "#E2E2E2", "black", "white", "#E0E0E0", "#555555"]
         if (theme) {
             return dark_theme[theme_name[name]]
         } else {
@@ -136,7 +136,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (settings_area.pressed || settings_area.containsMouse || sidebar.theme) ? "white" : "black"
+                        color: (sidebar.theme) ? (settings_area.pressed) ? "black" : "white" : (settings_area.pressed || settings_area.containsMouse) ? "white" : "black"
                     }
                 }
 
@@ -186,7 +186,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (notifications_area.pressed || notifications_area.containsMouse || sidebar.theme) ? "white" : "black"
+                        color: (sidebar.theme) ? (notifications_area.pressed) ? "black" : "white" : (notifications_area.pressed || notifications_area.containsMouse) ? "white" : "black"
                     }
                 }
 
@@ -220,7 +220,7 @@ Rectangle {
                 Layout.preferredHeight: 56
                 border.width: (sidebar.theme) ? 0 : 2
                 border.color: sidebar.get_theme("object_border")
-                color: (public_chat_area.pressed || users_view.currentIndex == -1) ? sidebar.get_theme("object(pressed)") : (public_chat_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
+                color: (public_chat_area.pressed) ? sidebar.get_theme("object(pressed)") : (public_chat_area.containsMouse || users_view.currentIndex == -1) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                 radius: 8
 
                 Behavior on scale {
@@ -236,7 +236,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (public_chat_area.pressed || users_view.currentIndex == -1 || public_chat_area.containsMouse || sidebar.theme) ? "white" : "black"
+                        color: (sidebar.theme) ? (public_chat_area.pressed) ? "black" : "white" : (public_chat_area.pressed || public_chat_area.containsMouse || users_view.currentIndex == -1) ? "white" : "black"
                     }
                 }
 
@@ -290,7 +290,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (groups_area.pressed || groups_area.containsMouse || sidebar.theme) ? "white" : "black"
+                        color: (sidebar.theme) ? (groups_area.pressed) ? "black" : "white" : (groups_area.pressed || groups_area.containsMouse) ? "white" : "black"
                     }
                 }
 
@@ -340,7 +340,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (folders_area.pressed || folders_area.containsMouse || sidebar.theme) ? "white" : "black"
+                        color: (sidebar.theme) ? (folders_area.pressed) ? "black" : "white" : (folders_area.pressed || folders_area.containsMouse) ? "white" : "black"
                     }
                 }
 
@@ -390,7 +390,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (theme_area.pressed || theme_area.containsMouse || sidebar.theme) ? "white" : "black"
+                        color: (sidebar.theme) ? (theme_area.pressed) ? "black" : "white" : (theme_area.pressed || theme_area.containsMouse) ? "white" : "black"
                     }
                 }
 
@@ -461,7 +461,7 @@ Rectangle {
                         z: 1
                         border.width: (sidebar.theme) ? 0 : 2
                         border.color: sidebar.get_theme("object_border")
-                        color: (model_area.pressed || users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("object(pressed)") : (model_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
+                        color: (model_area.pressed) ? sidebar.get_theme("object(pressed)") : (model_area.containsMouse || users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
                         radius: 8
                         property real saved_y
 
@@ -484,7 +484,7 @@ Rectangle {
                                 ColorOverlay {
                                     anchors.fill: parent
                                     source: parent
-                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse || sidebar.theme) ? "#ABACAC" : "#545353"
+                                    color: (sidebar.theme) ? (model_area.pressed) ? "#545454" : "white" : (model_area.pressed || model_area.containsMouse || users_view.currentIndex == delegate.model.index) ? "white" : "#545454"
                                 }
                             }
 
@@ -497,7 +497,7 @@ Rectangle {
                                     Layout.fillHeight: true
                                     verticalAlignment: Text.AlignBottom
                                     text: delegate.model.name
-                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
+                                    color: (sidebar.theme) ? (model_area.pressed) ? sidebar.get_theme("text", false) : sidebar.get_theme("text") : (model_area.pressed || model_area.containsMouse || users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
                                     font.family: "Inter"
                                     font.pixelSize: 14
                                     elide: Text.ElideRight
@@ -509,14 +509,14 @@ Rectangle {
                                     text: "IP: " + delegate.model.ip
                                     font.family: "Inter"
                                     font.pixelSize: 12
-                                    color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
+                                    color: (sidebar.theme) ? (model_area.pressed) ? sidebar.get_theme("second_text", false) : sidebar.get_theme("second_text") : (model_area.pressed || model_area.containsMouse || users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
                                 }
                             }
 
                             Rectangle {
                                 Layout.preferredWidth: 1
                                 Layout.fillHeight: true
-                                color: sidebar.get_theme("sidebar")
+                                color: (sidebar.theme && model_area.pressed) ? "#545454" : "#D9D9D9"
                             }
 
                             Text {
@@ -528,7 +528,7 @@ Rectangle {
                                 text: (delegate.model.last_message) ? delegate.model.last_message : ""
                                 font.family: "Inter"
                                 font.pixelSize: 17
-                                color: (model_area.pressed || users_view.currentIndex == delegate.model.index || model_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
+                                color: (sidebar.theme) ? (model_area.pressed) ? sidebar.get_theme("second_text", false) : sidebar.get_theme("second_text") : (model_area.pressed || model_area.containsMouse || users_view.currentIndex == delegate.model.index) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
                                 lineHeight: 0.75
                                 elide: Text.ElideRight
                             }
@@ -644,7 +644,7 @@ Rectangle {
             Layout.bottomMargin: -2
             border.width: (sidebar.theme) ? 0 : 2
             border.color: sidebar.get_theme("object_border")
-            color: (mouse_area.pressed) ? sidebar.get_theme("object(pressed)") : (mouse_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
+            color: (user_card_area.pressed) ? sidebar.get_theme("object(pressed)") : (user_card_area.containsMouse) ? sidebar.get_theme("object(hovered)") : sidebar.get_theme("object")
 
             Behavior on scale {
                 NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
@@ -665,7 +665,7 @@ Rectangle {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (mouse_area.pressed || mouse_area.containsMouse || sidebar.theme) ? "#ABACAC" : "#545353"
+                        color: (sidebar.theme) ? (user_card_area.pressed) ? "#545454" : "white" : (user_card_area.pressed || user_card_area.containsMouse) ? "white" : "#545454"
                     }
                 }
                 ColumnLayout {
@@ -678,7 +678,7 @@ Rectangle {
                         Layout.fillHeight: true
                         verticalAlignment: Text.AlignBottom
                         text: sidebar.name
-                        color: (mouse_area.pressed || mouse_area.containsMouse) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
+                        color: (sidebar.theme) ? (user_card_area.pressed) ? sidebar.get_theme("text", false) : sidebar.get_theme("text") : (user_card_area.pressed || user_card_area.containsMouse) ? sidebar.get_theme("text", true) : sidebar.get_theme("text")
                         font.family: "Inter"
                         font.pixelSize: 14
                     }
@@ -690,19 +690,15 @@ Rectangle {
                         text: "IP: " + sidebar.ip
                         font.family: "Inter"
                         font.pixelSize: 12
-                        color: (mouse_area.pressed || mouse_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
+                        color: (sidebar.theme) ? (user_card_area.pressed) ? sidebar.get_theme("second_text", false) : sidebar.get_theme("second_text") : (user_card_area.pressed || user_card_area.containsMouse) ? sidebar.get_theme("second_text", true) : sidebar.get_theme("second_text")
                     }
                 }
             }
 
             MouseArea {
-                id: mouse_area
+                id: user_card_area
                 anchors.fill: parent
                 hoverEnabled: true
-
-                onClicked: {
-                    //Soon...
-                }
             }
         }
     }

@@ -20,12 +20,12 @@ ColumnLayout {
     property string name
     property string ip
     property bool theme
-    function get_theme(name) {
-        var theme_name = {"top_panel": 0, "chat": 1, "object": 2, "object(hovered)": 3, "object(pressed)": 4, "object_border": 5, 
-        "text": 6, "second_text": 7, "title": 8, "placeholder": 9, "message_shadow": 10}
-        var light_theme = ["#D9D9D9", "#D9D9D9", "white", "#929292", "#585858", "black", "black", "#808080", "#545353", "#AAAAAA", "#C0C0C0"]
-        var dark_theme = ["#262626", "#262626", "#464646", "#222266", "#111133", "transparent", "white", "#AFAFAF", "#AFAFAF", "#D1D1D1", "#101010"]
-        if (chat.theme) {
+    function get_theme(name, theme = chat.theme) {
+        var theme_name = {"chat": 0, "object": 1, "object(hovered)": 2, "object(pressed)": 3, "object_border": 4, 
+        "text": 5, "second_text": 6, "title": 7, "placeholder": 8, "message_shadow": 9}
+        var light_theme = ["#D9D9D9", "white", "#929292", "#585858", "black", "black", "#808080", "#545454", "#AAAAAA", "#C0C0C0"]
+        var dark_theme = ["#262626", "#464646", "#929292", "#E2E2E2", "transparent", "white", "#E0E0E0", "#AFAFAF", "#D1D1D1", "#101010"]
+        if (theme) {
             return dark_theme[theme_name[name]]
         } else {
             return light_theme[theme_name[name]]
@@ -66,7 +66,7 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 80
-        color: chat.get_theme("top_panel")
+        color: chat.get_theme("chat")
         visible: (chat.connected) ? true : false
 
         RowLayout {
@@ -78,7 +78,7 @@ ColumnLayout {
                 Layout.preferredWidth: 600
                 Layout.preferredHeight: 64
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                color: chat.get_theme("object")
+                color: (user_card_area.pressed) ? chat.get_theme("object(pressed)") : (user_card_area.containsMouse) ? chat.get_theme("object(hovered)") : chat.get_theme("object")
                 border.width: 2
                 border.color: chat.get_theme("object_border")
                 radius: 8
@@ -101,7 +101,7 @@ ColumnLayout {
                             text: (typeof chat.user == "undefined") ? "" : chat.user.name
                             font.family: "Inter"
                             font.pixelSize: 14
-                            color: chat.get_theme("text")
+                            color: (chat.theme) ? (user_card_area.pressed) ? chat.get_theme("text", false) : chat.get_theme("text") : (user_card_area.pressed || user_card_area.containsMouse) ? chat.get_theme("text", true) : chat.get_theme("text")
                         }
                         
                         Text {
@@ -111,14 +111,14 @@ ColumnLayout {
                             text: (typeof chat.user == "undefined") ? "" : "был в сети " + (chat.user.last_time > 59 ? Math.round(chat.user.last_time / 60) + " часов назад" : chat.user.last_time + " минут назад")
                             font.family: "Inter"
                             font.pixelSize: 12
-                            color: chat.get_theme("second_text")
+                            color: (chat.theme) ? (user_card_area.pressed) ? chat.get_theme("second_text", false) : chat.get_theme("second_text") : (user_card_area.pressed || user_card_area.containsMouse) ? chat.get_theme("second_text", true) : chat.get_theme("second_text")
                         }
                     }
 
                     Rectangle {
                         Layout.preferredWidth: 1
                         Layout.fillHeight: true
-                        color: chat.get_theme("top_panel")
+                        color: (chat.theme && user_card_area.pressed) ? "#545454" : "#D9D9D9"
                     }
 
                     Text {
@@ -131,7 +131,7 @@ ColumnLayout {
                         text: "Добавьте описание пользователя..."
                         font.family: "Inter"
                         font.pixelSize: 16
-                        color: chat.get_theme("second_text")
+                        color: (chat.theme) ? (user_card_area.pressed) ? chat.get_theme("second_text", false) : chat.get_theme("second_text") : (user_card_area.pressed || user_card_area.containsMouse) ? chat.get_theme("second_text", true) : chat.get_theme("second_text")
                     }
                 }
 
@@ -140,6 +140,7 @@ ColumnLayout {
                 }
 
                 MouseArea {
+                    id: user_card_area
                     anchors.fill: parent
                     hoverEnabled: true
 
@@ -184,7 +185,7 @@ ColumnLayout {
                     Layout.preferredHeight: 56
                     border.width: 2
                     border.color: chat.get_theme("object_border")
-                    color: chat.get_theme("object")
+                    color: (phone_area.pressed) ? chat.get_theme("object(pressed)") : (phone_area.containsMouse) ? chat.get_theme("object(hovered)") : chat.get_theme("object")
                     radius: 8
 
                     Image {
@@ -196,7 +197,7 @@ ColumnLayout {
                         ColorOverlay {
                             anchors.fill: parent
                             source: parent
-                            color: (chat.theme) ? "white" : "black"
+                            color: (chat.theme) ? (phone_area.pressed) ? "black" : "white" : (phone_area.pressed || phone_area.containsMouse) ? "white" : "black"
                         }
                     }
 
@@ -205,6 +206,7 @@ ColumnLayout {
                     }
 
                     MouseArea {
+                        id: phone_area
                         anchors.fill: parent
                         hoverEnabled: true
 
@@ -231,7 +233,7 @@ ColumnLayout {
                     Layout.preferredHeight: 56
                     border.width: 2
                     border.color: chat.get_theme("object_border")
-                    color: chat.get_theme("object")
+                    color: (search_area.pressed) ? chat.get_theme("object(pressed)") : (search_area.containsMouse) ? chat.get_theme("object(hovered)") : chat.get_theme("object")
                     radius: 8
 
                     Image {
@@ -243,7 +245,7 @@ ColumnLayout {
                         ColorOverlay {
                             anchors.fill: parent
                             source: parent
-                            color: (chat.theme) ? "white" : "black"
+                            color: (chat.theme) ? (search_area.pressed) ? "black" : "white" : (search_area.pressed || search_area.containsMouse) ? "white" : "black"
                         }
                     }
 
@@ -252,6 +254,7 @@ ColumnLayout {
                     }
 
                     MouseArea {
+                        id: search_area
                         anchors.fill: parent
                         hoverEnabled: true
 
@@ -278,7 +281,7 @@ ColumnLayout {
                     Layout.preferredHeight: 56
                     border.width: 2
                     border.color: chat.get_theme("object_border")
-                    color: chat.get_theme("object")
+                    color: (more_area.pressed) ? chat.get_theme("object(pressed)") : (more_area.containsMouse) ? chat.get_theme("object(hovered)") : chat.get_theme("object")
                     radius: 8
 
                     Image {
@@ -290,7 +293,7 @@ ColumnLayout {
                         ColorOverlay {
                             anchors.fill: parent
                             source: parent
-                            color: (chat.theme) ? "white" : "black"
+                            color: (chat.theme) ? (more_area.pressed) ? "black" : "white" : (more_area.pressed || more_area.containsMouse) ? "white" : "black"
                         }
                     }
 
@@ -299,6 +302,7 @@ ColumnLayout {
                     }
 
                     MouseArea {
+                        id: more_area
                         anchors.fill: parent
                         hoverEnabled: true
 
@@ -327,7 +331,7 @@ ColumnLayout {
     Rectangle {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        color: (chat.connected) ? chat.get_theme("chat") : chat.get_theme("top_panel")
+        color: chat.get_theme("chat")
         clip: true
 
         Text {
@@ -383,7 +387,7 @@ ColumnLayout {
                             ColorOverlay {
                                 anchors.fill: parent
                                 source: parent
-                                color: (chat.theme) ? "#ABACAC" : "#545353"
+                                color: (chat.theme) ? "white" : "#545353"
                             }
                         }
 
@@ -450,6 +454,7 @@ ColumnLayout {
                             }
 
                             Rectangle {
+                                color: chat.get_theme("object")
                                 visible: (delegate.model.type && delegate.model.type == "file") ? true : false
                                 Layout.preferredWidth: 24
                                 Layout.preferredHeight: 24
@@ -460,6 +465,12 @@ ColumnLayout {
                                     height: 16
                                     anchors.centerIn: parent
                                     source: "icons/download.svg"
+                                    
+                                    ColorOverlay {
+                                        anchors.fill: parent
+                                        source: parent
+                                        color: (chat.theme) ? "#ABACAC" : "#545353"
+                                    }
                                 }
                             }
                         }
@@ -538,12 +549,11 @@ ColumnLayout {
 
             // Кнопка прикрепления файлов
             Rectangle {
-                id: attach_file
                 Layout.preferredWidth: 44
                 Layout.preferredHeight: 44
                 border.width: 2
                 border.color: chat.get_theme("object_border")
-                color: chat.get_theme("object")
+                color: (file_attach_area.pressed) ? chat.get_theme("object(pressed)") : (file_attach_area.containsMouse) ? chat.get_theme("object(hovered)") : chat.get_theme("object")
                 radius: 8
 
                 Image {
@@ -555,12 +565,12 @@ ColumnLayout {
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent
-                        color: (chat.theme) ? "white" : "black"
+                        color: (chat.theme) ? (file_attach_area.pressed) ? "black" : "white" : (file_attach_area.pressed || file_attach_area.containsMouse) ? "white" : "black"
                     }
                 }
 
                 FileDialog {
-                    id: file_attach
+                    id: file_attach_dialog
                     currentFolder: StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0]
                 }
 
@@ -569,12 +579,13 @@ ColumnLayout {
                 }
 
                 MouseArea {
+                    id: file_attach_area
                     anchors.fill: parent
                     hoverEnabled: true
 
                     onClicked: {
-                        file_attach.open()
-                        if (file_attach.selectedFile) {
+                        file_attach_dialog.open()
+                        if (file_attach_dialog.selectedFile) {
 
                         }
                     }
@@ -654,19 +665,20 @@ ColumnLayout {
                 }
             }
 
+            // Кнопка отправки сообщения
             Rectangle {
                 Layout.preferredWidth: 143
                 Layout.preferredHeight: 44
                 border.width: 2
                 border.color: chat.get_theme("object_border")
-                color: chat.get_theme("object")
+                color: (send_area.pressed) ? chat.get_theme("object(pressed)") : (send_area.containsMouse) ? chat.get_theme("object(hovered)") : chat.get_theme("object")
                 radius: 8
                 Text {
                     anchors.centerIn: parent
                     text: "Отправить"
                     font.family: "Inter"
                     font.pixelSize: 24
-                    color: chat.get_theme("text")
+                    color: (chat.theme) ? (send_area.pressed) ? chat.get_theme("text", false) : chat.get_theme("text") : (send_area.pressed || send_area.containsMouse) ? chat.get_theme("text", true) : chat.get_theme("text")
                 }
 
                 Behavior on scale {
