@@ -64,6 +64,8 @@ class Controller(QObject):
     theme: Any = Property(bool, readTheme, setTheme, notify=themeChanged) # type: ignore
     # theme - end
 
+    def control():
+        return control
 # Основной класс, с помощью которого можно осуществлять доступ к свойствам объектов и функций qml.
 # Инструкция:
 # 1. from путь.к.control import control
