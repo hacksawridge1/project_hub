@@ -15,7 +15,7 @@ class Test(unittest.TestCase):
         #self.assertEqual(contr.ip, get_local_ip())
         #self.assertEqual(contr.username, contr.readUsername(self))
     def setUp(self):
-        self.controller = Controller()
+        self.controller = Controller.control
 
     def test_send_message(self):
         # Create a mock of main_user
