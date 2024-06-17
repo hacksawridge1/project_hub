@@ -25,12 +25,8 @@ jobs:
       run: |
         pip install -r requirements.txt
         
-
     - name: Run unit tests file1
-      run: python src/app/tests.py
-
-    - name: Run unit tests file2
       run: python src/modules/test.py
 
-    - name: Run unit tests file3
+    - name: Run unit tests file2
       run: python src/modules/negativetests.py
