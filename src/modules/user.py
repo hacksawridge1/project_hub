@@ -11,7 +11,7 @@ from Crypto.PublicKey import RSA
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import modules.settings as set
 from app.control import Controller
-from objects import decrypt_data, encrypt_object, decrypt_object, find_in_object
+from .objects import decrypt_data, encrypt_object, decrypt_object, find_in_object
 #import netifaces
 #import ipaddress
 #import asyncio
